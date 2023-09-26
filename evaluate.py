@@ -38,7 +38,7 @@ def evaluate(model, eval_batch, config, is_test, metrics='Acc'):
                 print(vms_batch.size())
 
         logits = nn.Softmax(dim=1)(logits)
-        pred = torch.argmax(logits, dim=1)
+        pred = torch.argmax(logits, dim=1).unsqueeze(1)
         gold = label_ids_batch
         for j in range(pred.size()[0]):
             confusion[pred[j], gold[j]] += 1

@@ -56,11 +56,10 @@ class BertForSequenceClassification(BertPreTrainedModel):
                 position_ids=None, head_mask=None, labels=None, visible_matrix=None):
         
         seq_length = input_ids.size(1)
+        
         # Generate mask according to segment indicators.
         # mask: [batch_size x 1 x seq_length x seq_length]
-        if not self.use_vm:
-            visible_matrix = None
-        if visible_matrix is None:
+        if visible_matrix is None or not self.use_vm:
             encoder_attention_mask = (token_type_ids > 0). \
                     unsqueeze(1). \
                     repeat(1, seq_length, 1). \
@@ -80,7 +79,7 @@ class BertForSequenceClassification(BertPreTrainedModel):
                             head_mask=head_mask)
         
         output = outputs[0]
-                # Target.
+        # Target.
         if self.pooling == "mean":
             output = torch.mean(output, dim=1)
         elif self.pooling == "max":

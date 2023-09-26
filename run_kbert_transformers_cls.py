@@ -153,7 +153,7 @@ def main():
     test_dataset = dataloader.read_dataset(config.test_path, tokenizer, workers_num=args.workers_num, with_kg=not args.no_kg)
     test_dataset = dataloader.myDataset(test_dataset)
     test_batch = DataLoader(test_dataset,batch_size=config.batch_size)
-
+    
     train(model, train_batch, dev_batch, test_batch, config=config)
 
     # Evaluation phase.
