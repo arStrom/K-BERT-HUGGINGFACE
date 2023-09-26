@@ -1,8 +1,10 @@
 
+import torch
+import random
 from multiprocessing import Process, Pool
-from knowledgeable import add_knowledge_worker
+from torch.utils.data import Dataset
 
-def read_dataset(path, workers_num=1):
+def read_dataset(path, tokenizer, workers_num=1, with_kg = True):
 
     print("Loading sentences from {}".format(path))
     sentences = []
@@ -18,34 +20,30 @@ def read_dataset(path, workers_num=1):
         params = []
         sentence_per_block = int(sentence_num / workers_num) + 1
         for i in range(workers_num):
-            params.append((i, sentences[i*sentence_per_block: (i+1)*sentence_per_block], config.columns, kg, vocab, args))
+            params.append((sentences[i*sentence_per_block: (i+1)*sentence_per_block], i))
         pool = Pool(workers_num)
-        res = pool.map(add_knowledge_worker, params)
+        res = pool.map(tokenizer.encode_with_knowledge, *params) if with_kg else pool.map(tokenizer.encode, *params)
         pool.close()
         pool.join()
         dataset = [sample for block in res for sample in block]
     else:
-        params = (0, sentences, config.columns, kg, vocab, args)
-        dataset = add_knowledge_worker(params)
+        params = (sentences, 0)
+        dataset = tokenizer.encode_with_knowledge(*params) if with_kg else tokenizer.encode(*params)
 
     return dataset
 
-# Datset loader.
-def batch_loader(batch_size, input_ids, label_ids, mask_ids, pos_ids, vms):
-    instances_num = input_ids.size()[0]
-    for i in range(instances_num // batch_size):
-        input_ids_batch = input_ids[i*batch_size: (i+1)*batch_size, :]
-        label_ids_batch = label_ids[i*batch_size: (i+1)*batch_size]
-        mask_ids_batch = mask_ids[i*batch_size: (i+1)*batch_size, :]
-        pos_ids_batch = pos_ids[i*batch_size: (i+1)*batch_size, :]
-        vms_batch = vms[i*batch_size: (i+1)*batch_size]
-        yield input_ids_batch, label_ids_batch, mask_ids_batch, pos_ids_batch, vms_batch
-    if instances_num > instances_num // batch_size * batch_size:
-        input_ids_batch = input_ids[instances_num//batch_size*batch_size:, :]
-        label_ids_batch = label_ids[instances_num//batch_size*batch_size:]
-        mask_ids_batch = mask_ids[instances_num//batch_size*batch_size:, :]
-        pos_ids_batch = pos_ids[instances_num//batch_size*batch_size:, :]
-        vms_batch = vms[instances_num//batch_size*batch_size:]
-
-        yield input_ids_batch, label_ids_batch, mask_ids_batch, pos_ids_batch, vms_batch
+class myDataset(Dataset): #继承Dataset
+    def __init__(self, dataset): #__init__是初始化该类的一些基础参数
+        self.dataset = dataset   #数据集
+    
+    def __len__(self):#返回整个数据集的大小
+        return len(self.dataset)
+    
+    def __getitem__(self,index):#根据索引index返回dataset[index]
+        input_id = torch.LongTensor(self.dataset[index][0])
+        label_id = torch.LongTensor([self.dataset[index][1]])
+        mask_id = torch.LongTensor(self.dataset[index][2])
+        pos_id = torch.LongTensor(self.dataset[index][3])
+        vm = torch.LongTensor(self.dataset[index][4])
+        return input_id, label_id, mask_id, pos_id, vm  #返回该样本
 

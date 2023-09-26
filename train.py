@@ -1,34 +1,28 @@
 
+import sys
 import torch
-from dataloader import read_dataset
+import random
+import time
+from evaluate import evaluate
+from utils.optimizers import BertAdam
+from datetime import timedelta
 
 
-def train():
-    # Training phase.
-    print("Start training.")
-    trainset = read_dataset(args.train_path, workers_num=args.workers_num)
-    print("Shuffling dataset")
-    random.shuffle(trainset)
-    instances_num = len(trainset)
-    batch_size = args.batch_size
+def get_time_dif(start_time):
+    """
+    获取时间间隔
+    """
+    end_time = time.time()
+    time_dif = end_time - start_time
+    return timedelta(seconds=int(round(time_dif)))
 
-    print("Trans data to tensor.")
-    print("input_ids")
-    input_ids = torch.LongTensor([example[0] for example in trainset])
-    print("label_ids")
-    label_ids = torch.LongTensor([example[1] for example in trainset])
-    print("mask_ids")
-    mask_ids = torch.LongTensor([example[2] for example in trainset])
-    print("pos_ids")
-    pos_ids = torch.LongTensor([example[3] for example in trainset])
-    print("vms")
-    vms = [example[4] for example in trainset]
 
-    train_steps = int(instances_num * args.epochs_num / batch_size) + 1
+def train(model, train_batch, eval_batch, test_batch, config):
 
-    print("Batch size: ", batch_size)
-    print("The number of training instances:", instances_num)
-
+    device = config.device
+    batch_size = train_batch.batch_size
+    instances_num = len(train_batch.dataset)
+    train_steps = int(instances_num * config.epochs_num / batch_size) + 1
     param_optimizer = list(model.named_parameters())
     no_decay = ['bias', 'gamma', 'beta']
     optimizer_grouped_parameters = [
@@ -40,12 +34,13 @@ def train():
     total_loss = 0.0
     result = 0.0
     best_result = 0.0
-    for epoch in range(1, args.epochs_num+1):
-        model.train()
-        for i, (input_ids_batch, label_ids_batch, mask_ids_batch, pos_ids_batch, vms_batch) in enumerate(batch_loader(batch_size, input_ids, label_ids, mask_ids, pos_ids, vms)):
-            model.zero_grad()
 
-            vms_batch = torch.LongTensor(vms_batch)
+    start_time = time.time()
+
+    for epoch in range(1, config.epochs_num+1):
+        model.train()
+        for i, (input_ids_batch, label_ids_batch, mask_ids_batch, pos_ids_batch, vms_batch) in enumerate(train_batch):
+            model.zero_grad()
 
             input_ids_batch = input_ids_batch.to(device)
             label_ids_batch = label_ids_batch.to(device)
@@ -61,15 +56,16 @@ def train():
             if torch.cuda.device_count() > 1:
                 loss = torch.mean(loss)
             total_loss += loss.item()
-            if (i + 1) % args.report_steps == 0:
-                print("Epoch id: {}, Training steps: {}, Avg loss: {:.3f}".format(epoch, i+1, total_loss / args.report_steps))
+            if (i + 1) % config.report_steps == 0:
+                time_dif = get_time_dif(start_time)
+                print("Epoch id: {}, Training steps: {}, Avg loss: {:.3f}, Time: {}".format(epoch, i+1, total_loss / config.report_steps, time_dif))
                 sys.stdout.flush()
                 total_loss = 0.
             loss.backward()
             optimizer.step()
 
         print("Start evaluation on dev dataset.")
-        result = evaluate(args, False)
+        result = evaluate(model, eval_batch, device, is_test = False)
         if result > best_result:
             best_result = result
             model_to_save = model.module if hasattr(model, 'module') else model
@@ -78,13 +74,5 @@ def train():
             continue
 
         print("Start evaluation on test dataset.")
-        evaluate(args, True)
+        evaluate(model, test_batch, config, is_test = True)
 
-    # Evaluation phase.
-    print("Final evaluation on the test dataset.")
-
-    if torch.cuda.device_count() > 1:
-        model.module.load_state_dict(torch.load(config.output_dir + '/pytorch_model.bin'))
-    else:
-        model.load_state_dict(torch.load(config.output_dir + '/pytorch_model.bin'))
-    evaluate(args, True)

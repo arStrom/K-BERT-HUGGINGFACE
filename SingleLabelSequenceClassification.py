@@ -48,7 +48,7 @@ class BertForSequenceClassification(BertPreTrainedModel):
         self.output_layer_2 = nn.Linear(config.hidden_size, config.num_labels)
         self.softmax = nn.LogSoftmax(dim=-1)
         self.criterion = nn.NLLLoss()
-        self.use_vm = False if args.no_vm else True
+        self.use_vm = False if args.no_vm or args.no_kg else True
         print("[BertClassifier] use visible_matrix: {}".format(self.use_vm))
         self.init_weights()
 
@@ -61,20 +61,21 @@ class BertForSequenceClassification(BertPreTrainedModel):
         if not self.use_vm:
             visible_matrix = None
         if visible_matrix is None:
-            attention_mask = (token_type_ids > 0). \
+            encoder_attention_mask = (token_type_ids > 0). \
                     unsqueeze(1). \
                     repeat(1, seq_length, 1). \
                     unsqueeze(1)
-            attention_mask = attention_mask.float()
-            attention_mask = (1.0 - attention_mask) * -10000.0
+            encoder_attention_mask = encoder_attention_mask.float()
+            encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
         else:
-            attention_mask = visible_matrix.unsqueeze(1)
-            attention_mask = attention_mask.float()
-            attention_mask = (1.0 - attention_mask) * -10000.0
+            encoder_attention_mask = visible_matrix.unsqueeze(1)
+            encoder_attention_mask = encoder_attention_mask.float()
+            encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
 
+        # token_type_ids实际上是attention_mask
         outputs = self.bert(input_ids,
-                            token_type_ids=token_type_ids,
-                            encoder_attention_mask=attention_mask,
+                            attention_mask=token_type_ids,
+                            encoder_attention_mask=encoder_attention_mask,
                             position_ids=position_ids,
                             head_mask=head_mask)
         
