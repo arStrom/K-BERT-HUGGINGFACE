@@ -65,7 +65,7 @@ def train(model, train_batch, eval_batch, test_batch, config):
             optimizer.step()
 
         print("Start evaluation on dev dataset.")
-        result = evaluate(model, eval_batch, device, is_test = False)
+        result = evaluate(model, eval_batch, config, is_test = False)
         if result > best_result:
             best_result = result
             model_to_save = model.module if hasattr(model, 'module') else model

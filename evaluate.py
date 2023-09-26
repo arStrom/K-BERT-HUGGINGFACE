@@ -12,7 +12,7 @@ def evaluate(model, eval_batch, config, is_test, metrics='Acc'):
 
     correct = 0
     # Confusion matrix.
-    confusion = torch.zeros(config.label_number, config.label_number, dtype=torch.long)
+    confusion = torch.zeros(config.label_number, config.label_number, dtype=torch.long).to(device)
 
     model.eval()
     
