@@ -1,18 +1,38 @@
 
 import torch
 import random
+import numpy as np
 from multiprocessing import Process, Pool
 from torch.utils.data import Dataset
 
-def read_dataset(path, tokenizer, workers_num=1, with_kg = True):
-
-    print("Loading sentences from {}".format(path))
+def creat_multi_label_sentences(path, class_list):
+    """Creates examples for the training and dev sets."""
+    label_number = len(class_list)
     sentences = []
     with open(path, mode='r', encoding="utf-8") as f:
-        for line_id, line in enumerate(f):
-            if line_id == 0:
-                continue
-            sentences.append(line)
+        for (i, line) in enumerate(f):
+            line = line.strip().split('\t')
+            text_a = line[0]
+            label = np.zeros((label_number,), dtype=int)
+            for i in range(label_number):
+                if class_list[i] in line:
+                    label[i] = 1
+            sentences.append((label,text_a))
+    return sentences
+
+def read_dataset(path, tokenizer, workers_num=1, class_list=None, with_kg = True):
+
+    print("Loading sentences from {}".format(path))
+    if class_list is None:
+        sentences = []
+        with open(path, mode='r', encoding="utf-8") as f:
+            for line_id, line in enumerate(f):
+                if line_id == 0:
+                    continue
+                sentences.append(line)
+    else:
+        sentences = creat_multi_label_sentences(path,class_list)
+
     sentence_num = len(sentences)
 
     print("There are {} sentence in total. We use {} processes to inject knowledge into sentences.".format(sentence_num, workers_num))
@@ -41,7 +61,7 @@ class myDataset(Dataset): #继承Dataset
     
     def __getitem__(self,index):#根据索引index返回dataset[index]
         input_id = torch.LongTensor(self.dataset[index][0])
-        label_id = torch.LongTensor([self.dataset[index][1]])
+        label_id = torch.FloatTensor(self.dataset[index][1])
         mask_id = torch.LongTensor(self.dataset[index][2])
         pos_id = torch.LongTensor(self.dataset[index][3])
         vm = torch.LongTensor(self.dataset[index][4])

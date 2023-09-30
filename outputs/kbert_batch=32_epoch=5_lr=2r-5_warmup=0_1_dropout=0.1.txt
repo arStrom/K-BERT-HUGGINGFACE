@@ -1,0 +1,116 @@
+Some weights of BertForSequenceClassification were not initialized from the model checkpoint at ./models/google and are newly initialized: ['output_layer_2.bias', 'output_layer_1.bias', 'output_layer_2.weight', 'output_layer_1.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+1 GPUs are available. Let's use them.
+device:  cuda
+[KnowledgeGraph] Loading spo from /Lyq/experiment/K-BERT-HUGGINGFACE/brain/kgs/CnDbpedia.spo
+Start training.
+Loading sentences from ./datasets/book_review/train.tsv
+There are 20000 sentence in total. We use 1 processes to inject knowledge into sentences.
+Progress of process 0: 0/20000
+Progress of process 0: 10000/20000
+Loading sentences from ./datasets/book_review/dev.tsv
+There are 10000 sentence in total. We use 1 processes to inject knowledge into sentences.
+Progress of process 0: 0/10000
+Loading sentences from ./datasets/book_review/test.tsv
+There are 10000 sentence in total. We use 1 processes to inject knowledge into sentences.
+Progress of process 0: 0/10000
+/Lyq/experiment/K-BERT-HUGGINGFACE/utils/optimizers.py:123: UserWarning: This overload of add_ is deprecated:
+	add_(Number alpha, Tensor other)
+Consider using one of the following signatures instead:
+	add_(Tensor other, *, Number alpha) (Triggered internally at /opt/conda/conda-bld/pytorch_1678402379298/work/torch/csrc/utils/python_arg_parser.cpp:1485.)
+  next_m.mul_(beta1).add_(1 - beta1, grad)
+Epoch id: 1, Training steps: 100, Avg loss: 0.562, Time: 0:02:15
+Epoch id: 1, Training steps: 200, Avg loss: 0.399, Time: 0:04:35
+Epoch id: 1, Training steps: 300, Avg loss: 0.346, Time: 0:06:58
+Epoch id: 1, Training steps: 400, Avg loss: 0.364, Time: 0:09:11
+Epoch id: 1, Training steps: 500, Avg loss: 0.349, Time: 0:11:25
+Epoch id: 1, Training steps: 600, Avg loss: 0.321, Time: 0:13:29
+Start evaluation on dev dataset.
+Label 0: 0.916, 0.815, 0.862
+Label 1: 0.821, 0.919, 0.868
+Acc. (Correct/Total): 0.8650 (8650/10000) 
+Start evaluation on test dataset.
+The number of evaluation instances:  10000
+Confusion matrix:
+tensor([[4099,  413],
+        [1011, 4477]], device='cuda:0')
+Report precision, recall, and f1:
+Label 0: 0.908, 0.802, 0.852
+Label 1: 0.816, 0.916, 0.863
+Acc. (Correct/Total): 0.8576 (8576/10000) 
+Epoch id: 2, Training steps: 100, Avg loss: 0.380, Time: 0:22:55
+Epoch id: 2, Training steps: 200, Avg loss: 0.225, Time: 0:25:05
+Epoch id: 2, Training steps: 300, Avg loss: 0.167, Time: 0:26:57
+Epoch id: 2, Training steps: 400, Avg loss: 0.178, Time: 0:28:47
+Epoch id: 2, Training steps: 500, Avg loss: 0.174, Time: 0:30:51
+Epoch id: 2, Training steps: 600, Avg loss: 0.154, Time: 0:32:59
+Start evaluation on dev dataset.
+Label 0: 0.926, 0.793, 0.854
+Label 1: 0.807, 0.932, 0.865
+Acc. (Correct/Total): 0.8596 (8596/10000) 
+Epoch id: 3, Training steps: 100, Avg loss: 0.224, Time: 0:38:20
+Epoch id: 3, Training steps: 200, Avg loss: 0.114, Time: 0:40:06
+Epoch id: 3, Training steps: 300, Avg loss: 0.091, Time: 0:42:16
+Epoch id: 3, Training steps: 400, Avg loss: 0.080, Time: 0:44:44
+Epoch id: 3, Training steps: 500, Avg loss: 0.091, Time: 0:46:48
+Epoch id: 3, Training steps: 600, Avg loss: 0.074, Time: 0:48:36
+Start evaluation on dev dataset.
+Label 0: 0.912, 0.832, 0.870
+Label 1: 0.834, 0.914, 0.872
+Acc. (Correct/Total): 0.8712 (8712/10000) 
+Start evaluation on test dataset.
+The number of evaluation instances:  10000
+Confusion matrix:
+tensor([[4175,  445],
+        [ 935, 4445]], device='cuda:0')
+Report precision, recall, and f1:
+Label 0: 0.904, 0.817, 0.858
+Label 1: 0.826, 0.909, 0.866
+Acc. (Correct/Total): 0.8620 (8620/10000) 
+Epoch id: 4, Training steps: 100, Avg loss: 0.114, Time: 0:57:41
+Epoch id: 4, Training steps: 200, Avg loss: 0.055, Time: 0:59:21
+Epoch id: 4, Training steps: 300, Avg loss: 0.040, Time: 1:01:20
+Epoch id: 4, Training steps: 400, Avg loss: 0.032, Time: 1:03:15
+Epoch id: 4, Training steps: 500, Avg loss: 0.047, Time: 1:05:11
+Epoch id: 4, Training steps: 600, Avg loss: 0.036, Time: 1:07:01
+Start evaluation on dev dataset.
+Label 0: 0.897, 0.868, 0.882
+Label 1: 0.862, 0.892, 0.877
+Acc. (Correct/Total): 0.8796 (8796/10000) 
+Start evaluation on test dataset.
+The number of evaluation instances:  10000
+Confusion matrix:
+tensor([[4365,  567],
+        [ 745, 4323]], device='cuda:0')
+Report precision, recall, and f1:
+Label 0: 0.885, 0.854, 0.869
+Label 1: 0.853, 0.884, 0.868
+Acc. (Correct/Total): 0.8688 (8688/10000) 
+Epoch id: 5, Training steps: 100, Avg loss: 0.059, Time: 1:14:22
+Epoch id: 5, Training steps: 200, Avg loss: 0.032, Time: 1:16:04
+Epoch id: 5, Training steps: 300, Avg loss: 0.023, Time: 1:17:48
+Epoch id: 5, Training steps: 400, Avg loss: 0.018, Time: 1:19:46
+Epoch id: 5, Training steps: 500, Avg loss: 0.029, Time: 1:21:50
+Epoch id: 5, Training steps: 600, Avg loss: 0.022, Time: 1:23:43
+Start evaluation on dev dataset.
+Label 0: 0.897, 0.873, 0.885
+Label 1: 0.867, 0.892, 0.880
+Acc. (Correct/Total): 0.8824 (8824/10000) 
+Start evaluation on test dataset.
+The number of evaluation instances:  10000
+Confusion matrix:
+tensor([[4394,  568],
+        [ 716, 4322]], device='cuda:0')
+Report precision, recall, and f1:
+Label 0: 0.886, 0.860, 0.873
+Label 1: 0.858, 0.884, 0.871
+Acc. (Correct/Total): 0.8716 (8716/10000) 
+Final evaluation on the test dataset.
+The number of evaluation instances:  10000
+Confusion matrix:
+tensor([[4394,  568],
+        [ 716, 4322]], device='cuda:0')
+Report precision, recall, and f1:
+Label 0: 0.886, 0.860, 0.873
+Label 1: 0.858, 0.884, 0.871
+Acc. (Correct/Total): 0.8716 (8716/10000)

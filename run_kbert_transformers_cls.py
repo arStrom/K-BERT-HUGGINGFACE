@@ -18,7 +18,7 @@ from torch.utils.data import DataLoader, RandomSampler, SequentialSampler
 from tokenizer import tokenizer as Tokenizer
 import numpy as np
 from train import train
-from evaluate import evaluate
+from evaluate import evaluate, evaluate_multi_label
 import MultiLabelSequenceClassification as MLCModels
 import SingleLabelSequenceClassification as SLCModels
 
@@ -119,7 +119,7 @@ def main():
     args.vocab = vocab
 
     # 加载分类模型
-    model = SLCModel[model_name].from_pretrained(config.pretrained_model_path, config=model_config, args = args)
+    model = MLCModel[model_name].from_pretrained(config.pretrained_model_path, config=model_config, args = args)
 
     # 使用DataParallel包装器来使用多个GPU
     if torch.cuda.device_count() > 1:
@@ -140,21 +140,22 @@ def main():
     
     #训练.
     print("Start training.")
-    tokenizer = Tokenizer(vocab, config.columns, config.max_seq_length, kg)
+    tokenizer = Tokenizer(vocab, config.max_seq_length, kg)
 
-    train_dataset = dataloader.read_dataset(config.train_path, tokenizer, workers_num=args.workers_num, with_kg=not args.no_kg)
+    train_dataset = dataloader.read_dataset(config.train_path, tokenizer, workers_num=args.workers_num, class_list=config.class_list, with_kg=not args.no_kg)
     train_dataset = dataloader.myDataset(train_dataset)
     train_batch = DataLoader(train_dataset,batch_size=config.batch_size)
 
-    dev_dataset = dataloader.read_dataset(config.dev_path, tokenizer, workers_num=args.workers_num, with_kg=not args.no_kg)
+    dev_dataset = dataloader.read_dataset(config.dev_path, tokenizer, workers_num=args.workers_num, class_list=config.class_list, with_kg=not args.no_kg)
     dev_dataset = dataloader.myDataset(dev_dataset)
     dev_batch = DataLoader(dev_dataset,batch_size=config.batch_size)
 
-    test_dataset = dataloader.read_dataset(config.test_path, tokenizer, workers_num=args.workers_num, with_kg=not args.no_kg)
+    test_dataset = dataloader.read_dataset(config.test_path, tokenizer, workers_num=args.workers_num, class_list=config.class_list, with_kg=not args.no_kg)
     test_dataset = dataloader.myDataset(test_dataset)
     test_batch = DataLoader(test_dataset,batch_size=config.batch_size)
     
-    train(model, train_batch, dev_batch, test_batch, config=config)
+    evaluate_multi_label(model, test_batch, config, is_test = True)
+    train(model, train_batch, dev_batch, test_batch, config=config, is_MLC=True)
 
     # Evaluation phase.
     print("Final evaluation on the test dataset.")
@@ -163,7 +164,7 @@ def main():
         model.module.load_state_dict(torch.load(config.output_dir + '/pytorch_model.bin'))
     else:
         model.load_state_dict(torch.load(config.output_dir + '/pytorch_model.bin'))
-    evaluate(model, test_batch, config, is_test = True)
+    evaluate_multi_label(model, test_batch, config, is_test = True)
 
 
 if __name__ == "__main__":

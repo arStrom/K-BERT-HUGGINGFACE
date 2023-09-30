@@ -3,10 +3,10 @@ import sys
 import torch
 import random
 import time
-from evaluate import evaluate
+from evaluate import evaluate, evaluate_multi_label
 from utils.optimizers import BertAdam
 from datetime import timedelta
-
+import sklearn.metrics as metrics
 
 def get_time_dif(start_time):
     """
@@ -17,7 +17,7 @@ def get_time_dif(start_time):
     return timedelta(seconds=int(round(time_dif)))
 
 
-def train(model, train_batch, eval_batch, test_batch, config):
+def train(model, train_batch, eval_batch, test_batch, config, is_MLC=None):
 
     device = config.device
     batch_size = train_batch.batch_size
@@ -65,7 +65,10 @@ def train(model, train_batch, eval_batch, test_batch, config):
             optimizer.step()
 
         print("Start evaluation on dev dataset.")
-        result = evaluate(model, eval_batch, config, is_test = False)
+        if is_MLC is None or is_MLC is False:
+            result = evaluate(model, eval_batch, config, is_test = False)
+        else:
+            result = evaluate_multi_label(model, eval_batch, config, is_test = False)
         if result > best_result:
             best_result = result
             model_to_save = model.module if hasattr(model, 'module') else model
@@ -74,5 +77,8 @@ def train(model, train_batch, eval_batch, test_batch, config):
             continue
 
         print("Start evaluation on test dataset.")
-        evaluate(model, test_batch, config, is_test = True)
+        if is_MLC is None or is_MLC is False:
+            result = evaluate(model, eval_batch, config, is_test = False)
+        else:
+            result = evaluate_multi_label(model, eval_batch, config, is_test = False)
 

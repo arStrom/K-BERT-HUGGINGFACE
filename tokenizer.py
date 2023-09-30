@@ -5,9 +5,8 @@ import numpy as np
 
 class tokenizer:
 
-    def __init__(self, vocab, columns, max_length=256, kg=None):
+    def __init__(self, vocab, max_length=256, kg=None):
         self.vocab = vocab
-        self.columns = columns
         self.kg = kg
         self.max_length = max_length
 
@@ -15,15 +14,16 @@ class tokenizer:
     def encode(self, sentences, p_id=0):
         sentences_num = len(sentences)
         dataset = []
+        columns = {"label":0, "text_a":1}
         for line_id, line in enumerate(sentences):
             if line_id % 10000 == 0:
                 print("Progress of process {}: {}/{}".format(p_id, line_id, sentences_num))
                 sys.stdout.flush()
-            line = line.strip().split('\t')
+            # line = line.strip().split('\t')
             try:
                 if len(line) == 2:
-                    label = int(line[self.columns["label"]])
-                    tokens = [CLS_TOKEN] + list(line[self.columns["text_a"]])
+                    label = line[columns["label"]]
+                    tokens = [CLS_TOKEN] + list(line[columns["text_a"]])
                     tokens_lenth = len(tokens)
                     token_ids = [self.vocab.get(t) for t in tokens]
                     pos_ids = [i for i in range(0, tokens_lenth)]
@@ -50,6 +50,7 @@ class tokenizer:
     def encode_with_knowledge(self, sentences, p_id=0):
         sentences_num = len(sentences)
         dataset = []
+        columns = {"label":0, "text_a":1}
         for line_id, line in enumerate(sentences):
             if line_id % 10000 == 0:
                 print("Progress of process {}: {}/{}".format(p_id, line_id, sentences_num))
@@ -57,8 +58,8 @@ class tokenizer:
             line = line.strip().split('\t')
             try:
                 if len(line) == 2:
-                    label = int(line[self.columns["label"]])
-                    text = CLS_TOKEN + line[self.columns["text_a"]]
+                    label = line[columns["label"]]
+                    text = CLS_TOKEN + line[columns["text_a"]]
     
                     tokens, pos, vm, _ = self.kg.add_knowledge_with_vm([text], add_pad=True, max_length=self.max_length)
                     tokens = tokens[0]

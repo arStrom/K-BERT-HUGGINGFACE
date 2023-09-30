@@ -13,24 +13,6 @@ def get_class_list(file_path):
     with open(file_path, 'r', encoding='UTF-8') as f:
         return [line.strip('\n') for line in tqdm(f.readlines())]
 
-def get_label_set(train_path):
-    # Count the number of labels.
-    labels_set = set()
-    columns = {}
-    with open(train_path, mode="r", encoding="utf-8") as f:
-        for line_id, line in enumerate(f):
-            try:
-                line = line.strip().split("\t")
-                if line_id == 0:
-                    for i, column_name in enumerate(line):
-                        columns[column_name] = i
-                    continue
-                label = int(line[columns["label"]])
-                labels_set.add(label)
-            except:
-                pass
-    return labels_set, columns
-
 def create_dir(dirs):
     if not os.path.isdir(dirs):
         os.makedirs(dirs)
@@ -88,13 +70,13 @@ class BaseConfig(object):
         self.seed = 7
 
         # dataset
-        self.data_dir = './datasets/book_review'
+        self.data_dir = './datasets/book_multilabels_task'
         self.train_path = join(self.data_dir, 'train.tsv')  # 训练集
         self.dev_path = join(self.data_dir, 'dev.tsv')  # 验证集
         self.test_path = join(self.data_dir, 'test.tsv')  # 测试集
         self.label_path = join(self.data_dir, 'labels.txt')  # 标签
-        self.label_set, self.columns = get_label_set(self.train_path)  # 标签集
-        self.label_number = len(self.label_set)  # 标签个数
+        self.class_list = get_class_list(self.label_path)  # 标签列表
+        self.label_number = len(self.class_list)  # 标签个数
 
 
 
