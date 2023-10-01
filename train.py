@@ -74,8 +74,8 @@ def train(model, train_batch, eval_batch, test_batch, config, is_MLC=None):
             else:
                 continue
         else:
-            acc,f1,num = evaluate_multi_label(model, eval_batch, config, is_test = False)
-            result = f1
+            acc,prec,f1,num = evaluate_multi_label(model, eval_batch, config, is_test = False)
+            result = prec
             if result > best_result:
                 best_result = result
                 model_to_save = model.module if hasattr(model, 'module') else model

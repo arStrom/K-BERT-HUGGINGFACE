@@ -121,14 +121,15 @@ def evaluate_multi_label(model, eval_batch, config, is_test):
                 labels_all = np.append(labels_all, labels, axis=0)
                 predict_all = np.append(predict_all, pred, axis=0)
     acc = metrics.accuracy_score(labels_all, predict_all)
+    prec = metrics.precision_score(y_true=labels_all, y_pred=predict_all, average='samples')
     f1 = metrics.f1_score(labels_all, predict_all, average='samples')
 
     if is_test:
         report = metrics.classification_report(labels_all, predict_all, target_names=config.class_list, digits=4)
         # confusion = metrics.confusion_matrix(labels_all, predict_all)
         # return acc, loss_total / len(data_loader), report, confusion
-        return acc, f1, loss_total / len(eval_batch), report
+        return acc, prec, f1, loss_total / len(eval_batch), report
     
 
-    print("Acc. (Correct/Total): {:.4f} ({}/{}) F1: {:.4f}".format(correct/instances_num, correct, instances_num, f1))
-    return acc, f1, loss_total / len(eval_batch)
+    print("Acc. (Correct/Total): {:.4f} ({}/{}) Prec: {:.4f} F1: {:.4f}".format(correct/instances_num, correct, instances_num, prec, f1))
+    return acc, prec, f1, loss_total / len(eval_batch)
