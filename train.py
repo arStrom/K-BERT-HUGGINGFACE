@@ -67,14 +67,21 @@ def train(model, train_batch, eval_batch, test_batch, config, is_MLC=None):
         print("Start evaluation on dev dataset.")
         if is_MLC is None or is_MLC is False:
             result = evaluate(model, eval_batch, config, is_test = False)
+            if result > best_result:
+                best_result = result
+                model_to_save = model.module if hasattr(model, 'module') else model
+                model_to_save.save_pretrained(config.output_dir)
+            else:
+                continue
         else:
-            result = evaluate_multi_label(model, eval_batch, config, is_test = False)
-        if result > best_result:
-            best_result = result
-            model_to_save = model.module if hasattr(model, 'module') else model
-            model_to_save.save_pretrained(config.output_dir)
-        else:
-            continue
+            acc,f1,num = evaluate_multi_label(model, eval_batch, config, is_test = False)
+            result = f1
+            if result > best_result:
+                best_result = result
+                model_to_save = model.module if hasattr(model, 'module') else model
+                model_to_save.save_pretrained(config.output_dir)
+            else:
+                continue
 
         print("Start evaluation on test dataset.")
         if is_MLC is None or is_MLC is False:

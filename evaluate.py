@@ -68,6 +68,8 @@ def evaluate(model, eval_batch, config, is_test):
         print("Label {}: {:.3f}, {:.3f}, {:.3f}".format(i,p,r,f1))
     print("Acc. (Correct/Total): {:.4f} ({}/{}) ".format(correct/instances_num, correct, instances_num))
 
+    return correct/len(dataset)
+
 
 
 
@@ -111,8 +113,7 @@ def evaluate_multi_label(model, eval_batch, config, is_test):
             pred = logits.cpu().numpy()
             pred[pred >= config.acc_percent] = 1
             pred[pred < config.acc_percent] = 0
-            gold = label_ids_batch
-            correct += metrics.accuracy_score(pred,gold)
+            correct += metrics.accuracy_score(pred,labels)
             if predict_all is None:
                 predict_all = pred
                 labels_all = labels
@@ -120,12 +121,14 @@ def evaluate_multi_label(model, eval_batch, config, is_test):
                 labels_all = np.append(labels_all, labels, axis=0)
                 predict_all = np.append(predict_all, pred, axis=0)
     acc = metrics.accuracy_score(labels_all, predict_all)
+    f1 = metrics.f1_score(labels_all, predict_all, average='samples')
 
     if is_test:
         report = metrics.classification_report(labels_all, predict_all, target_names=config.class_list, digits=4)
         # confusion = metrics.confusion_matrix(labels_all, predict_all)
         # return acc, loss_total / len(data_loader), report, confusion
-        return acc, loss_total / len(eval_batch), report
+        return acc, f1, loss_total / len(eval_batch), report
     
 
-    print("Acc. (Correct/Total): {:.4f} ({}/{}) ".format(correct/instances_num, correct, instances_num))
+    print("Acc. (Correct/Total): {:.4f} ({}/{}) F1: {:.4f}".format(correct/instances_num, correct, instances_num, f1))
+    return acc, f1, loss_total / len(eval_batch)
