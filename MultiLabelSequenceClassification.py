@@ -90,7 +90,7 @@ class BertForMultiLabelSequenceClassification(BertPreTrainedModel):
             output = output[:, 0, :]
         output = torch.tanh(self.output_layer_1(output))
         logits = self.output_layer_2(output)
-        loss = self.criterion(self.sigmoid(logits.view(-1, self.num_labels)), labels.view(-1, self.num_labels))
+        loss = self.criterion(self.sigmoid(logits).view(-1, self.num_labels), labels.view(-1, self.num_labels))
         return loss, logits
 
 

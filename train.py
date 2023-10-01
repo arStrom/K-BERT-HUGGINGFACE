@@ -5,6 +5,7 @@ import random
 import time
 from evaluate import evaluate, evaluate_multi_label
 from utils.optimizers import BertAdam
+from torch.optim import Adam, AdamW
 from datetime import timedelta
 import sklearn.metrics as metrics
 
@@ -29,8 +30,8 @@ def train(model, train_batch, eval_batch, test_batch, config, is_MLC=None):
                 {'params': [p for n, p in param_optimizer if not any(nd in n for nd in no_decay)], 'weight_decay_rate': 0.01},
                 {'params': [p for n, p in param_optimizer if any(nd in n for nd in no_decay)], 'weight_decay_rate': 0.0}
     ]
-    optimizer = BertAdam(optimizer_grouped_parameters, lr=config.learning_rate, warmup=config.warmup, t_total=train_steps)
-
+    # optimizer = BertAdam(optimizer_grouped_parameters, lr=config.learning_rate, warmup=config.warmup, t_total=train_steps)
+    optimizer = AdamW(optimizer_grouped_parameters, lr=config.learning_rate)
     total_loss = 0.0
     result = 0.0
     best_result = 0.0
@@ -85,7 +86,7 @@ def train(model, train_batch, eval_batch, test_batch, config, is_MLC=None):
 
         print("Start evaluation on test dataset.")
         if is_MLC is None or is_MLC is False:
-            result = evaluate(model, eval_batch, config, is_test = False)
+            result = evaluate(model, test_batch, config, is_test = False)
         else:
-            result = evaluate_multi_label(model, eval_batch, config, is_test = False)
+            result = evaluate_multi_label(model, test_batch, config, is_test = False)
 
