@@ -144,7 +144,7 @@ def main():
 
     train_dataset = dataloader.read_dataset(config.train_path, tokenizer, workers_num=args.workers_num, class_list=config.class_list, with_kg=not args.no_kg)
     train_dataset = dataloader.myDataset(train_dataset)
-    train_batch = DataLoader(train_dataset,batch_size=config.batch_size)
+    train_batch = DataLoader(train_dataset,batch_size=config.batch_size, shuffle=True)
 
     dev_dataset = dataloader.read_dataset(config.dev_path, tokenizer, workers_num=args.workers_num, class_list=config.class_list, with_kg=not args.no_kg)
     dev_dataset = dataloader.myDataset(dev_dataset)

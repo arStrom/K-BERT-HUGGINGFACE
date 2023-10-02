@@ -54,11 +54,13 @@ def train(model, train_batch, eval_batch, test_batch, config, is_MLC=None):
                             token_type_ids=mask_ids_batch, 
                             position_ids=pos_ids_batch, 
                             visible_matrix=vms_batch)
-            # if torch.cuda.device_count() > 1:
-            #     loss = torch.mean(loss)
+            if torch.cuda.device_count() > 1:
+                loss = torch.mean(loss)
+            else:
+                loss = loss.mean()
             if (i + 1) % config.report_steps == 0:
                 time_dif = get_time_dif(start_time)
-                print("Epoch id: {}, Training steps: {}, Avg loss: {:.3f}, Time: {}".format(epoch, i+1, loss.mean().item(), time_dif))
+                print("Epoch id: {}, Training steps: {}, Avg loss: {:.3f}, Time: {}".format(epoch, i+1, loss.item(), time_dif))
                 sys.stdout.flush()
                 total_loss = 0.
             loss.backward()
