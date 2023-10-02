@@ -39,7 +39,7 @@ class BertForMultiLabelSequenceClassification(BertPreTrainedModel):
     def __init__(self, config, args):
         super(BertForMultiLabelSequenceClassification, self).__init__(config)
         self.num_labels = config.num_labels
-        self.bert = BertModel(config, add_pooling_layer=False)
+        self.bert = BertModel(config)
         for param in self.bert.parameters():
             param.requires_grad = True
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
@@ -78,19 +78,32 @@ class BertForMultiLabelSequenceClassification(BertPreTrainedModel):
                             position_ids=position_ids,
                             head_mask=head_mask)
         
-        output = outputs[0]
-        # Target.
-        if self.pooling == "mean":
-            output = torch.mean(output, dim=1)
-        elif self.pooling == "max":
-            output = torch.max(output, dim=1)[0]
-        elif self.pooling == "last":
-            output = output[:, -1, :]
-        else:
-            output = output[:, 0, :]
-        output = torch.tanh(self.output_layer_1(output))
-        logits = self.output_layer_2(output)
-        loss = self.criterion(self.sigmoid(logits).view(-1, self.num_labels), labels.view(-1, self.num_labels))
+
+        pooled_output = outputs[1]
+
+        # pooled_output = self.dropout(pooled_output)
+        # predictions = self.sigmoid(self.classifier(pooled_output))
+
+        # outputs = (predictions,) + outputs[2:]  # add hidden states and attention if they are here
+        # if labels is not None:
+        #     loss_fct = nn.BCELoss()
+        #     loss = loss_fct(predictions.view(-1, self.num_labels), labels.view(-1, self.num_labels))
+        #     outputs = (loss,) + outputs
+        # return outputs  # (loss), logits, (hidden_states), (attentions)
+
+        # output = outputs[0]
+        # # Target.
+        # if self.pooling == "mean":
+        #     output = torch.mean(output, dim=1)
+        # elif self.pooling == "max":
+        #     output = torch.max(output, dim=1)[0]
+        # elif self.pooling == "last":
+        #     output = output[:, -1, :]
+        # else:
+        #     output = output[:, 0, :]
+        # output = torch.tanh(self.output_layer_1(output))
+        logits = self.sigmoid(self.output_layer_2(pooled_output))
+        loss = self.criterion(logits.view(-1, self.num_labels), labels.view(-1, self.num_labels))
         return loss, logits
 
 

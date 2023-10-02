@@ -42,10 +42,10 @@ class BertForSequenceClassification(BertPreTrainedModel):
         self.bert = BertModel(config, add_pooling_layer=False)
         for param in self.bert.parameters():
             param.requires_grad = True
-        self.pooling = args.pooling
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
         self.output_layer_1 = nn.Linear(config.hidden_size, config.hidden_size)
         self.output_layer_2 = nn.Linear(config.hidden_size, config.num_labels)
+        self.pooling = args.pooling
         self.softmax = nn.LogSoftmax(dim=-1)
         self.criterion = nn.NLLLoss()
         self.use_vm = False if args.no_vm or args.no_kg else True
