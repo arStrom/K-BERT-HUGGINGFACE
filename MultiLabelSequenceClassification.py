@@ -47,7 +47,7 @@ class BertForMultiLabelSequenceClassification(BertPreTrainedModel):
         self.output_layer_2 = nn.Linear(config.hidden_size, config.num_labels)
         self.pooling = args.pooling
         self.sigmoid = nn.Sigmoid()
-        self.criterion = nn.BCELoss(reduction='none')
+        self.criterion = nn.BCELoss()
         self.use_vm = False if args.no_vm or args.no_kg else True
         print("[BertClassifier] use visible_matrix: {}".format(self.use_vm))
         self.init_weights()
@@ -81,7 +81,7 @@ class BertForMultiLabelSequenceClassification(BertPreTrainedModel):
 
         pooled_output = outputs[1]
 
-        # pooled_output = self.dropout(pooled_output)
+        pooled_output = self.dropout(pooled_output)
         # predictions = self.sigmoid(self.classifier(pooled_output))
 
         # outputs = (predictions,) + outputs[2:]  # add hidden states and attention if they are here
