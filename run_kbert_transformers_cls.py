@@ -46,7 +46,7 @@ def main():
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     parser.add_argument('--model', default='bert', type=str, help='choose a model')
-    parser.add_argument('--pretrained', default='google', type=str, help='choose a pretreined model')
+    parser.add_argument('--pretrained', default='bert', type=str, help='choose a pretreined model')
     parser.add_argument('--cuda', action='store_true', help='True use GPU, False use CPU')
 
     # Model options.
