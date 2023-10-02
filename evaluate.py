@@ -108,7 +108,7 @@ def evaluate_multi_label(model, eval_batch, config, is_test):
                 print(input_ids_batch.size())
                 print(vms_batch)
                 print(vms_batch.size())
-            loss_total += loss
+            loss_total += loss.mean()
             labels = label_ids_batch.data.cpu().numpy()
             pred = logits.cpu().numpy()
             pred[pred >= config.acc_percent] = 1
