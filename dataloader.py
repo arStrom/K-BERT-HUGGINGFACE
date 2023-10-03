@@ -1,6 +1,5 @@
 
 import torch
-import random
 import numpy as np
 from multiprocessing import Process, Pool
 from torch.utils.data import Dataset
@@ -20,10 +19,10 @@ def creat_multi_label_sentences(path, class_list):
             sentences.append((label,text_a))
     return sentences
 
-def read_dataset(path, tokenizer, workers_num=1, class_list=None, with_kg = True):
+def read_dataset(path, tokenizer, workers_num=1, is_MLC=None, class_list=None, with_kg = True):
 
     print("Loading sentences from {}".format(path))
-    if class_list is None:
+    if is_MLC is None or is_MLC is False:
         sentences = []
         with open(path, mode='r', encoding="utf-8") as f:
             for line_id, line in enumerate(f):
