@@ -113,7 +113,7 @@ def evaluate_multi_label(model, eval_batch, config, is_test):
             pred = logits.cpu().numpy()
             pred[pred >= config.acc_percent] = 1
             pred[pred < config.acc_percent] = 0
-            correct += metrics.accuracy_score(pred,labels)
+            correct += torch.sum(pred == labels).item
             if predict_all is None:
                 predict_all = pred
                 labels_all = labels
@@ -128,6 +128,9 @@ def evaluate_multi_label(model, eval_batch, config, is_test):
         report = metrics.classification_report(labels_all, predict_all, target_names=config.class_list, digits=4)
         # confusion = metrics.confusion_matrix(labels_all, predict_all)
         # return acc, loss_total / len(data_loader), report, confusion
+        print("Acc. (Correct/Total): {:.4f} ({}/{}) Prec: {:.4f} F1: {:.4f}".format(acc, correct, instances_num, prec, f1))
+        print("Precision, Recall and F1-Score...")
+        print(report)
         return acc, prec, f1, loss_total / len(eval_batch), report
     
 
