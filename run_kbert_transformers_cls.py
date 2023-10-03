@@ -143,15 +143,21 @@ def main():
     print("Start training.")
     tokenizer = Tokenizer(vocab, config.max_seq_length, kg)
 
-    train_dataset = dataloader.read_dataset(config.train_path, tokenizer, workers_num=args.workers_num, class_list=config.class_list, with_kg=not args.no_kg)
+    train_dataset = dataloader.read_dataset(config.train_path, tokenizer, 
+                                            workers_num=args.workers_num, is_MLC=True, 
+                                            class_list=config.class_list, with_kg=not args.no_kg)
     train_dataset = dataloader.myDataset(train_dataset)
     train_batch = DataLoader(train_dataset,batch_size=config.batch_size, shuffle=True)
 
-    dev_dataset = dataloader.read_dataset(config.dev_path, tokenizer, workers_num=args.workers_num, class_list=config.class_list, with_kg=not args.no_kg)
+    dev_dataset = dataloader.read_dataset(config.dev_path, tokenizer, 
+                                          workers_num=args.workers_num, is_MLC=True, 
+                                          class_list=config.class_list, with_kg=not args.no_kg)
     dev_dataset = dataloader.myDataset(dev_dataset)
     dev_batch = DataLoader(dev_dataset,batch_size=config.batch_size)
 
-    test_dataset = dataloader.read_dataset(config.test_path, tokenizer, workers_num=args.workers_num, class_list=config.class_list, with_kg=not args.no_kg)
+    test_dataset = dataloader.read_dataset(config.test_path, tokenizer, 
+                                           workers_num=args.workers_num, is_MLC=True, 
+                                           class_list=config.class_list, with_kg=not args.no_kg)
     test_dataset = dataloader.myDataset(test_dataset)
     test_batch = DataLoader(test_dataset,batch_size=config.batch_size)
 
