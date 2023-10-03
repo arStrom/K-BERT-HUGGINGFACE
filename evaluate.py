@@ -113,7 +113,7 @@ def evaluate_multi_label(model, eval_batch, config, is_test):
             pred = logits.cpu().numpy()
             pred[pred >= config.acc_percent] = 1
             pred[pred < config.acc_percent] = 0
-            correct += torch.sum(pred == labels).item
+            correct += np.sum(pred == labels)
             if predict_all is None:
                 predict_all = pred
                 labels_all = labels

@@ -156,7 +156,7 @@ def main():
     test_batch = DataLoader(test_dataset,batch_size=config.batch_size)
 
     # evaluate_multi_label(model, test_batch, config, is_test = True)
-    # train(model, train_batch, dev_batch, test_batch, config=config, is_MLC=True)
+    train(model, train_batch, dev_batch, test_batch, config=config, is_MLC=True)
 
     # Evaluation phase.
     print("Final evaluation on the test dataset.")
