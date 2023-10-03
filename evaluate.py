@@ -131,5 +131,5 @@ def evaluate_multi_label(model, eval_batch, config, is_test):
         return acc, prec, f1, loss_total / len(eval_batch), report
     
 
-    print("Acc. (Correct/Total): {:.4f} ({}/{}) Prec: {:.4f} F1: {:.4f}".format(correct/instances_num, correct, instances_num, prec, f1))
+    print("Acc. (Correct/Total): {:.4f} ({}/{}) Prec: {:.4f} F1: {:.4f}".format(acc, correct, instances_num, prec, f1))
     return acc, prec, f1, loss_total / len(eval_batch)
