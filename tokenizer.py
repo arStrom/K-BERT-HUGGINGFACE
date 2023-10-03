@@ -55,7 +55,7 @@ class tokenizer:
             if line_id % 10000 == 0:
                 print("Progress of process {}: {}/{}".format(p_id, line_id, sentences_num))
                 sys.stdout.flush()
-            line = line.strip().split('\t')
+            # line = line.strip().split('\t')
             try:
                 if len(line) == 2:
                     label = line[columns["label"]]
