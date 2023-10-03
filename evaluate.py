@@ -1,5 +1,4 @@
 import torch
-from dataloader import read_dataset
 import torch.nn as nn
 import numpy as np
 import sklearn.metrics as metrics
@@ -68,7 +67,7 @@ def evaluate(model, eval_batch, config, is_test):
         print("Label {}: {:.3f}, {:.3f}, {:.3f}".format(i,p,r,f1))
     print("Acc. (Correct/Total): {:.4f} ({}/{}) ".format(correct/instances_num, correct, instances_num))
 
-    return correct/len(dataset)
+    return correct/len(eval_batch)
 
 
 
@@ -126,8 +125,6 @@ def evaluate_multi_label(model, eval_batch, config, is_test):
 
     if is_test:
         report = metrics.classification_report(labels_all, predict_all, target_names=config.class_list, digits=4)
-        # confusion = metrics.confusion_matrix(labels_all, predict_all)
-        # return acc, loss_total / len(data_loader), report, confusion
         print("Acc. (Correct/Total): {:.4f} ({}/{}) Prec: {:.4f} F1: {:.4f}".format(acc, correct, instances_num, prec, f1))
         print("Precision, Recall and F1-Score...")
         print(report)

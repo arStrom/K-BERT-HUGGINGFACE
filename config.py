@@ -46,7 +46,7 @@ class BaseConfig(object):
         self.no_kg = no_kg
         self.no_vm = no_vm
         self.output_dir = create_dir('./outputs/'
-                                     + model_name
+                                     + pretrained
                                      + "_num_epochs="
                                      + str(self.epochs_num)
                                      + "_batch_size="
