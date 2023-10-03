@@ -96,17 +96,17 @@ def evaluate_multi_label(model, eval_batch, config, is_test):
             mask_ids_batch = mask_ids_batch.to(device)
             pos_ids_batch = pos_ids_batch.to(device)
             vms_batch = vms_batch.to(device)
-            try:
-                loss, logits = model(input_ids=input_ids_batch, 
-                    labels=label_ids_batch, 
-                    token_type_ids=mask_ids_batch, 
-                    position_ids=pos_ids_batch, 
-                    visible_matrix=vms_batch)
-            except:
-                print(input_ids_batch)
-                print(input_ids_batch.size())
-                print(vms_batch)
-                print(vms_batch.size())
+            # try:
+            loss, logits = model(input_ids=input_ids_batch, 
+                labels=label_ids_batch, 
+                token_type_ids=mask_ids_batch, 
+                position_ids=pos_ids_batch, 
+                visible_matrix=vms_batch)
+            # except:
+            #     print(input_ids_batch)
+            #     print(input_ids_batch.size())
+            #     print(vms_batch)
+            #     print(vms_batch.size())
             loss_total += loss.mean()
             labels = label_ids_batch.data.cpu().numpy()
             pred = logits.cpu().numpy()
