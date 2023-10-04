@@ -54,10 +54,6 @@ def main():
 
     parser.add_argument("--seq_length", type=int, default=256,
                         help="Sequence length.")
-    parser.add_argument("--encoder", choices=["bert", "lstm", "gru", \
-                                                   "cnn", "gatedcnn", "attn", \
-                                                   "rcnn", "crnn", "gpt", "bilstm"], \
-                                                   default="bert", help="Encoder type.")
     parser.add_argument("--bidirectional", action="store_true", help="Specific to recurrent model.")
     parser.add_argument("--pooling", choices=["mean", "max", "first", "last"], default="first",
                         help="Pooling type.")
@@ -161,7 +157,7 @@ def main():
     test_dataset = dataloader.myDataset(test_dataset)
     test_batch = DataLoader(test_dataset,batch_size=config.batch_size)
 
-    # evaluate_multi_label(model, test_batch, config, is_test = True)
+    # evaluate_multi_label(model, dev_batch, config, is_test = True)
     train(model, train_batch, dev_batch, test_batch, config=config, is_MLC=True)
 
     # Evaluation phase.
