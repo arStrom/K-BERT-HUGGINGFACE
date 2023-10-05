@@ -266,8 +266,8 @@ class ErnieForMultiLabelSequenceClassification(ErniePreTrainedModel):
     def __init__(self, config, args):
         super(ErnieForMultiLabelSequenceClassification, self).__init__(config)
         self.num_labels = config.num_labels
-        self.bert = ErnieModel(config, add_pooling_layer=False)
-        for param in self.bert.parameters():
+        self.ernie = ErnieModel(config, add_pooling_layer=False)
+        for param in self.ernie.parameters():
             param.requires_grad = True
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
         self.output_layer_1 = nn.Linear(config.hidden_size, config.hidden_size)
@@ -299,7 +299,7 @@ class ErnieForMultiLabelSequenceClassification(ErniePreTrainedModel):
             encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
 
         # token_type_ids实际上是attention_mask
-        outputs = self.bert(input_ids,
+        outputs = self.ernie(input_ids,
                             attention_mask=token_type_ids,
                             encoder_attention_mask=encoder_attention_mask,
                             position_ids=position_ids,
@@ -326,8 +326,8 @@ class ErnieRCNNForMultiLabelSequenceClassification(ErniePreTrainedModel):
     def __init__(self, config, args):
         super(ErnieRCNNForMultiLabelSequenceClassification, self).__init__(config)
         self.num_labels = config.num_labels
-        self.bert = ErnieModel(config, add_pooling_layer=False)
-        for param in self.bert.parameters():
+        self.ernie = ErnieModel(config, add_pooling_layer=False)
+        for param in self.ernie.parameters():
             param.requires_grad = True
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
         self.output_layer_1 = nn.Linear(config.hidden_size, config.hidden_size)
@@ -370,7 +370,7 @@ class ErnieRCNNForMultiLabelSequenceClassification(ErniePreTrainedModel):
             encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
 
         # token_type_ids实际上是attention_mask
-        outputs = self.bert(input_ids,
+        outputs = self.ernie(input_ids,
                             attention_mask=token_type_ids,
                             encoder_attention_mask=encoder_attention_mask,
                             position_ids=position_ids,
