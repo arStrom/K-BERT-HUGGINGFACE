@@ -8,7 +8,7 @@ import argparse
 import collections
 import torch.nn as nn
 from config import BaseConfig
-from transformers import BertConfig
+from transformers import BertConfig, ErnieConfig
 from utils.vocab import Vocab
 from utils.seed import set_seed
 from brain import KnowledgeGraph
@@ -25,14 +25,10 @@ import SingleLabelSequenceClassification as SLCModels
 
 
 MLCModel = {
-    'rbt3': MLCModels.BertForMultiLabelSequenceClassification,
     'bert': MLCModels.BertForMultiLabelSequenceClassification,
     'bert-rcnn': MLCModels.BertRCNNForMultiLabelSequenceClassification,
     'bert-cnn': MLCModels.BertCNNForMultiLabelSequenceClassification,
     'bert-rnn': MLCModels.BertRNNForMultiLabelSequenceClassification,
-    'roberta-rcnn': MLCModels.BertRCNNForMultiLabelSequenceClassification,
-    'roberta-cnn': MLCModels.BertCNNForMultiLabelSequenceClassification,
-    'roberta-rnn': MLCModels.BertRNNForMultiLabelSequenceClassification,
     'ernie': MLCModels.ErnieForMultiLabelSequenceClassification,
     'ernie-rcnn': MLCModels.ErnieRCNNForMultiLabelSequenceClassification,
     'ernie-cnn': MLCModels.ErnieCNNForMultiLabelSequenceClassification,
@@ -100,11 +96,17 @@ def main():
     config = BaseConfig(args.cuda, model_name, args.pretrained, args.seq_length, args.dropout, 
                         args.epochs_num, args.batch_size, args.learning_rate, args.report_steps,
                         args.no_kg, args.no_vm)
-    model_config = BertConfig.from_pretrained(
-        config.pretrained_model_path + '/config.json',
-        num_labels = config.label_number
-    )
-
+    model_type = model_name.split('-')
+    if model_type[0] == 'bert':
+        model_config = BertConfig.from_pretrained(
+            config.pretrained_model_path + '/config.json',
+            num_labels = config.label_number
+        )
+    else:
+        model_config = ErnieConfig.from_pretrained(
+            config.pretrained_model_path + '/config.json',
+            num_labels = config.label_number
+        )
     # 设置随机种子
     set_seed(config.seed)
 

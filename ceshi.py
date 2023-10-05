@@ -44,21 +44,26 @@
 #     encoder_attention_mask2 = (1.0 - encoder_attention_mask2) * -10000.0
 # print("Time: {}".format(time_dif))
 
-import numpy as np
+# import numpy as np
 
-labels = ['A', 'B', 'C', 'D']
+# labels = ['A', 'B', 'C', 'D']
 
-y_true = np.array([[0, 1, 0, 1],
-                   [0, 1, 1, 0],
-                   [1, 0, 1, 1]])
+# y_true = np.array([[0, 1, 0, 1],
+#                    [0, 1, 1, 0],
+#                    [1, 0, 1, 1]])
 
-y_pred = np.array([[0, 1, 1, 0],
-                   [0, 1, 1, 0],
-                   [0, 1, 0, 1]])
+# y_pred = np.array([[0, 1, 1, 0],
+#                    [0, 1, 1, 0],
+#                    [0, 1, 0, 1]])
 
-import sklearn.metrics as metrics
+# import sklearn.metrics as metrics
 
-print(metrics.accuracy_score(y_true,y_pred)) # 0.33333333
-print(metrics.accuracy_score(np.array([[0, 1], [1, 1]]), np.ones((2, 2)))) # 0.5
-print(metrics.classification_report(y_true, y_pred, target_names=labels, digits=4))
+# print(metrics.accuracy_score(y_true,y_pred)) # 0.33333333
+# print(metrics.accuracy_score(np.array([[0, 1], [1, 1]]), np.ones((2, 2)))) # 0.5
+# print(metrics.classification_report(y_true, y_pred, target_names=labels, digits=4))
+
+model_name = 'bert-rcnn'
+model_type = model_name.split('-')
+
+print(model_type)
 
