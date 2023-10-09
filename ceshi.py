@@ -66,9 +66,24 @@ def creat_multi_label_sentences_slice(path, class_list):
             sentences.append(InputExample(title=title, keyword=keyword, summary=summary, label=label))
     return sentences
 
-label_path = './datasets/book_multilabels_task/labels.txt'
-train_path = './datasets/book_multilabels_task/train.tsv'
-class_list = get_class_list(label_path)
-sentences = creat_multi_label_sentences_slice(train_path,class_list)
-print(sentences)
+# label_path = './datasets/book_multilabels_task/labels.txt'
+# train_path = './datasets/book_multilabels_task/train.tsv'
+# class_list = get_class_list(label_path)
+# sentences = creat_multi_label_sentences_slice(train_path,class_list)
+# print(sentences)
 
+
+x = torch.rand(5, 3)
+y = torch.rand(5, 3)
+print("x, y",x, y)
+#第一种
+print("x+y",x + y)
+#第二种
+print("add(x,y)",torch.add(x, y))
+#第三种
+result = torch.empty(5, 3)
+torch.add(x, y, out=result)
+print(result)
+#第四种
+y.add_(x)
+print("y.add", y)

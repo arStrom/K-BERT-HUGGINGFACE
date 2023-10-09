@@ -121,6 +121,38 @@ def read_dataset(path, tokenizer, workers_num=1, task = 'SLC', class_list=None, 
 
     return dataset
 
+def read_dataset_slice(path, tokenizer, workers_num=1, task = 'SLC', class_list=None, with_kg = True):
+
+    print("Loading sentences from {}".format(path))
+    if task == 'SLC':
+        sentences = []
+        with open(path, mode='r', encoding="utf-8") as f:
+            for line_id, line in enumerate(f):
+                if line_id == 0:
+                    continue
+                sentences.append(line)
+    elif task == 'MLC':
+        sentences = creat_multi_label_sentences_slice(path,class_list)
+
+    sentence_num = len(sentences)
+
+    print("There are {} sentence in total. We use {} processes to inject knowledge into sentences.".format(sentence_num, workers_num))
+    if workers_num > 1:
+        params = []
+        sentence_per_block = int(sentence_num / workers_num) + 1
+        for i in range(workers_num):
+            params.append((sentences[i*sentence_per_block: (i+1)*sentence_per_block], i))
+        pool = Pool(workers_num)
+        res = pool.map(tokenizer.encode_with_knowledge_slice, *params) if with_kg else pool.map(tokenizer.encode_slice, *params)
+        pool.close()
+        pool.join()
+        dataset = [sample for block in res for sample in block]
+    else:
+        params = (sentences, 0)
+        dataset = tokenizer.encode_with_knowledge_slice(*params) if with_kg else tokenizer.encode_slice(*params)
+
+    return dataset
+
 class myDataset(Dataset): #继承Dataset
     def __init__(self, dataset): #__init__是初始化该类的一些基础参数
         self.dataset = dataset   #数据集
@@ -135,4 +167,24 @@ class myDataset(Dataset): #继承Dataset
         pos_id = torch.LongTensor(self.dataset[index][3])
         vm = torch.LongTensor(self.dataset[index][4])
         return input_id, label_id, mask_id, pos_id, vm  #返回该样本
+
+
+class myDataset_slice(Dataset): #继承Dataset
+    def __init__(self, dataset): #__init__是初始化该类的一些基础参数
+        self.dataset = dataset   #数据集
+    
+    def __len__(self):#返回整个数据集的大小
+        return len(self.dataset)
+    
+    def __getitem__(self,index):#根据索引index返回dataset[index]
+        dic_keys = ['title','keyword','summary']
+        date_dic = {}
+        for i in range(3):
+            input_id = torch.LongTensor(self.dataset[index][i][0])
+            mask_id = torch.LongTensor(self.dataset[index][i][1])
+            pos_id = torch.LongTensor(self.dataset[index][i][2])
+            vm = torch.LongTensor(self.dataset[index][i][3])
+            date_dic[dic_keys[i]] = (input_id,mask_id,pos_id,vm)
+        label_id = torch.LongTensor([self.dataset[index][3]])
+        return date_dic, label_id  #返回该样本
 

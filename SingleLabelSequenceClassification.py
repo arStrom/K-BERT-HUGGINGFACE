@@ -75,7 +75,6 @@ class BertForSequenceClassification(BertPreTrainedModel):
         outputs = self.bert(input_ids,
                             attention_mask=token_type_ids,
                             encoder_attention_mask=encoder_attention_mask,
-                            position_ids=position_ids,
                             head_mask=head_mask)
         
         output = outputs[0]
