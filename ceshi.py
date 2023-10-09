@@ -1,69 +1,74 @@
-# from transformers import BertTokenizerFast
-# # from pytorch_pretrained_bert import BertTokenizer
+import torch
+import os
+from os.path import join
+from tqdm import tqdm
+import copy
+import numpy as np
+import json
 
-# from config import BaseConfig
+class InputExample(object):
+    """
+    A single training/test example for simple sequence classification.
 
-# line = '人工智能是一门极富挑战性的科学。'
-# CLS_TOKEN = '[CLS]'
-# text = [CLS_TOKEN] + list(line)
-# print(text)
+    Args:
+        guid: Unique id for the example.
+        text_a: string. The untokenized text of the first sequence. For single
+        sequence tasks, only this sequence must be specified.
+        text_b: (Optional) string. The untokenized text of the second sequence.
+        Only must be specified for sequence pair tasks.
+        label: (Optional) string. The label of the example. This should be
+        specified for train and dev examples, but not for test examples.
+    """
 
-# import torch
-# import numpy as np
-# import time
-# from datetime import timedelta
+    def __init__(self, title, keyword=None, summary=None, label=None, guid=None):
+        self.guid = guid
+        self.title = title
+        self.keyword = keyword
+        self.summary = summary
+        self.label = label
 
+    def __repr__(self):
+        return str(self.to_json_string())
 
-# def get_time_dif(start_time):
-#     """
-#     获取时间间隔
-#     """
-#     end_time = time.time()
-#     time_dif = end_time - start_time
-#     return timedelta(seconds=int(round(time_dif)))
+    def to_dict(self):
+        """Serializes this instance to a Python dictionary."""
+        output = copy.deepcopy(self.__dict__)
+        return output
 
-# seq_length = 256
-# vm = np.zeros((seq_length,seq_length))
-# vm = vm[0].astype("bool")
-# vm = torch.LongTensor(vm)
-# token_type_ids = torch.LongTensor(np.zeros(seq_length))
-# start_time = time.time()
-# for i in range(10000):
-#     encoder_attention_mask1 = (token_type_ids > 0). \
-#             unsqueeze(1). \
-#             repeat(1, seq_length, 1). \
-#             unsqueeze(1)
-#     encoder_attention_mask1 = encoder_attention_mask1.float()
-#     encoder_attention_mask1 = (1.0 - encoder_attention_mask1) * -10000.0
-#     time_dif = get_time_dif(start_time)
-# print("Time: {}".format(time_dif))
+    def to_json_string(self):
+        """Serializes this instance to a JSON string."""
+        return json.dumps(self.to_dict(), indent=2, sort_keys=True) + "\n"
 
-# for i in range(10000):
-#     encoder_attention_mask2 = vm.unsqueeze(1)
-#     encoder_attention_mask2 = encoder_attention_mask2.float()
-#     encoder_attention_mask2 = (1.0 - encoder_attention_mask2) * -10000.0
-# print("Time: {}".format(time_dif))
+def get_class_list(file_path):
+    # with open(file_path, 'r', encoding='UTF-8') as f:
+    #     return [json.loads(line.strip())['label_desc'] for line in tqdm(f) if line.strip()]
 
-# import numpy as np
+    # multi_classification
+    with open(file_path, 'r', encoding='UTF-8') as f:
+        return [line.strip('\n') for line in tqdm(f.readlines())]
 
-# labels = ['A', 'B', 'C', 'D']
+def creat_multi_label_sentences_slice(path, class_list):
+    """Creates examples for the training and dev sets."""
+    label_number = len(class_list)
+    sentences = []
+    with open(path, mode='r', encoding="utf-8") as f:
+        for (i, line) in enumerate(f):
+            if i == 0 :
+                continue
+            line = line.strip().split('\t')
+            title = line[0]
+            keyword = line[1]
+            summary = line[2]
+            label = np.zeros((label_number,), dtype=int)
+            for i in range(label_number):
+                if class_list[i] in line:
+                    label[i] = 1
+            sentences.append(InputExample(title=title, keyword=keyword, summary=summary, label=label))
+    return sentences
 
-# y_true = np.array([[0, 1, 0, 1],
-#                    [0, 1, 1, 0],
-#                    [1, 0, 1, 1]])
-
-# y_pred = np.array([[0, 1, 1, 0],
-#                    [0, 1, 1, 0],
-#                    [0, 1, 0, 1]])
-
-# import sklearn.metrics as metrics
-
-# print(metrics.accuracy_score(y_true,y_pred)) # 0.33333333
-# print(metrics.accuracy_score(np.array([[0, 1], [1, 1]]), np.ones((2, 2)))) # 0.5
-# print(metrics.classification_report(y_true, y_pred, target_names=labels, digits=4))
-
-model_name = 'bert-rcnn'
-model_type = model_name.split('-')
-
-print(model_type)
+label_path = './datasets/book_multilabels_task/labels.txt'
+train_path = './datasets/book_multilabels_task/train.tsv'
+class_list = get_class_list(label_path)
+sentences = creat_multi_label_sentences_slice(train_path,class_list)
+print(sentences)
 

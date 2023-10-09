@@ -43,8 +43,10 @@ def main():
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 
     parser.add_argument('--model', default='bert', type=str, help='choose a model')
-    parser.add_argument('--pretrained', default='bert', type=str, help='choose a pretreined model')
+    parser.add_argument('--pretrained', default='google', type=str, help='choose a pretreined model')
     parser.add_argument('--cuda', action='store_true', help='True use GPU, False use CPU')
+    parser.add_argument('--task', default='SLC', help='task type')
+    parser.add_argument('--dataset', default='book_review', help='dataset name')
 
     # Model options.
 
@@ -93,7 +95,7 @@ def main():
     args = parser.parse_args()
 
     model_name = args.model
-    config = BaseConfig(args.cuda, model_name, args.pretrained, args.seq_length, args.dropout, 
+    config = BaseConfig(args.cuda, model_name, args.pretrained, args.dataset, args.seq_length, args.dropout, 
                         args.epochs_num, args.batch_size, args.learning_rate, args.report_steps,
                         args.no_kg, args.no_vm)
     model_type = model_name.split('-')
@@ -118,8 +120,13 @@ def main():
     args.vocab = vocab
 
     # 加载分类模型
-    model = MLCModel[model_name].from_pretrained(config.pretrained_model_path, config=model_config, args = args)
-
+    if args.task == 'SLC':
+        model = SLCModel[model_name].from_pretrained(config.pretrained_model_path, config=model_config, args = args)
+    elif args.task == 'MLC':
+        model = MLCModel[model_name].from_pretrained(config.pretrained_model_path, config=model_config, args = args)
+    else:
+        raise NameError("任务名称错误")
+    
     # 使用DataParallel包装器来使用多个GPU
     if torch.cuda.device_count() > 1:
         model = nn.DataParallel(model)
@@ -132,6 +139,7 @@ def main():
         spo_files = []
     else:
         spo_files = [args.kg_name]
+    
     if not args.no_kg:
         kg = KnowledgeGraph(spo_files=spo_files, predicate=True)
     else:
@@ -142,29 +150,30 @@ def main():
     tokenizer = Tokenizer(vocab, config.max_seq_length, kg)
 
     train_dataset = dataloader.read_dataset(config.train_path, tokenizer, 
-                                            workers_num=args.workers_num, is_MLC=True, 
+                                            workers_num=args.workers_num, task=args.task, 
                                             class_list=config.class_list, with_kg=not args.no_kg)
     train_dataset = dataloader.myDataset(train_dataset)
     train_batch = DataLoader(train_dataset,batch_size=config.batch_size, shuffle=True)
 
     dev_dataset = dataloader.read_dataset(config.dev_path, tokenizer, 
-                                          workers_num=args.workers_num, is_MLC=True, 
+                                          workers_num=args.workers_num, task=args.task, 
                                           class_list=config.class_list, with_kg=not args.no_kg)
     dev_dataset = dataloader.myDataset(dev_dataset)
     dev_batch = DataLoader(dev_dataset,batch_size=config.batch_size)
 
     test_dataset = dataloader.read_dataset(config.test_path, tokenizer, 
-                                           workers_num=args.workers_num, is_MLC=True, 
+                                           workers_num=args.workers_num, task=args.task, 
                                            class_list=config.class_list, with_kg=not args.no_kg)
     test_dataset = dataloader.myDataset(test_dataset)
     test_batch = DataLoader(test_dataset,batch_size=config.batch_size)
 
-    # evaluate_multi_label(model, dev_batch, config, is_test = True)
-    train(model, train_batch, dev_batch, test_batch, config=config, is_MLC=True)
+    evaluate(model, dev_batch, config, is_test = False)
+    # evaluate_multi_label(model, dev_batch, config, is_test = False)
+    train(model, train_batch, dev_batch, test_batch, config=config, task=args.task)
 
     # Evaluation phase.
     print("Final evaluation on the test dataset.")
-    test(model,test_batch,config,is_MLC=True)
+    test(model,test_batch,config,task=args.task)
 
 if __name__ == "__main__":
     main()

@@ -1,8 +1,59 @@
 
 import torch
 import numpy as np
+from tqdm import tqdm
+import copy
+import json
 from multiprocessing import Process, Pool
 from torch.utils.data import Dataset
+
+class InputExample(object):
+    """
+    A single training/test example for simple sequence classification.
+
+    Args:
+        guid: Unique id for the example.
+        text_a: string. The untokenized text of the first sequence. For single
+        sequence tasks, only this sequence must be specified.
+        text_b: (Optional) string. The untokenized text of the second sequence.
+        Only must be specified for sequence pair tasks.
+        label: (Optional) string. The label of the example. This should be
+        specified for train and dev examples, but not for test examples.
+    """
+
+    def __init__(self, title, keyword=None, summary=None, label=None, guid=None):
+        self.guid = guid
+        self.title = title
+        self.keyword = keyword
+        self.summary = summary
+        self.label = label
+
+    def __repr__(self):
+        return str(self.to_json_string())
+
+    def to_dict(self):
+        """Serializes this instance to a Python dictionary."""
+        output = copy.deepcopy(self.__dict__)
+        return output
+
+    def to_json_string(self):
+        """Serializes this instance to a JSON string."""
+        return json.dumps(self.to_dict(), indent=2, sort_keys=True) + "\n"
+
+def creat_label_sentences(path, class_list):
+    """Creates examples for the training and dev sets."""
+    label_number = len(class_list)
+    sentences = []
+    with open(path, mode='r', encoding="utf-8") as f:
+        for (i, line) in enumerate(f):
+            line = line.strip().split('\t')
+            text_a = line[0]
+            label = np.zeros((label_number,), dtype=int)
+            for i in range(label_number):
+                if class_list[i] in line:
+                    label[i] = 1
+            sentences.append((label,text_a))
+    return sentences
 
 def creat_multi_label_sentences(path, class_list):
     """Creates examples for the training and dev sets."""
@@ -19,18 +70,37 @@ def creat_multi_label_sentences(path, class_list):
             sentences.append((label,text_a))
     return sentences
 
-def read_dataset(path, tokenizer, workers_num=1, is_MLC=None, class_list=None, with_kg = True):
+def creat_multi_label_sentences_slice(path, class_list):
+    """Creates examples for the training and dev sets."""
+    label_number = len(class_list)
+    sentences = []
+    with open(path, mode='r', encoding="utf-8") as f:
+        for (i, line) in enumerate(f):
+            if i == 0 :
+                continue
+            line = line.strip().split('\t')
+            title = line[0]
+            keyword = line[1]
+            summary = line[2]
+            label = np.zeros((label_number,), dtype=int)
+            for i in range(label_number):
+                if class_list[i] in line:
+                    label[i] = 1
+            sentences.append(InputExample(title=title, keyword=keyword, summary=summary, label=label))
+    return sentences
+
+def read_dataset(path, tokenizer, workers_num=1, task = 'SLC', class_list=None, with_kg = True):
 
     print("Loading sentences from {}".format(path))
-    if is_MLC is None or is_MLC is False:
+    if task == 'SLC':
         sentences = []
         with open(path, mode='r', encoding="utf-8") as f:
             for line_id, line in enumerate(f):
                 if line_id == 0:
                     continue
                 sentences.append(line)
-    else:
-        sentences = creat_multi_label_sentences(path,class_list)
+    elif task == 'MLC':
+        sentences = creat_multi_label_sentences_slice(path,class_list)
 
     sentence_num = len(sentences)
 
@@ -60,7 +130,7 @@ class myDataset(Dataset): #继承Dataset
     
     def __getitem__(self,index):#根据索引index返回dataset[index]
         input_id = torch.LongTensor(self.dataset[index][0])
-        label_id = torch.FloatTensor(self.dataset[index][1])
+        label_id = torch.LongTensor([self.dataset[index][1]])
         mask_id = torch.LongTensor(self.dataset[index][2])
         pos_id = torch.LongTensor(self.dataset[index][3])
         vm = torch.LongTensor(self.dataset[index][4])

@@ -397,8 +397,8 @@ class ErnieRNNForMultiLabelSequenceClassification(ErniePreTrainedModel):
     def __init__(self, config, args):
         super(ErnieRNNForMultiLabelSequenceClassification, self).__init__(config)
         self.num_labels = config.num_labels
-        self.bert = ErnieModel(config, add_pooling_layer=False)
-        for param in self.bert.parameters():
+        self.ernie = ErnieModel(config, add_pooling_layer=False)
+        for param in self.ernie.parameters():
             param.requires_grad = True
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
         self.rnn_hidden = 768
@@ -437,7 +437,7 @@ class ErnieRNNForMultiLabelSequenceClassification(ErniePreTrainedModel):
             encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
 
         # token_type_ids实际上是attention_mask
-        outputs = self.bert(input_ids,
+        outputs = self.ernie(input_ids,
                             attention_mask=token_type_ids,
                             encoder_attention_mask=encoder_attention_mask,
                             position_ids=position_ids,
@@ -456,8 +456,8 @@ class ErnieCNNForMultiLabelSequenceClassification(ErniePreTrainedModel):
     def __init__(self, config, args):
         super(ErnieCNNForMultiLabelSequenceClassification, self).__init__(config)
         self.num_labels = config.num_labels
-        self.bert = ErnieModel(config, add_pooling_layer=False)
-        for param in self.bert.parameters():
+        self.ernie = ErnieModel(config, add_pooling_layer=False)
+        for param in self.ernie.parameters():
             param.requires_grad = True
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
         self.filter_sizes = (2, 3, 4)  # 卷积核尺寸
@@ -499,7 +499,7 @@ class ErnieCNNForMultiLabelSequenceClassification(ErniePreTrainedModel):
             encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
 
         # token_type_ids实际上是attention_mask
-        outputs = self.bert(input_ids,
+        outputs = self.ernie(input_ids,
                             attention_mask=token_type_ids,
                             encoder_attention_mask=encoder_attention_mask,
                             position_ids=position_ids,

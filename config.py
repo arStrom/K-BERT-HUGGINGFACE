@@ -27,7 +27,7 @@ class BaseConfig(object):
 
     """配置参数"""
 
-    def __init__(self, cuda, model_name, pretrained, seq_length, dropout,
+    def __init__(self, cuda, model_name, pretrained, dataset,seq_length, dropout,
                   epochs_num, batch_size, learning_rate, report_steps, no_kg, no_vm):
 
         # train
@@ -72,7 +72,7 @@ class BaseConfig(object):
         self.seed = 7
 
         # dataset
-        self.data_dir = './datasets/book_multilabels_task'
+        self.data_dir = './datasets/' + dataset
         self.train_path = join(self.data_dir, 'train.tsv')  # 训练集
         self.dev_path = join(self.data_dir, 'dev.tsv')  # 验证集
         self.test_path = join(self.data_dir, 'test.tsv')  # 测试集

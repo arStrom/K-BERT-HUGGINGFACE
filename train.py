@@ -18,7 +18,7 @@ def get_time_dif(start_time):
     return timedelta(seconds=int(round(time_dif)))
 
 
-def train(model, train_batch, eval_batch, test_batch, config, is_MLC=None):
+def train(model, train_batch, eval_batch, test_batch, config, task):
 
     device = config.device
     batch_size = train_batch.batch_size
@@ -67,7 +67,7 @@ def train(model, train_batch, eval_batch, test_batch, config, is_MLC=None):
             optimizer.step()
 
         print("Start evaluation on dev dataset.")
-        if is_MLC is None or is_MLC is False:
+        if task == 'SLC':
             result = evaluate(model, eval_batch, config, is_test = False)
             if result > best_result:
                 best_result = result
@@ -75,7 +75,7 @@ def train(model, train_batch, eval_batch, test_batch, config, is_MLC=None):
                 model_to_save.save_pretrained(config.output_dir)
             else:
                 continue
-        else:
+        elif task == 'MLC':
             acc,prec,f1,num = evaluate_multi_label(model, eval_batch, config, is_test = False)
             result = acc
             if result > best_result:
@@ -86,8 +86,8 @@ def train(model, train_batch, eval_batch, test_batch, config, is_MLC=None):
                 continue
 
         print("Start evaluation on test dataset.")
-        if is_MLC is None or is_MLC is False:
+        if task == 'SLC':
             result = evaluate(model, test_batch, config, is_test = False)
-        else:
+        elif task == 'MLC':
             result = evaluate_multi_label(model, test_batch, config, is_test = False)
 

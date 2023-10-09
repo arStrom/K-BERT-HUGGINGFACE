@@ -28,6 +28,8 @@ class Vocab(object):
             for index, line in enumerate(reader):
                 try:
                     w = line.strip().split()[0]
+                    if w in self.w2i.keys():
+                        print(w)
                     self.w2i[w] = index
                     self.i2w.append(w)
                 except:

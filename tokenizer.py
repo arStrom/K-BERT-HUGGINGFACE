@@ -19,31 +19,28 @@ class tokenizer:
             if line_id % 10000 == 0:
                 print("Progress of process {}: {}/{}".format(p_id, line_id, sentences_num))
                 sys.stdout.flush()
-            # line = line.strip().split('\t')
+            line = line.strip().split('\t')
             try:
-                if len(line) == 2:
-                    label = line[columns["label"]]
-                    tokens = [CLS_TOKEN] + list(line[columns["text_a"]])
-                    tokens_lenth = len(tokens)
-                    token_ids = [self.vocab.get(t) for t in tokens]
-                    pos_ids = [i for i in range(0, tokens_lenth)]
-                    mask = [1 for i in range(0, tokens_lenth)]
-                    if tokens_lenth < self.max_length:
-                        pad_num = self.max_length - tokens_lenth
-                        token_ids += [self.vocab.get(PAD_TOKEN)] * pad_num
-                        pos_ids += [self.max_length-1] * pad_num
-                        mask += [0] * pad_num
-                    else:
-                        token_ids = token_ids[:self.max_length]
-                        pos_ids = pos_ids[:self.max_length]
-                        mask = mask[:self.max_length]
-                    vm = np.zeros((self.max_length,self.max_length))
-                    vm = vm[0].astype("bool")
-                    dataset.append((token_ids, label, mask, pos_ids, vm))
+                label = int(line[columns["label"]])
+                tokens = [CLS_TOKEN] + list(line[columns["text_a"]])
+                tokens_lenth = len(tokens)
+                token_ids = [self.vocab.get(t) for t in tokens]
+                pos_ids = [i for i in range(0, tokens_lenth)]
+                mask = [1 for i in range(0, tokens_lenth)]
+                if tokens_lenth < self.max_length:
+                    pad_num = self.max_length - tokens_lenth
+                    token_ids += [self.vocab.get(PAD_TOKEN)] * pad_num
+                    pos_ids += [self.max_length-1] * pad_num
+                    mask += [0] * pad_num
                 else:
-                    pass
+                    token_ids = token_ids[:self.max_length]
+                    pos_ids = pos_ids[:self.max_length]
+                    mask = mask[:self.max_length]
+                vm = np.zeros((self.max_length,self.max_length))
+                vm = vm[0].astype("bool")
+                dataset.append((token_ids, label, mask, pos_ids, vm))
             except:
-                print("Error line: ", line)
+                print("Error line: ", line_id)
         return dataset
 
 
@@ -55,24 +52,58 @@ class tokenizer:
             if line_id % 10000 == 0:
                 print("Progress of process {}: {}/{}".format(p_id, line_id, sentences_num))
                 sys.stdout.flush()
-            # line = line.strip().split('\t')
+            line = line.strip().split('\t')
             try:
-                if len(line) == 2:
-                    label = line[columns["label"]]
-                    text = CLS_TOKEN + line[columns["text_a"]]
-    
-                    tokens, pos, vm, _ = self.kg.add_knowledge_with_vm([text], add_pad=True, max_length=self.max_length)
-                    tokens = tokens[0]
-                    pos = pos[0]
-                    vm = vm[0].astype("bool")
+                label = int(line[columns["label"]])
+                text = CLS_TOKEN + line[columns["text_a"]]
 
-                    token_ids = [self.vocab.get(t) for t in tokens]
-                    mask = [1 if t != PAD_TOKEN else 0 for t in tokens]
+                tokens, pos, vm, _ = self.kg.add_knowledge_with_vm([text], add_pad=True, max_length=self.max_length)
+                tokens = tokens[0]
+                pos = pos[0]
+                vm = vm[0].astype("bool")
 
-                    dataset.append((token_ids, label, mask, pos, vm))
-                else:
-                    pass
-                
+                token_ids = [self.vocab.get(t) for t in tokens]
+                mask = [1 if t != PAD_TOKEN else 0 for t in tokens]
+
+                dataset.append((token_ids, label, mask, pos, vm))
             except:
                 print("Error line: ", line)
+        return dataset
+
+
+    def encode_slice(self, sentences, p_id=0):
+        sentences_num = len(sentences)
+        dataset = []
+        for line_id, inputexample in enumerate(sentences):
+            if line_id % 10000 == 0:
+                print("Progress of process {}: {}/{}".format(p_id, line_id, sentences_num))
+                sys.stdout.flush()
+            # line = line.strip().split('\t')
+            try:
+                label = inputexample["label"]
+                title_tokens = [CLS_TOKEN] + list(inputexample["title"])
+                keyword_tokens = [CLS_TOKEN] + list(inputexample["keyword"])
+                summary_tokens = [CLS_TOKEN] + list(inputexample["summary"])
+                title_tokens_lenth = len(title_tokens)
+                keyword_tokens_lenth = len(keyword_tokens)
+                summary_tokens_lenth = len(summary_tokens)
+                title_token_ids = [self.vocab.get(t) for t in title_tokens]
+                keyword_token_ids = [self.vocab.get(t) for t in keyword_tokens]
+                summary_token_ids = [self.vocab.get(t) for t in summary_tokens]
+                # pos_ids = [i for i in range(0, tokens_lenth)]
+                mask = [1 for i in range(0, tokens_lenth)]
+                if tokens_lenth < self.max_length:
+                    pad_num = self.max_length - tokens_lenth
+                    token_ids += [self.vocab.get(PAD_TOKEN)] * pad_num
+                    # pos_ids += [self.max_length-1] * pad_num
+                    mask += [0] * pad_num
+                else:
+                    token_ids = token_ids[:self.max_length]
+                    # pos_ids = pos_ids[:self.max_length]
+                    mask = mask[:self.max_length]
+                vm = np.zeros((self.max_length,self.max_length))
+                vm = vm[0].astype("bool")
+                dataset.append((token_ids, label, mask, pos_ids, vm))
+            except:
+                print("Error line: ", line_id)
         return dataset
