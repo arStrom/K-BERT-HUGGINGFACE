@@ -156,15 +156,17 @@ def evaluate_multi_label_slice(model, eval_batch, config, is_test):
     with torch.no_grad():
         for i, (date_dic, label_ids_batch) in enumerate(eval_batch):
 
-            title_batch = [x.to(device) for x in date_dic['title']]
-            keyword_batch = [x.to(device) for x in date_dic['keyword']]
-            summary_batch = [x.to(device) for x in date_dic['summary']]
+            input_ids_batch = input_ids_batch.transpose(0,1).to(device)
+            mask_ids_batch = mask_ids_batch.transpose(0,1).to(device)
+            pos_ids_batch = pos_ids_batch.transpose(0,1).to(device)
+            vms_batch = vms_batch.transpose(0,1).to(device)
             label_ids_batch = label_ids_batch.to(device)
 
             # try:
-            loss, logits = model(title_batch, 
-                                keyword_batch, 
-                                summary_batch, 
+            loss, logits = model(input_ids_batch, 
+                                mask_ids_batch, 
+                                pos_ids_batch, 
+                                vms_batch,
                                 label_ids_batch)
             # except:
             #     print(input_ids_batch)
