@@ -138,10 +138,16 @@ class tokenizer:
                 summary_vm = summary_vm.astype("bool")
 
 
-                dataset.append(((title_token_ids, title_mask, title_pos_ids, title_vm), 
-                               (keyword_token_ids, keyword_mask, keyword_pos_ids, keyword_vm), 
-                               (summary_token_ids, summary_mask, summary_pos_ids, summary_vm), 
+                dataset.append(((title_token_ids, keyword_token_ids, summary_token_ids), 
+                               (title_mask, keyword_mask, summary_mask), 
+                               (title_pos_ids, keyword_pos_ids, summary_pos_ids), 
+                               (title_vm, keyword_vm, summary_vm),
                                label))
+
+                # dataset.append(((title_token_ids, title_mask, title_pos_ids, title_vm), 
+                #                (keyword_token_ids, keyword_mask, keyword_pos_ids, keyword_vm), 
+                #                (summary_token_ids, summary_mask, summary_pos_ids, summary_vm), 
+                #                label))
             except:
                 print("Error line: ", line_id)
         return dataset

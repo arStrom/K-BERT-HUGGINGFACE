@@ -203,10 +203,16 @@ class myDataset_slice(Dataset): #继承Dataset
         #     pos_ids.append(pos_id)
         #     vms.append(vm)
         
-        input_ids = torch.stack([torch.LongTensor(self.dataset[index][i][0]) for i in range(3)], 0)
-        mask_ids = torch.stack([torch.LongTensor(self.dataset[index][i][1]) for i in range(3)], 0)
-        pos_ids = torch.stack([torch.LongTensor(self.dataset[index][i][2]) for i in range(3)], 0)
-        vms = torch.stack([torch.LongTensor(self.dataset[index][i][3]) for i in range(3)], 0)
-        label_id = torch.FloatTensor(self.dataset[index][3])
+        # input_ids = torch.stack([torch.LongTensor(self.dataset[index][i][0]) for i in range(3)], 0)
+        # mask_ids = torch.stack([torch.LongTensor(self.dataset[index][i][1]) for i in range(3)], 0)
+        # pos_ids = torch.stack([torch.LongTensor(self.dataset[index][i][2]) for i in range(3)], 0)
+        # vms = torch.stack([torch.LongTensor(self.dataset[index][i][3]) for i in range(3)], 0)
+
+        input_ids = torch.LongTensor(self.dataset[index][0])
+        mask_ids = torch.LongTensor(self.dataset[index][1])
+        pos_ids = torch.LongTensor(self.dataset[index][2])
+        vms = torch.LongTensor(np.array(self.dataset[index][3]))
+
+        label_id = torch.FloatTensor(self.dataset[index][4])
         return input_ids, mask_ids, pos_ids, vms, label_id  #返回该样本
 
