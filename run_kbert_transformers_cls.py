@@ -17,8 +17,8 @@ import dataloader
 from torch.utils.data import DataLoader, RandomSampler, SequentialSampler
 from tokenizer import tokenizer as Tokenizer
 import numpy as np
-from train import train
-from evaluate import evaluate, evaluate_multi_label
+from train import train, train_slice
+from evaluate import evaluate, evaluate_multi_label, evaluate_multi_label_slice
 from test import test
 import MultiLabelSequenceClassification as MLCModels
 import SingleLabelSequenceClassification as SLCModels
@@ -26,6 +26,7 @@ import SingleLabelSequenceClassification as SLCModels
 
 MLCModel = {
     'bert': MLCModels.BertForMultiLabelSequenceClassification,
+    'bert-slice': MLCModels.BertForMultiLabelSequenceClassificationSlice,
     'bert-rcnn': MLCModels.BertRCNNForMultiLabelSequenceClassification,
     'bert-cnn': MLCModels.BertCNNForMultiLabelSequenceClassification,
     'bert-rnn': MLCModels.BertRNNForMultiLabelSequenceClassification,
@@ -75,7 +76,7 @@ def main():
                         )
 
     # Training options.
-    parser.add_argument("--dropout", type=float, default=0.5,
+    parser.add_argument("--dropout", type=float, default=0.1,
                         help="Dropout.")
     parser.add_argument("--epochs_num", type=int, default=5,
                         help="Number of epochs.")
@@ -98,6 +99,7 @@ def main():
     config = BaseConfig(args.cuda, model_name, args.pretrained, args.dataset, args.seq_length, args.dropout, 
                         args.epochs_num, args.batch_size, args.learning_rate, args.report_steps,
                         args.no_kg, args.no_vm)
+
     model_type = model_name.split('-')
     if model_type[0] == 'bert':
         model_config = BertConfig.from_pretrained(
@@ -109,6 +111,25 @@ def main():
             config.pretrained_model_path + '/config.json',
             num_labels = config.label_number
         )
+
+    print("model: ",args.model)
+    print("pretrained: ",args.pretrained)
+    print("task: ",args.task)
+    print("dataset: ",args.dataset)
+
+    print("seq_length: ",args.seq_length)
+    print("hidden_dropout_prob: ",model_config.hidden_dropout_prob)
+    print("attention_probs_dropout_prob: ",model_config.attention_probs_dropout_prob)
+    print("epochs_num: ",args.epochs_num)
+    print("batch_size: ",args.batch_size)
+    print("learning_rate: ",args.learning_rate)
+    print("report_steps: ",args.report_steps)
+    print("kg_name: ",args.kg_name)
+    print("no_kg: ",args.no_kg)
+    print("no_vm: ",args.no_vm)
+
+
+
     # 设置随机种子
     set_seed(config.seed)
 
@@ -123,6 +144,8 @@ def main():
     if args.task == 'SLC':
         model = SLCModel[model_name].from_pretrained(config.pretrained_model_path, config=model_config, args = args)
     elif args.task == 'MLC':
+        model = MLCModel[model_name].from_pretrained(config.pretrained_model_path, config=model_config, args = args)
+    elif args.task == 'MLC-slice':
         model = MLCModel[model_name].from_pretrained(config.pretrained_model_path, config=model_config, args = args)
     else:
         raise NameError("任务名称错误")
@@ -167,9 +190,32 @@ def main():
     test_dataset = dataloader.myDataset_slice(test_dataset)
     test_batch = DataLoader(test_dataset,batch_size=config.batch_size)
 
+    # train_dataset = dataloader.read_dataset(config.train_path, tokenizer, 
+    #                                         workers_num=args.workers_num, task=args.task, 
+    #                                         class_list=config.class_list, with_kg=not args.no_kg)
+    # train_dataset = dataloader.myDataset(train_dataset)
+    # train_batch = DataLoader(train_dataset,batch_size=config.batch_size, shuffle=True)
+
+    # dev_dataset = dataloader.read_dataset(config.dev_path, tokenizer, 
+    #                                       workers_num=args.workers_num, task=args.task, 
+    #                                       class_list=config.class_list, with_kg=not args.no_kg)
+    # dev_dataset = dataloader.myDataset(dev_dataset)
+    # dev_batch = DataLoader(dev_dataset,batch_size=config.batch_size)
+
+    # test_dataset = dataloader.read_dataset(config.test_path, tokenizer, 
+    #                                        workers_num=args.workers_num, task=args.task, 
+    #                                        class_list=config.class_list, with_kg=not args.no_kg)
+    # test_dataset = dataloader.myDataset(test_dataset)
+    # test_batch = DataLoader(test_dataset,batch_size=config.batch_size)
+
     # evaluate(model, dev_batch, config, is_test = False)
     # evaluate_multi_label(model, dev_batch, config, is_test = False)
-    train(model, train_batch, dev_batch, test_batch, config=config, task=args.task)
+    # evaluate_multi_label_slice(model, dev_batch, config, is_test = False)
+
+    if args.task == 'MLC-slice':
+        train_slice(model, train_batch, dev_batch, test_batch, config=config, task=args.task)
+    else:
+        train(model, train_batch, dev_batch, test_batch, config=config, task=args.task)
 
     # Evaluation phase.
     print("Final evaluation on the test dataset.")

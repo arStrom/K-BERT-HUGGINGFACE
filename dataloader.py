@@ -132,6 +132,8 @@ def read_dataset_slice(path, tokenizer, workers_num=1, task = 'SLC', class_list=
                     continue
                 sentences.append(line)
     elif task == 'MLC':
+        sentences = creat_multi_label_sentences(path,class_list)
+    elif task == 'MLC-slice':
         sentences = creat_multi_label_sentences_slice(path,class_list)
 
     sentence_num = len(sentences)
@@ -184,7 +186,7 @@ class myDataset_slice(Dataset): #继承Dataset
             mask_id = torch.LongTensor(self.dataset[index][i][1])
             pos_id = torch.LongTensor(self.dataset[index][i][2])
             vm = torch.LongTensor(self.dataset[index][i][3])
-            date_dic[dic_keys[i]] = (input_id,mask_id,pos_id,vm)
-        label_id = torch.LongTensor([self.dataset[index][3]])
+            date_dic[dic_keys[i]] = [input_id,mask_id,pos_id,vm]
+        label_id = torch.FloatTensor(self.dataset[index][3])
         return date_dic, label_id  #返回该样本
 

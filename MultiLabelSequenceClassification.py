@@ -70,7 +70,7 @@ class BertForMultiLabelSequenceClassification(BertPreTrainedModel):
 class BertForMultiLabelSequenceClassificationSlice(BertPreTrainedModel):
 
     def __init__(self, config, args):
-        super(BertForMultiLabelSequenceClassification, self).__init__(config)
+        super(BertForMultiLabelSequenceClassificationSlice, self).__init__(config)
         self.num_labels = config.num_labels
         self.bert = BertModel(config, add_pooling_layer=False)
         for param in self.bert.parameters():
@@ -115,9 +115,9 @@ class BertForMultiLabelSequenceClassificationSlice(BertPreTrainedModel):
                                 attention_mask=attention_mask,
                                 encoder_attention_mask=encoder_attention_mask,
                                 position_ids=position_ids)
-            
-            output = outputs[0] 
-            output_batch.append(output)
+            output_batch.append(outputs[0])
+
+        output = (output_batch[0] + output_batch[1] + output_batch[2]) / 3
 
         # Target.
         if self.pooling == "mean":

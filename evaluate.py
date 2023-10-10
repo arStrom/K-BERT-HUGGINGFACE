@@ -135,3 +135,67 @@ def evaluate_multi_label(model, eval_batch, config, is_test):
 
     print("Acc. (Correct/Total): {:>6.2%}% Prec: {:.4f} F1: {:.4f}".format(acc, prec, f1))
     return acc, prec, f1, loss_total / len(eval_batch)
+
+
+# Evaluation function.
+def evaluate_multi_label_slice(model, eval_batch, config, is_test):
+
+    predict_all = None
+    labels_all = None
+    device = config.device
+    instances_num = len(eval_batch.dataset)
+    if is_test:
+        print("The number of evaluation instances: ", instances_num)
+
+    correct = 0
+
+    model.eval()
+    loss_total = 0
+    pred_all = None
+    labels_all = None
+    with torch.no_grad():
+        for i, (date_dic, label_ids_batch) in enumerate(eval_batch):
+
+            title_batch = [x.to(device) for x in date_dic['title']]
+            keyword_batch = [x.to(device) for x in date_dic['keyword']]
+            summary_batch = [x.to(device) for x in date_dic['summary']]
+            label_ids_batch = label_ids_batch.to(device)
+
+            # try:
+            loss, logits = model(title_batch, 
+                                keyword_batch, 
+                                summary_batch, 
+                                label_ids_batch)
+            # except:
+            #     print(input_ids_batch)
+            #     print(input_ids_batch.size())
+            #     print(vms_batch)
+            #     print(vms_batch.size())
+            loss_total += loss.mean()
+            labels = label_ids_batch.data.cpu().numpy()
+            pred = logits.cpu().numpy()
+            pred[pred >= config.acc_percent] = 1
+            pred[pred < config.acc_percent] = 0
+            if len(pred.shape) == 1:
+                pred = np.expand_dims(pred,axis=0)
+            correct += np.sum(pred == labels)
+            if predict_all is None:
+                predict_all = pred
+                labels_all = labels
+            else:
+                labels_all = np.append(labels_all, labels, axis=0)
+                predict_all = np.append(predict_all, pred, axis=0)
+    acc = metrics.accuracy_score(labels_all, predict_all)
+    prec = metrics.precision_score(y_true=labels_all, y_pred=predict_all, average='samples')
+    f1 = metrics.f1_score(labels_all, predict_all, average='samples')
+
+    if is_test:
+        report = metrics.classification_report(labels_all, predict_all, target_names=config.class_list, digits=4)
+        print("Acc. (Correct/Total): {:>6.2%} Prec: {:.4f} F1: {:.4f}".format(acc, prec, f1))
+        print("Precision, Recall and F1-Score...")
+        print(report)
+        return acc, prec, f1, loss_total / len(eval_batch), report
+    
+
+    print("Acc. (Correct/Total): {:>6.2%}% Prec: {:.4f} F1: {:.4f}".format(acc, prec, f1))
+    return acc, prec, f1, loss_total / len(eval_batch)

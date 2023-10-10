@@ -3,7 +3,7 @@ import sys
 import torch
 import random
 import time
-from evaluate import evaluate, evaluate_multi_label
+from evaluate import evaluate, evaluate_multi_label, evaluate_multi_label_slice
 from utils.optimizers import BertAdam
 from torch.optim import Adam, AdamW
 from datetime import timedelta
@@ -105,8 +105,8 @@ def train_slice(model, train_batch, eval_batch, test_batch, config, task):
                 {'params': [p for n, p in param_optimizer if not any(nd in n for nd in no_decay)], 'weight_decay_rate': 0.01},
                 {'params': [p for n, p in param_optimizer if any(nd in n for nd in no_decay)], 'weight_decay_rate': 0.0}
     ]
-    optimizer = BertAdam(optimizer_grouped_parameters, lr=config.learning_rate, warmup=config.warmup, t_total=train_steps)
-    # optimizer = AdamW(model.parameters(), lr=config.learning_rate)
+    # optimizer = BertAdam(optimizer_grouped_parameters, lr=config.learning_rate, warmup=config.warmup, t_total=train_steps)
+    optimizer = AdamW(model.parameters(), lr=config.learning_rate)
     total_loss = 0.0
     result = 0.0
     best_result = 0.0
@@ -115,23 +115,26 @@ def train_slice(model, train_batch, eval_batch, test_batch, config, task):
 
     for epoch in range(1, config.epochs_num+1):
         model.train()
-        for i, (title_batch, keyword_batch, summary_batch, label_ids_batch) in enumerate(train_batch):
-            model.zero_grad()
+        for i, (date_dic, label_ids_batch) in enumerate(train_batch):
 
-            title_batch = title_batch.to(device)
-            keyword_batch = keyword_batch.to(device)
-            summary_batch = summary_batch.to(device)
+            model.zero_grad()
+            title_batch = [x.to(device) for x in date_dic['title']]
+            keyword_batch = [x.to(device) for x in date_dic['keyword']]
+            summary_batch = [x.to(device) for x in date_dic['summary']]
             label_ids_batch = label_ids_batch.to(device)
 
-            loss, _ = model(input_ids=input_ids_batch, 
-                            labels=label_ids_batch, 
-                            token_type_ids=mask_ids_batch, 
-                            position_ids=pos_ids_batch, 
-                            visible_matrix=vms_batch)
+            # title_batch = title_batch.to(device)
+            # keyword_batch = keyword_batch.to(device)
+            # summary_batch = summary_batch.to(device)
+
+            loss, _ = model(title_batch, 
+                            keyword_batch, 
+                            summary_batch, 
+                            label_ids_batch)
             if torch.cuda.device_count() > 1:
                 loss = torch.mean(loss)
-            # else:
-            #     loss = loss.mean()
+            else:
+                loss = loss.mean()
             total_loss += loss.item()
             if (i + 1) % config.report_steps == 0:
                 time_dif = get_time_dif(start_time)
@@ -142,27 +145,15 @@ def train_slice(model, train_batch, eval_batch, test_batch, config, task):
             optimizer.step()
 
         print("Start evaluation on dev dataset.")
-        if task == 'SLC':
-            result = evaluate(model, eval_batch, config, is_test = False)
-            if result > best_result:
-                best_result = result
-                model_to_save = model.module if hasattr(model, 'module') else model
-                model_to_save.save_pretrained(config.output_dir)
-            else:
-                continue
-        elif task == 'MLC':
-            acc,prec,f1,num = evaluate_multi_label(model, eval_batch, config, is_test = False)
-            result = acc
-            if result > best_result:
-                best_result = result
-                model_to_save = model.module if hasattr(model, 'module') else model
-                model_to_save.save_pretrained(config.output_dir)
-            else:
-                continue
+        acc,prec,f1,num = evaluate_multi_label_slice(model, eval_batch, config, is_test = False)
+        result = acc
+        if result > best_result:
+            best_result = result
+            model_to_save = model.module if hasattr(model, 'module') else model
+            model_to_save.save_pretrained(config.output_dir)
+        else:
+            continue
 
         print("Start evaluation on test dataset.")
-        if task == 'SLC':
-            result = evaluate(model, test_batch, config, is_test = False)
-        elif task == 'MLC':
-            result = evaluate_multi_label(model, test_batch, config, is_test = False)
+        result = evaluate_multi_label_slice(model, test_batch, config, is_test = False)
 

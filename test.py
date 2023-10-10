@@ -1,5 +1,5 @@
 import torch
-from evaluate import evaluate, evaluate_multi_label
+from evaluate import evaluate, evaluate_multi_label, evaluate_multi_label_slice
 
 def test(model,test_batch,config, task = 'SLC'):
     # path = 'outputs/bert-rcnn_pretrained=bert_num_epochs=20_batch_size=16_learning_rate=2e-05_max_seq_length=512_no_kg=True_no_vm=False'
@@ -14,3 +14,5 @@ def test(model,test_batch,config, task = 'SLC'):
         evaluate(model, test_batch, config, is_test=True)
     elif task == 'MLC':
         evaluate_multi_label(model, test_batch, config, is_test=True)
+    elif task == 'MLC-slice':
+        evaluate_multi_label_slice(model, test_batch, config, is_test=True)
