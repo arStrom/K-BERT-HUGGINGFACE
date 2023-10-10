@@ -99,8 +99,13 @@ def read_dataset(path, tokenizer, workers_num=1, task = 'SLC', class_list=None, 
                 if line_id == 0:
                     continue
                 sentences.append(line)
+        encoder = tokenizer.encode_with_knowledge if with_kg else tokenizer.encode
     elif task == 'MLC':
+        sentences = creat_multi_label_sentences(path,class_list)
+        encoder = tokenizer.encode_with_knowledge if with_kg else tokenizer.encode
+    elif task == 'MLC-slice':
         sentences = creat_multi_label_sentences_slice(path,class_list)
+        encoder = tokenizer.encode_with_knowledge_slice if with_kg else tokenizer.encode_slice
 
     sentence_num = len(sentences)
 
@@ -111,13 +116,15 @@ def read_dataset(path, tokenizer, workers_num=1, task = 'SLC', class_list=None, 
         for i in range(workers_num):
             params.append((sentences[i*sentence_per_block: (i+1)*sentence_per_block], i))
         pool = Pool(workers_num)
-        res = pool.map(tokenizer.encode_with_knowledge, *params) if with_kg else pool.map(tokenizer.encode, *params)
+        # res = pool.map(tokenizer.encode_with_knowledge, *params) if with_kg else pool.map(tokenizer.encode, *params)
+        res = pool.map(encoder, *params)
         pool.close()
         pool.join()
         dataset = [sample for block in res for sample in block]
     else:
         params = (sentences, 0)
-        dataset = tokenizer.encode_with_knowledge(*params) if with_kg else tokenizer.encode(*params)
+        dataset = encoder(*params)
+        # dataset = tokenizer.encode_with_knowledge(*params) if with_kg else tokenizer.encode(*params)
 
     return dataset
 
@@ -179,14 +186,27 @@ class myDataset_slice(Dataset): #继承Dataset
         return len(self.dataset)
     
     def __getitem__(self,index):#根据索引index返回dataset[index]
-        dic_keys = ['title','keyword','summary']
-        date_dic = {}
-        for i in range(3):
-            input_id = torch.LongTensor(self.dataset[index][i][0])
-            mask_id = torch.LongTensor(self.dataset[index][i][1])
-            pos_id = torch.LongTensor(self.dataset[index][i][2])
-            vm = torch.LongTensor(self.dataset[index][i][3])
-            date_dic[dic_keys[i]] = [input_id,mask_id,pos_id,vm]
+        # dic_keys = ['title','keyword','summary']
+        # date_dic = {}
+        # input_ids = []
+        # mask_ids = []
+        # pos_ids = []
+        # vms = []
+        # for i in range(3):
+        #     input_id = torch.LongTensor(self.dataset[index][i][0])
+        #     mask_id = torch.LongTensor(self.dataset[index][i][1])
+        #     pos_id = torch.LongTensor(self.dataset[index][i][2])
+        #     vm = torch.LongTensor(self.dataset[index][i][3])
+
+        #     input_ids.append(input_id)
+        #     mask_ids.append(mask_id)
+        #     pos_ids.append(pos_id)
+        #     vms.append(vm)
+        
+        input_ids = torch.stack([torch.LongTensor(self.dataset[index][i][0]) for i in range(3)], 0)
+        mask_ids = torch.stack([torch.LongTensor(self.dataset[index][i][1]) for i in range(3)], 0)
+        pos_ids = torch.stack([torch.LongTensor(self.dataset[index][i][2]) for i in range(3)], 0)
+        vms = torch.stack([torch.LongTensor(self.dataset[index][i][3]) for i in range(3)], 0)
         label_id = torch.FloatTensor(self.dataset[index][3])
-        return date_dic, label_id  #返回该样本
+        return input_ids, mask_ids, pos_ids, vms, label_id  #返回该样本
 

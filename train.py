@@ -115,26 +115,27 @@ def train_slice(model, train_batch, eval_batch, test_batch, config, task):
 
     for epoch in range(1, config.epochs_num+1):
         model.train()
-        for i, (date_dic, label_ids_batch) in enumerate(train_batch):
+        for i, (input_ids_batch, mask_ids_batch, pos_ids_batch, vms_batch, label_ids_batch) in enumerate(train_batch):
 
             model.zero_grad()
-            title_batch = [x.to(device) for x in date_dic['title']]
-            keyword_batch = [x.to(device) for x in date_dic['keyword']]
-            summary_batch = [x.to(device) for x in date_dic['summary']]
+
+            input_ids_batch = input_ids_batch.transpose(0,1).to(device)
+            mask_ids_batch = mask_ids_batch.transpose(0,1).to(device)
+            pos_ids_batch = pos_ids_batch.transpose(0,1).to(device)
+            vms_batch = vms_batch.transpose(0,1).to(device)
             label_ids_batch = label_ids_batch.to(device)
 
-            # title_batch = title_batch.to(device)
-            # keyword_batch = keyword_batch.to(device)
-            # summary_batch = summary_batch.to(device)
-
-            loss, _ = model(title_batch, 
-                            keyword_batch, 
-                            summary_batch, 
+            loss, _ = model(input_ids_batch, 
+                            mask_ids_batch, 
+                            pos_ids_batch, 
+                            vms_batch,
                             label_ids_batch)
+            
             if torch.cuda.device_count() > 1:
                 loss = torch.mean(loss)
             else:
                 loss = loss.mean()
+
             total_loss += loss.item()
             if (i + 1) % config.report_steps == 0:
                 time_dif = get_time_dif(start_time)

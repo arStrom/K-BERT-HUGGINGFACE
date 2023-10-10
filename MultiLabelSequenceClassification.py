@@ -85,14 +85,13 @@ class BertForMultiLabelSequenceClassificationSlice(BertPreTrainedModel):
         print("[BertClassifier] use visible_matrix: {}".format(self.use_vm))
         self.init_weights()
 
-    def forward(self, title, keyword, summary, labels=None):
-        input_batch = [title,keyword,summary]
+    def forward(self, input_ids_batch, mask_ids_batch, pos_ids_batch, vms_batch, labels):
         output_batch = []
-        for input in input_batch:
-            input_ids = input[0]
-            attention_mask = input[1]
-            position_ids = input[2]
-            visible_matrix = input[3]
+        for i in range(3):
+            input_ids = input_ids_batch[i]
+            attention_mask = mask_ids_batch[i]
+            position_ids = pos_ids_batch[i]
+            visible_matrix = vms_batch[i]
 
             seq_length = input_ids.size(1)
                 

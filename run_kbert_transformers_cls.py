@@ -170,43 +170,46 @@ def main():
     
     #训练.
     print("Start training.")
+
     tokenizer = Tokenizer(vocab, config.max_seq_length, kg)
 
-    train_dataset = dataloader.read_dataset_slice(config.train_path, tokenizer, 
-                                            workers_num=args.workers_num, task=args.task, 
-                                            class_list=config.class_list, with_kg=not args.no_kg)
-    train_dataset = dataloader.myDataset_slice(train_dataset)
-    train_batch = DataLoader(train_dataset,batch_size=config.batch_size, shuffle=True)
-
-    dev_dataset = dataloader.read_dataset_slice(config.dev_path, tokenizer, 
-                                          workers_num=args.workers_num, task=args.task, 
-                                          class_list=config.class_list, with_kg=not args.no_kg)
-    dev_dataset = dataloader.myDataset_slice(dev_dataset)
-    dev_batch = DataLoader(dev_dataset,batch_size=config.batch_size)
-
-    test_dataset = dataloader.read_dataset_slice(config.test_path, tokenizer, 
-                                           workers_num=args.workers_num, task=args.task, 
-                                           class_list=config.class_list, with_kg=not args.no_kg)
-    test_dataset = dataloader.myDataset_slice(test_dataset)
-    test_batch = DataLoader(test_dataset,batch_size=config.batch_size)
-
-    # train_dataset = dataloader.read_dataset(config.train_path, tokenizer, 
+    # train_dataset = dataloader.read_dataset_slice(config.train_path, tokenizer, 
     #                                         workers_num=args.workers_num, task=args.task, 
     #                                         class_list=config.class_list, with_kg=not args.no_kg)
-    # train_dataset = dataloader.myDataset(train_dataset)
+    # train_dataset = dataloader.myDataset_slice(train_dataset)
     # train_batch = DataLoader(train_dataset,batch_size=config.batch_size, shuffle=True)
 
-    # dev_dataset = dataloader.read_dataset(config.dev_path, tokenizer, 
+    # dev_dataset = dataloader.read_dataset_slice(config.dev_path, tokenizer, 
     #                                       workers_num=args.workers_num, task=args.task, 
     #                                       class_list=config.class_list, with_kg=not args.no_kg)
-    # dev_dataset = dataloader.myDataset(dev_dataset)
+    # dev_dataset = dataloader.myDataset_slice(dev_dataset)
     # dev_batch = DataLoader(dev_dataset,batch_size=config.batch_size)
 
-    # test_dataset = dataloader.read_dataset(config.test_path, tokenizer, 
+    # test_dataset = dataloader.read_dataset_slice(config.test_path, tokenizer, 
     #                                        workers_num=args.workers_num, task=args.task, 
     #                                        class_list=config.class_list, with_kg=not args.no_kg)
-    # test_dataset = dataloader.myDataset(test_dataset)
+    # test_dataset = dataloader.myDataset_slice(test_dataset)
     # test_batch = DataLoader(test_dataset,batch_size=config.batch_size)
+
+    Dataseter = dataloader.myDataset_slice if args.task == "MLC-slice" else dataloader.myDataset
+
+    train_dataset = dataloader.read_dataset(config.train_path, tokenizer, 
+                                            workers_num=args.workers_num, task=args.task, 
+                                            class_list=config.class_list, with_kg=not args.no_kg)
+    train_dataset = Dataseter(train_dataset)
+    train_batch = DataLoader(train_dataset,batch_size=config.batch_size, shuffle=True)
+
+    dev_dataset = dataloader.read_dataset(config.dev_path, tokenizer, 
+                                          workers_num=args.workers_num, task=args.task, 
+                                          class_list=config.class_list, with_kg=not args.no_kg)
+    dev_dataset = Dataseter(dev_dataset)
+    dev_batch = DataLoader(dev_dataset,batch_size=config.batch_size)
+
+    test_dataset = dataloader.read_dataset(config.test_path, tokenizer, 
+                                           workers_num=args.workers_num, task=args.task, 
+                                           class_list=config.class_list, with_kg=not args.no_kg)
+    test_dataset = Dataseter(test_dataset)
+    test_batch = DataLoader(test_dataset,batch_size=config.batch_size)
 
     # evaluate(model, dev_batch, config, is_test = False)
     # evaluate_multi_label(model, dev_batch, config, is_test = False)
