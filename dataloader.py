@@ -179,35 +179,13 @@ class myDataset(Dataset): #继承Dataset
 
 
 class myDataset_slice(Dataset): #继承Dataset
-    def __init__(self, dataset): #__init__是初始化该类的一些基础参数
+    def __init__(self, dataset, no_vm): #__init__是初始化该类的一些基础参数
         self.dataset = dataset   #数据集
     
     def __len__(self):#返回整个数据集的大小
         return len(self.dataset)
     
     def __getitem__(self,index):#根据索引index返回dataset[index]
-        # dic_keys = ['title','keyword','summary']
-        # date_dic = {}
-        # input_ids = []
-        # mask_ids = []
-        # pos_ids = []
-        # vms = []
-        # for i in range(3):
-        #     input_id = torch.LongTensor(self.dataset[index][i][0])
-        #     mask_id = torch.LongTensor(self.dataset[index][i][1])
-        #     pos_id = torch.LongTensor(self.dataset[index][i][2])
-        #     vm = torch.LongTensor(self.dataset[index][i][3])
-
-        #     input_ids.append(input_id)
-        #     mask_ids.append(mask_id)
-        #     pos_ids.append(pos_id)
-        #     vms.append(vm)
-        
-        # input_ids = torch.stack([torch.LongTensor(self.dataset[index][i][0]) for i in range(3)], 0)
-        # mask_ids = torch.stack([torch.LongTensor(self.dataset[index][i][1]) for i in range(3)], 0)
-        # pos_ids = torch.stack([torch.LongTensor(self.dataset[index][i][2]) for i in range(3)], 0)
-        # vms = torch.stack([torch.LongTensor(self.dataset[index][i][3]) for i in range(3)], 0)
-
         input_ids = torch.LongTensor(self.dataset[index][0])
         mask_ids = torch.LongTensor(self.dataset[index][1])
         pos_ids = torch.LongTensor(self.dataset[index][2])

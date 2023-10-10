@@ -73,17 +73,20 @@ def creat_multi_label_sentences_slice(path, class_list):
 # print(sentences)
 
 
-x = torch.rand(5, 3)
-y = torch.rand(5, 3)
-print("x, y ",x, y)
-#第一种
-print("x+y ",x + y)
-#第二种
-print("add(x,y) ",torch.add(x, y))
-#第三种
-result = torch.empty(5, 3)
-torch.add(x, y, out=result)
-print("result ", result)
-#第四种
-y.add_(x)
-print("y.add ", y)
+# x = torch.rand(5, 3)
+# y = torch.rand(5, 3)
+# print("x, y ",x, y)
+# #第一种
+# print("x+y ",x + y)
+# #第二种
+# print("add(x,y) ",torch.add(x, y))
+# #第三种
+# result = torch.empty(5, 3)
+# torch.add(x, y, out=result)
+# print("result ", result)
+# #第四种
+# y.add_(x)
+# print("y.add ", y)
+
+
+print(np.ones(1))

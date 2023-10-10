@@ -110,8 +110,6 @@ class tokenizer:
                     title_token_ids = title_token_ids[:self.max_length]
                     title_pos_ids = title_pos_ids[:self.max_length]
                     title_mask = title_mask[:self.max_length]
-                title_vm = np.zeros((self.max_length,self.max_length))
-                title_vm = title_vm.astype("bool")
 
                 if keyword_tokens_lenth < self.max_length:
                     pad_num = self.max_length - keyword_tokens_lenth
@@ -122,8 +120,6 @@ class tokenizer:
                     keyword_token_ids = keyword_token_ids[:self.max_length]
                     keyword_pos_ids = keyword_pos_ids[:self.max_length]
                     keyword_mask = keyword_mask[:self.max_length]
-                keyword_vm = np.zeros((self.max_length,self.max_length))
-                keyword_vm = keyword_vm.astype("bool")
 
                 if summary_tokens_lenth < self.max_length:
                     pad_num = self.max_length - summary_tokens_lenth
@@ -134,20 +130,12 @@ class tokenizer:
                     summary_token_ids = summary_token_ids[:self.max_length]
                     summary_pos_ids = summary_pos_ids[:self.max_length]
                     summary_mask = summary_mask[:self.max_length]
-                summary_vm = np.zeros((self.max_length,self.max_length))
-                summary_vm = summary_vm.astype("bool")
-
 
                 dataset.append(((title_token_ids, keyword_token_ids, summary_token_ids), 
                                (title_mask, keyword_mask, summary_mask), 
-                               (title_pos_ids, keyword_pos_ids, summary_pos_ids), 
-                               (title_vm, keyword_vm, summary_vm),
+                               (title_pos_ids, keyword_pos_ids, summary_pos_ids),
+                               (np.ones(1), np.ones(1), np.ones(1)),
                                label))
-
-                # dataset.append(((title_token_ids, title_mask, title_pos_ids, title_vm), 
-                #                (keyword_token_ids, keyword_mask, keyword_pos_ids, keyword_vm), 
-                #                (summary_token_ids, summary_mask, summary_pos_ids, summary_vm), 
-                #                label))
             except:
                 print("Error line: ", line_id)
         return dataset
@@ -194,9 +182,10 @@ class tokenizer:
             summary_token_ids = [self.vocab.get(t) for t in summary_tokens]
             summary_mask = [1 if t != PAD_TOKEN else 0 for t in summary_tokens]
 
-            dataset.append(((title_token_ids, title_mask, title_pos, title_vm), 
-                            (keyword_token_ids, keyword_mask, title_pos, keyword_vm), 
-                            (summary_token_ids, summary_mask, title_pos, summary_vm), 
+            dataset.append(((title_token_ids, keyword_token_ids, summary_token_ids), 
+                            (title_mask, keyword_mask, summary_mask), 
+                            (title_pos, keyword_pos, summary_pos), 
+                            (title_vm, keyword_vm, summary_vm),
                             label))
             # except:
             #     print("Error line: ", line_id)
