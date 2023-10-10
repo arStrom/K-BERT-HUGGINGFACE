@@ -179,7 +179,7 @@ class myDataset(Dataset): #继承Dataset
 
 
 class myDataset_slice(Dataset): #继承Dataset
-    def __init__(self, dataset, no_vm): #__init__是初始化该类的一些基础参数
+    def __init__(self, dataset): #__init__是初始化该类的一些基础参数
         self.dataset = dataset   #数据集
     
     def __len__(self):#返回整个数据集的大小
