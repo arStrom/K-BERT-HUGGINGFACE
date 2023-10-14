@@ -95,7 +95,7 @@ def main():
                         help="Number of epochs.")
     parser.add_argument("--batch_size", type=int, default=32,
                         help="Batch size.")
-    parser.add_argument("--learning_rate", type=int, default=2e-5,
+    parser.add_argument("--learning_rate", type=float, default=2e-5,
                         help="Sequence length.")
     parser.add_argument("--report_steps", type=int, default=100,
                         help="Specific steps to print prompt.")
