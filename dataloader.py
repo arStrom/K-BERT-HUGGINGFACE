@@ -171,11 +171,11 @@ class myDataset(Dataset): #继承Dataset
     
     def __getitem__(self,index):#根据索引index返回dataset[index]
         input_id = torch.LongTensor(self.dataset[index][0])
-        label_id = torch.LongTensor([self.dataset[index][1]])
+        label_id = torch.FloatTensor(self.dataset[index][1])
         mask_id = torch.LongTensor(self.dataset[index][2])
         pos_id = torch.LongTensor(self.dataset[index][3])
         vm = torch.LongTensor(self.dataset[index][4])
-        return input_id, label_id, mask_id, pos_id, vm  #返回该样本
+        return input_id, mask_id, pos_id, vm, label_id  #返回该样本
 
 
 class myDataset_slice(Dataset): #继承Dataset

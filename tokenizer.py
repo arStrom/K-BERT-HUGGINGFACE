@@ -19,9 +19,9 @@ class tokenizer:
             if line_id % 10000 == 0:
                 print("Progress of process {}: {}/{}".format(p_id, line_id, sentences_num))
                 sys.stdout.flush()
-            line = line.strip().split('\t')
+            # line = line.strip().split('\t')
             try:
-                label = int(line[columns["label"]])
+                label = line[columns["label"]]
                 tokens = [CLS_TOKEN] + list(line[columns["text_a"]])
                 tokens_lenth = len(tokens)
                 token_ids = [self.vocab.get(t) for t in tokens]
@@ -36,9 +36,7 @@ class tokenizer:
                     token_ids = token_ids[:self.max_length]
                     pos_ids = pos_ids[:self.max_length]
                     mask = mask[:self.max_length]
-                vm = np.zeros((self.max_length,self.max_length))
-                vm = vm[0].astype("bool")
-                dataset.append((token_ids, label, mask, pos_ids, vm))
+                dataset.append((token_ids, label, mask, pos_ids, np.zeros(1)))
             except:
                 print("Error line: ", line_id)
         return dataset
@@ -52,9 +50,9 @@ class tokenizer:
             if line_id % 10000 == 0:
                 print("Progress of process {}: {}/{}".format(p_id, line_id, sentences_num))
                 sys.stdout.flush()
-            line = line.strip().split('\t')
+            # line = line.strip().split('\t')
             try:
-                label = int(line[columns["label"]])
+                label = line[columns["label"]]
                 text = CLS_TOKEN + line[columns["text_a"]]
 
                 tokens, pos, vm, _ = self.kg.add_knowledge_with_vm([text], add_pad=True, max_length=self.max_length)

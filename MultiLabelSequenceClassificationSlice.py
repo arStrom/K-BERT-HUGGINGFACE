@@ -7,10 +7,10 @@ from torch import nn
 import torch.nn.functional as F
 
 
-class BertForMultiLabelSequenceClassification(BertPreTrainedModel):
+class BertForMultiLabelSequenceClassificationSlice(BertPreTrainedModel):
 
     def __init__(self, config, args):
-        super(BertForMultiLabelSequenceClassification, self).__init__(config)
+        super(BertForMultiLabelSequenceClassificationSlice, self).__init__(config)
         self.num_labels = config.num_labels
         self.bert = BertModel(config, add_pooling_layer=False)
         for param in self.bert.parameters():
@@ -25,34 +25,39 @@ class BertForMultiLabelSequenceClassification(BertPreTrainedModel):
         print("[BertClassifier] use visible_matrix: {}".format(self.use_vm))
         self.init_weights()
 
-    def forward(self, input_ids, token_type_ids=None,
-                position_ids=None, head_mask=None, labels=None, visible_matrix=None):
-        
-        seq_length = input_ids.size(1)
-        
-        # Generate mask according to segment indicators.
-        # mask: [batch_size x 1 x seq_length x seq_length]
-        if visible_matrix is None or not self.use_vm:
-            encoder_attention_mask = (token_type_ids > 0). \
-                    unsqueeze(1). \
-                    repeat(1, seq_length, 1). \
-                    unsqueeze(1)
-            encoder_attention_mask = encoder_attention_mask.float()
-            encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
-        else:
-            encoder_attention_mask = visible_matrix.unsqueeze(1)
-            encoder_attention_mask = encoder_attention_mask.float()
-            encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
+    def forward(self, input_ids_batch, mask_ids_batch, pos_ids_batch, vms_batch, labels):
+        output_batch = []
+        for i in range(3):
+            input_ids = input_ids_batch[i]
+            attention_mask = mask_ids_batch[i]
+            position_ids = pos_ids_batch[i]
+            visible_matrix = vms_batch[i]
 
-        # token_type_ids实际上是attention_mask
-        outputs = self.bert(input_ids,
-                            attention_mask=token_type_ids,
-                            encoder_attention_mask=encoder_attention_mask,
-                            position_ids=position_ids,
-                            head_mask=head_mask)
+            seq_length = input_ids.size(1)
+                
+            # Generate mask according to segment indicators.
+            # mask: [batch_size x 1 x seq_length x seq_length]
+            if visible_matrix is None or not self.use_vm:
+                encoder_attention_mask = (attention_mask > 0). \
+                        unsqueeze(1). \
+                        repeat(1, seq_length, 1). \
+                        unsqueeze(1)
+                encoder_attention_mask = encoder_attention_mask.float()
+                encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
+            else:
+                encoder_attention_mask = visible_matrix.unsqueeze(1)
+                encoder_attention_mask = encoder_attention_mask.float()
+                encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
 
+            # token_type_ids实际上是attention_mask
+            outputs = self.bert(input_ids,
+                                attention_mask=attention_mask,
+                                encoder_attention_mask=encoder_attention_mask,
+                                position_ids=position_ids)
+            output_batch.append(outputs[0])
 
-        output = outputs[0]
+        output = (output_batch[0] + output_batch[1] + output_batch[2]) / 3
+
         # Target.
         if self.pooling == "mean":
             output = torch.mean(output, dim=1)
@@ -68,10 +73,10 @@ class BertForMultiLabelSequenceClassification(BertPreTrainedModel):
         return loss, logits
 
 
-class BertRCNNForMultiLabelSequenceClassification(BertPreTrainedModel):
+class BertRCNNForMultiLabelSequenceClassificationSlice(BertPreTrainedModel):
 
     def __init__(self, config, args):
-        super(BertRCNNForMultiLabelSequenceClassification, self).__init__(config)
+        super(BertRCNNForMultiLabelSequenceClassificationSlice, self).__init__(config)
         self.num_labels = config.num_labels
         self.bert = BertModel(config, add_pooling_layer=False)
         for param in self.bert.parameters():
@@ -97,34 +102,40 @@ class BertRCNNForMultiLabelSequenceClassification(BertPreTrainedModel):
         print("[BertClassifier] use visible_matrix: {}".format(self.use_vm))
         self.init_weights()
 
-    def forward(self, input_ids, token_type_ids=None,
-                position_ids=None, head_mask=None, labels=None, visible_matrix=None):
+    def forward(self, input_ids_batch, mask_ids_batch, pos_ids_batch, vms_batch, labels):
         
-        seq_length = input_ids.size(1)
-        
-        # Generate mask according to segment indicators.
-        # mask: [batch_size x 1 x seq_length x seq_length]
-        if visible_matrix is None or not self.use_vm:
-            encoder_attention_mask = (token_type_ids > 0). \
-                    unsqueeze(1). \
-                    repeat(1, seq_length, 1). \
-                    unsqueeze(1)
-            encoder_attention_mask = encoder_attention_mask.float()
-            encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
-        else:
-            encoder_attention_mask = visible_matrix.unsqueeze(1)
-            encoder_attention_mask = encoder_attention_mask.float()
-            encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
+        output_batch = []
+        for i in range(3):
+            input_ids = input_ids_batch[i]
+            attention_mask = mask_ids_batch[i]
+            position_ids = pos_ids_batch[i]
+            visible_matrix = vms_batch[i]
 
-        # token_type_ids实际上是attention_mask
-        outputs = self.bert(input_ids,
-                            attention_mask=token_type_ids,
-                            encoder_attention_mask=encoder_attention_mask,
-                            position_ids=position_ids,
-                            head_mask=head_mask)
+            seq_length = input_ids.size(1)
+                
+            # Generate mask according to segment indicators.
+            # mask: [batch_size x 1 x seq_length x seq_length]
+            if visible_matrix is None or not self.use_vm:
+                encoder_attention_mask = (attention_mask > 0). \
+                        unsqueeze(1). \
+                        repeat(1, seq_length, 1). \
+                        unsqueeze(1)
+                encoder_attention_mask = encoder_attention_mask.float()
+                encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
+            else:
+                encoder_attention_mask = visible_matrix.unsqueeze(1)
+                encoder_attention_mask = encoder_attention_mask.float()
+                encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
 
+            # token_type_ids实际上是attention_mask
+            outputs = self.bert(input_ids,
+                                attention_mask=attention_mask,
+                                encoder_attention_mask=encoder_attention_mask,
+                                position_ids=position_ids)
+            output_batch.append(outputs[0])
 
-        output = outputs[0]
+        output = (output_batch[0] + output_batch[1] + output_batch[2]) / 3
+
 
         out, _ = self.lstm(output)
         out = self.cat((output, out), 2)
@@ -139,10 +150,10 @@ class BertRCNNForMultiLabelSequenceClassification(BertPreTrainedModel):
         return loss, logits
 
 
-class BertRNNForMultiLabelSequenceClassification(BertPreTrainedModel):
+class BertRNNForMultiLabelSequenceClassificationSlice(BertPreTrainedModel):
 
     def __init__(self, config, args):
-        super(BertRNNForMultiLabelSequenceClassification, self).__init__(config)
+        super(BertRNNForMultiLabelSequenceClassificationSlice, self).__init__(config)
         self.num_labels = config.num_labels
         self.bert = BertModel(config, add_pooling_layer=False)
         for param in self.bert.parameters():
@@ -164,33 +175,42 @@ class BertRNNForMultiLabelSequenceClassification(BertPreTrainedModel):
         print("[BertClassifier] use visible_matrix: {}".format(self.use_vm))
         self.init_weights()
 
-    def forward(self, input_ids, token_type_ids=None,
-                position_ids=None, head_mask=None, labels=None, visible_matrix=None):
+    def forward(self, input_ids_batch, mask_ids_batch, pos_ids_batch, vms_batch, labels):
         
-        seq_length = input_ids.size(1)
-        
-        # Generate mask according to segment indicators.
-        # mask: [batch_size x 1 x seq_length x seq_length]
-        if visible_matrix is None or not self.use_vm:
-            encoder_attention_mask = (token_type_ids > 0). \
-                    unsqueeze(1). \
-                    repeat(1, seq_length, 1). \
-                    unsqueeze(1)
-            encoder_attention_mask = encoder_attention_mask.float()
-            encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
-        else:
-            encoder_attention_mask = visible_matrix.unsqueeze(1)
-            encoder_attention_mask = encoder_attention_mask.float()
-            encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
+        output_batch = []
+        for i in range(3):
+            input_ids = input_ids_batch[i]
+            attention_mask = mask_ids_batch[i]
+            position_ids = pos_ids_batch[i]
+            visible_matrix = vms_batch[i]
 
-        # token_type_ids实际上是attention_mask
-        outputs = self.bert(input_ids,
-                            attention_mask=token_type_ids,
-                            encoder_attention_mask=encoder_attention_mask,
-                            position_ids=position_ids,
-                            head_mask=head_mask)
+            seq_length = input_ids.size(1)
+                
+            # Generate mask according to segment indicators.
+            # mask: [batch_size x 1 x seq_length x seq_length]
+            if visible_matrix is None or not self.use_vm:
+                encoder_attention_mask = (attention_mask > 0). \
+                        unsqueeze(1). \
+                        repeat(1, seq_length, 1). \
+                        unsqueeze(1)
+                encoder_attention_mask = encoder_attention_mask.float()
+                encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
+            else:
+                encoder_attention_mask = visible_matrix.unsqueeze(1)
+                encoder_attention_mask = encoder_attention_mask.float()
+                encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
 
-        out, _ = self.lstm(outputs[0])
+            # token_type_ids实际上是attention_mask
+            outputs = self.bert(input_ids,
+                                attention_mask=attention_mask,
+                                encoder_attention_mask=encoder_attention_mask,
+                                position_ids=position_ids)
+            output_batch.append(outputs[0])
+
+        output = (output_batch[0] + output_batch[1] + output_batch[2]) / 3
+
+
+        out, _ = self.lstm(output)
         out = self.lstm_dropout(out)
         logits = self.sigmoid(self.classifier(out[:, -1, :]))
 
@@ -198,10 +218,10 @@ class BertRNNForMultiLabelSequenceClassification(BertPreTrainedModel):
         return loss, logits
 
 
-class BertCNNForMultiLabelSequenceClassification(BertPreTrainedModel):
+class BertCNNForMultiLabelSequenceClassificationSlice(BertPreTrainedModel):
 
     def __init__(self, config, args):
-        super(BertCNNForMultiLabelSequenceClassification, self).__init__(config)
+        super(BertCNNForMultiLabelSequenceClassificationSlice, self).__init__(config)
         self.num_labels = config.num_labels
         self.bert = BertModel(config, add_pooling_layer=False)
         for param in self.bert.parameters():
@@ -226,33 +246,41 @@ class BertCNNForMultiLabelSequenceClassification(BertPreTrainedModel):
         x = F.max_pool1d(x, x.size(2)).squeeze(2)
         return x
 
-    def forward(self, input_ids, token_type_ids=None,
-                position_ids=None, head_mask=None, labels=None, visible_matrix=None):
+    def forward(self, input_ids_batch, mask_ids_batch, pos_ids_batch, vms_batch, labels):
         
-        seq_length = input_ids.size(1)
-        
-        # Generate mask according to segment indicators.
-        # mask: [batch_size x 1 x seq_length x seq_length]
-        if visible_matrix is None or not self.use_vm:
-            encoder_attention_mask = (token_type_ids > 0). \
-                    unsqueeze(1). \
-                    repeat(1, seq_length, 1). \
-                    unsqueeze(1)
-            encoder_attention_mask = encoder_attention_mask.float()
-            encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
-        else:
-            encoder_attention_mask = visible_matrix.unsqueeze(1)
-            encoder_attention_mask = encoder_attention_mask.float()
-            encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
+        output_batch = []
+        for i in range(3):
+            input_ids = input_ids_batch[i]
+            attention_mask = mask_ids_batch[i]
+            position_ids = pos_ids_batch[i]
+            visible_matrix = vms_batch[i]
 
-        # token_type_ids实际上是attention_mask
-        outputs = self.bert(input_ids,
-                            attention_mask=token_type_ids,
-                            encoder_attention_mask=encoder_attention_mask,
-                            position_ids=position_ids,
-                            head_mask=head_mask)
+            seq_length = input_ids.size(1)
+                
+            # Generate mask according to segment indicators.
+            # mask: [batch_size x 1 x seq_length x seq_length]
+            if visible_matrix is None or not self.use_vm:
+                encoder_attention_mask = (attention_mask > 0). \
+                        unsqueeze(1). \
+                        repeat(1, seq_length, 1). \
+                        unsqueeze(1)
+                encoder_attention_mask = encoder_attention_mask.float()
+                encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
+            else:
+                encoder_attention_mask = visible_matrix.unsqueeze(1)
+                encoder_attention_mask = encoder_attention_mask.float()
+                encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
 
-        out = outputs[0].unsqueeze(1)
+            # token_type_ids实际上是attention_mask
+            outputs = self.bert(input_ids,
+                                attention_mask=attention_mask,
+                                encoder_attention_mask=encoder_attention_mask,
+                                position_ids=position_ids)
+            output_batch.append(outputs[0])
+
+        output = (output_batch[0] + output_batch[1] + output_batch[2]) / 3
+
+        out = output.unsqueeze(1)
         out = self.cat([self.conv_and_pool(out, conv) for conv in self.convs], 1)
         out = self.cnn_dropout(out)
         logits = self.sigmoid(self.classifier(out))
@@ -261,10 +289,10 @@ class BertCNNForMultiLabelSequenceClassification(BertPreTrainedModel):
         return loss, logits
 
 
-class ErnieForMultiLabelSequenceClassification(ErniePreTrainedModel):
+class ErnieForMultiLabelSequenceClassificationSlice(ErniePreTrainedModel):
 
     def __init__(self, config, args):
-        super(ErnieForMultiLabelSequenceClassification, self).__init__(config)
+        super(ErnieForMultiLabelSequenceClassificationSlice, self).__init__(config)
         self.num_labels = config.num_labels
         self.ernie = ErnieModel(config, add_pooling_layer=False)
         for param in self.ernie.parameters():
@@ -279,34 +307,40 @@ class ErnieForMultiLabelSequenceClassification(ErniePreTrainedModel):
         print("[BertClassifier] use visible_matrix: {}".format(self.use_vm))
         self.init_weights()
 
-    def forward(self, input_ids, token_type_ids=None,
-                position_ids=None, head_mask=None, labels=None, visible_matrix=None):
+    def forward(self, input_ids_batch, mask_ids_batch, pos_ids_batch, vms_batch, labels):
         
-        seq_length = input_ids.size(1)
-        
-        # Generate mask according to segment indicators.
-        # mask: [batch_size x 1 x seq_length x seq_length]
-        if visible_matrix is None or not self.use_vm:
-            encoder_attention_mask = (token_type_ids > 0). \
-                    unsqueeze(1). \
-                    repeat(1, seq_length, 1). \
-                    unsqueeze(1)
-            encoder_attention_mask = encoder_attention_mask.float()
-            encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
-        else:
-            encoder_attention_mask = visible_matrix.unsqueeze(1)
-            encoder_attention_mask = encoder_attention_mask.float()
-            encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
+        output_batch = []
+        for i in range(3):
+            input_ids = input_ids_batch[i]
+            attention_mask = mask_ids_batch[i]
+            position_ids = pos_ids_batch[i]
+            visible_matrix = vms_batch[i]
 
-        # token_type_ids实际上是attention_mask
-        outputs = self.ernie(input_ids,
-                            attention_mask=token_type_ids,
-                            encoder_attention_mask=encoder_attention_mask,
-                            position_ids=position_ids,
-                            head_mask=head_mask)
+            seq_length = input_ids.size(1)
+                
+            # Generate mask according to segment indicators.
+            # mask: [batch_size x 1 x seq_length x seq_length]
+            if visible_matrix is None or not self.use_vm:
+                encoder_attention_mask = (attention_mask > 0). \
+                        unsqueeze(1). \
+                        repeat(1, seq_length, 1). \
+                        unsqueeze(1)
+                encoder_attention_mask = encoder_attention_mask.float()
+                encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
+            else:
+                encoder_attention_mask = visible_matrix.unsqueeze(1)
+                encoder_attention_mask = encoder_attention_mask.float()
+                encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
 
+            # token_type_ids实际上是attention_mask
+            outputs = self.ernie(input_ids,
+                                attention_mask=attention_mask,
+                                encoder_attention_mask=encoder_attention_mask,
+                                position_ids=position_ids)
+            output_batch.append(outputs[0])
 
-        output = outputs[0]
+        output = (output_batch[0] + output_batch[1] + output_batch[2]) / 3
+
         # Target.
         if self.pooling == "mean":
             output = torch.mean(output, dim=1)
@@ -321,10 +355,10 @@ class ErnieForMultiLabelSequenceClassification(ErniePreTrainedModel):
         loss = self.criterion(logits.view(-1, self.num_labels), labels.view(-1, self.num_labels))
         return loss, logits
 
-class ErnieRCNNForMultiLabelSequenceClassification(ErniePreTrainedModel):
+class ErnieRCNNForMultiLabelSequenceClassificationSlice(ErniePreTrainedModel):
 
     def __init__(self, config, args):
-        super(ErnieRCNNForMultiLabelSequenceClassification, self).__init__(config)
+        super(ErnieRCNNForMultiLabelSequenceClassificationSlice, self).__init__(config)
         self.num_labels = config.num_labels
         self.ernie = ErnieModel(config, add_pooling_layer=False)
         for param in self.ernie.parameters():
@@ -350,34 +384,39 @@ class ErnieRCNNForMultiLabelSequenceClassification(ErniePreTrainedModel):
         print("[BertClassifier] use visible_matrix: {}".format(self.use_vm))
         self.init_weights()
 
-    def forward(self, input_ids, token_type_ids=None,
-                position_ids=None, head_mask=None, labels=None, visible_matrix=None):
+    def forward(self, input_ids_batch, mask_ids_batch, pos_ids_batch, vms_batch, labels):
         
-        seq_length = input_ids.size(1)
-        
-        # Generate mask according to segment indicators.
-        # mask: [batch_size x 1 x seq_length x seq_length]
-        if visible_matrix is None or not self.use_vm:
-            encoder_attention_mask = (token_type_ids > 0). \
-                    unsqueeze(1). \
-                    repeat(1, seq_length, 1). \
-                    unsqueeze(1)
-            encoder_attention_mask = encoder_attention_mask.float()
-            encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
-        else:
-            encoder_attention_mask = visible_matrix.unsqueeze(1)
-            encoder_attention_mask = encoder_attention_mask.float()
-            encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
+        output_batch = []
+        for i in range(3):
+            input_ids = input_ids_batch[i]
+            attention_mask = mask_ids_batch[i]
+            position_ids = pos_ids_batch[i]
+            visible_matrix = vms_batch[i]
 
-        # token_type_ids实际上是attention_mask
-        outputs = self.ernie(input_ids,
-                            attention_mask=token_type_ids,
-                            encoder_attention_mask=encoder_attention_mask,
-                            position_ids=position_ids,
-                            head_mask=head_mask)
+            seq_length = input_ids.size(1)
+                
+            # Generate mask according to segment indicators.
+            # mask: [batch_size x 1 x seq_length x seq_length]
+            if visible_matrix is None or not self.use_vm:
+                encoder_attention_mask = (attention_mask > 0). \
+                        unsqueeze(1). \
+                        repeat(1, seq_length, 1). \
+                        unsqueeze(1)
+                encoder_attention_mask = encoder_attention_mask.float()
+                encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
+            else:
+                encoder_attention_mask = visible_matrix.unsqueeze(1)
+                encoder_attention_mask = encoder_attention_mask.float()
+                encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
 
+            # token_type_ids实际上是attention_mask
+            outputs = self.ernie(input_ids,
+                                attention_mask=attention_mask,
+                                encoder_attention_mask=encoder_attention_mask,
+                                position_ids=position_ids)
+            output_batch.append(outputs[0])
 
-        output = outputs[0]
+        output = (output_batch[0] + output_batch[1] + output_batch[2]) / 3
 
         out, _ = self.lstm(output)
         out = self.cat((output, out), 2)
@@ -392,10 +431,10 @@ class ErnieRCNNForMultiLabelSequenceClassification(ErniePreTrainedModel):
         return loss, logits
 
 
-class ErnieRNNForMultiLabelSequenceClassification(ErniePreTrainedModel):
+class ErnieRNNForMultiLabelSequenceClassificationSlice(ErniePreTrainedModel):
 
     def __init__(self, config, args):
-        super(ErnieRNNForMultiLabelSequenceClassification, self).__init__(config)
+        super(ErnieRNNForMultiLabelSequenceClassificationSlice, self).__init__(config)
         self.num_labels = config.num_labels
         self.ernie = ErnieModel(config, add_pooling_layer=False)
         for param in self.ernie.parameters():
@@ -417,33 +456,41 @@ class ErnieRNNForMultiLabelSequenceClassification(ErniePreTrainedModel):
         print("[BertClassifier] use visible_matrix: {}".format(self.use_vm))
         self.init_weights()
 
-    def forward(self, input_ids, token_type_ids=None,
-                position_ids=None, head_mask=None, labels=None, visible_matrix=None):
+    def forward(self, input_ids_batch, mask_ids_batch, pos_ids_batch, vms_batch, labels):
         
-        seq_length = input_ids.size(1)
-        
-        # Generate mask according to segment indicators.
-        # mask: [batch_size x 1 x seq_length x seq_length]
-        if visible_matrix is None or not self.use_vm:
-            encoder_attention_mask = (token_type_ids > 0). \
-                    unsqueeze(1). \
-                    repeat(1, seq_length, 1). \
-                    unsqueeze(1)
-            encoder_attention_mask = encoder_attention_mask.float()
-            encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
-        else:
-            encoder_attention_mask = visible_matrix.unsqueeze(1)
-            encoder_attention_mask = encoder_attention_mask.float()
-            encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
+        output_batch = []
+        for i in range(3):
+            input_ids = input_ids_batch[i]
+            attention_mask = mask_ids_batch[i]
+            position_ids = pos_ids_batch[i]
+            visible_matrix = vms_batch[i]
 
-        # token_type_ids实际上是attention_mask
-        outputs = self.ernie(input_ids,
-                            attention_mask=token_type_ids,
-                            encoder_attention_mask=encoder_attention_mask,
-                            position_ids=position_ids,
-                            head_mask=head_mask)
+            seq_length = input_ids.size(1)
+                
+            # Generate mask according to segment indicators.
+            # mask: [batch_size x 1 x seq_length x seq_length]
+            if visible_matrix is None or not self.use_vm:
+                encoder_attention_mask = (attention_mask > 0). \
+                        unsqueeze(1). \
+                        repeat(1, seq_length, 1). \
+                        unsqueeze(1)
+                encoder_attention_mask = encoder_attention_mask.float()
+                encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
+            else:
+                encoder_attention_mask = visible_matrix.unsqueeze(1)
+                encoder_attention_mask = encoder_attention_mask.float()
+                encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
 
-        out, _ = self.lstm(outputs[0])
+            # token_type_ids实际上是attention_mask
+            outputs = self.ernie(input_ids,
+                                attention_mask=attention_mask,
+                                encoder_attention_mask=encoder_attention_mask,
+                                position_ids=position_ids)
+            output_batch.append(outputs[0])
+
+        output = (output_batch[0] + output_batch[1] + output_batch[2]) / 3
+
+        out, _ = self.lstm(output)
         out = self.lstm_dropout(out)
         logits = self.sigmoid(self.classifier(out[:, -1, :]))
 
@@ -451,10 +498,10 @@ class ErnieRNNForMultiLabelSequenceClassification(ErniePreTrainedModel):
         return loss, logits
 
 
-class ErnieCNNForMultiLabelSequenceClassification(ErniePreTrainedModel):
+class ErnieCNNForMultiLabelSequenceClassificationSlice(ErniePreTrainedModel):
 
     def __init__(self, config, args):
-        super(ErnieCNNForMultiLabelSequenceClassification, self).__init__(config)
+        super(ErnieCNNForMultiLabelSequenceClassificationSlice, self).__init__(config)
         self.num_labels = config.num_labels
         self.ernie = ErnieModel(config, add_pooling_layer=False)
         for param in self.ernie.parameters():
@@ -479,33 +526,42 @@ class ErnieCNNForMultiLabelSequenceClassification(ErniePreTrainedModel):
         x = F.max_pool1d(x, x.size(2)).squeeze(2)
         return x
 
-    def forward(self, input_ids, token_type_ids=None,
-                position_ids=None, head_mask=None, labels=None, visible_matrix=None):
+    def forward(self, input_ids_batch, mask_ids_batch, pos_ids_batch, vms_batch, labels):
         
-        seq_length = input_ids.size(1)
-        
-        # Generate mask according to segment indicators.
-        # mask: [batch_size x 1 x seq_length x seq_length]
-        if visible_matrix is None or not self.use_vm:
-            encoder_attention_mask = (token_type_ids > 0). \
-                    unsqueeze(1). \
-                    repeat(1, seq_length, 1). \
-                    unsqueeze(1)
-            encoder_attention_mask = encoder_attention_mask.float()
-            encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
-        else:
-            encoder_attention_mask = visible_matrix.unsqueeze(1)
-            encoder_attention_mask = encoder_attention_mask.float()
-            encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
+        output_batch = []
+        for i in range(3):
+            input_ids = input_ids_batch[i]
+            attention_mask = mask_ids_batch[i]
+            position_ids = pos_ids_batch[i]
+            visible_matrix = vms_batch[i]
 
-        # token_type_ids实际上是attention_mask
-        outputs = self.ernie(input_ids,
-                            attention_mask=token_type_ids,
-                            encoder_attention_mask=encoder_attention_mask,
-                            position_ids=position_ids,
-                            head_mask=head_mask)
+            seq_length = input_ids.size(1)
+                
+            # Generate mask according to segment indicators.
+            # mask: [batch_size x 1 x seq_length x seq_length]
+            if visible_matrix is None or not self.use_vm:
+                encoder_attention_mask = (attention_mask > 0). \
+                        unsqueeze(1). \
+                        repeat(1, seq_length, 1). \
+                        unsqueeze(1)
+                encoder_attention_mask = encoder_attention_mask.float()
+                encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
+            else:
+                encoder_attention_mask = visible_matrix.unsqueeze(1)
+                encoder_attention_mask = encoder_attention_mask.float()
+                encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
 
-        out = outputs[0].unsqueeze(1)
+            # token_type_ids实际上是attention_mask
+            outputs = self.ernie(input_ids,
+                                attention_mask=attention_mask,
+                                encoder_attention_mask=encoder_attention_mask,
+                                position_ids=position_ids)
+            output_batch.append(outputs[0])
+
+        output = (output_batch[0] + output_batch[1] + output_batch[2]) / 3
+
+
+        out = output.unsqueeze(1)
         out = self.cat([self.conv_and_pool(out, conv) for conv in self.convs], 1)
         out = self.cnn_dropout(out)
         logits = self.sigmoid(self.classifier(out))

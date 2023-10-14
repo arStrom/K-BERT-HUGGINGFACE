@@ -25,7 +25,7 @@ def evaluate(model, eval_batch, config, is_test):
 
     model.eval()
     
-    for i, (input_ids_batch, label_ids_batch,  mask_ids_batch, pos_ids_batch, vms_batch) in enumerate(eval_batch):
+    for i, (input_ids_batch, mask_ids_batch, pos_ids_batch, vms_batch, label_ids_batch) in enumerate(eval_batch):
 
         input_ids_batch = input_ids_batch.to(device)
         label_ids_batch = label_ids_batch.to(device)
@@ -89,7 +89,7 @@ def evaluate_multi_label(model, eval_batch, config, is_test):
     pred_all = None
     labels_all = None
     with torch.no_grad():
-        for i, (input_ids_batch, label_ids_batch,  mask_ids_batch, pos_ids_batch, vms_batch) in enumerate(eval_batch):
+        for i, (input_ids_batch, mask_ids_batch, pos_ids_batch, vms_batch, label_ids_batch) in enumerate(eval_batch):
 
             input_ids_batch = input_ids_batch.to(device)
             label_ids_batch = label_ids_batch.to(device)
@@ -139,7 +139,7 @@ def evaluate_multi_label(model, eval_batch, config, is_test):
 
 # Evaluation function.
 def evaluate_multi_label_slice(model, eval_batch, config, is_test):
-    
+
     device = config.device
     instances_num = len(eval_batch.dataset)
     if is_test:
@@ -152,7 +152,7 @@ def evaluate_multi_label_slice(model, eval_batch, config, is_test):
     predict_all = None
     labels_all = None
     with torch.no_grad():
-        for i, (input_ids_batch, label_ids_batch, mask_ids_batch, pos_ids_batch, label_ids_batch) in enumerate(eval_batch):
+        for i, (input_ids_batch, mask_ids_batch, pos_ids_batch, vms_batch, label_ids_batch) in enumerate(eval_batch):
 
             input_ids_batch = input_ids_batch.transpose(0,1).to(device)
             mask_ids_batch = mask_ids_batch.transpose(0,1).to(device)

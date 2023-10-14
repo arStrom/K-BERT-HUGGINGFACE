@@ -30,8 +30,8 @@ def train(model, train_batch, eval_batch, test_batch, config, task):
                 {'params': [p for n, p in param_optimizer if not any(nd in n for nd in no_decay)], 'weight_decay_rate': 0.01},
                 {'params': [p for n, p in param_optimizer if any(nd in n for nd in no_decay)], 'weight_decay_rate': 0.0}
     ]
-    optimizer = BertAdam(optimizer_grouped_parameters, lr=config.learning_rate, warmup=config.warmup, t_total=train_steps)
-    # optimizer = AdamW(model.parameters(), lr=config.learning_rate)
+    # optimizer = BertAdam(optimizer_grouped_parameters, lr=config.learning_rate, warmup=config.warmup, t_total=train_steps)
+    optimizer = AdamW(model.parameters(), lr=config.learning_rate)
     total_loss = 0.0
     result = 0.0
     best_result = 0.0
@@ -40,7 +40,7 @@ def train(model, train_batch, eval_batch, test_batch, config, task):
 
     for epoch in range(1, config.epochs_num+1):
         model.train()
-        for i, (input_ids_batch, label_ids_batch, mask_ids_batch, pos_ids_batch, vms_batch) in enumerate(train_batch):
+        for i, (input_ids_batch, mask_ids_batch, pos_ids_batch, vms_batch, label_ids_batch) in enumerate(train_batch):
             model.zero_grad()
 
             input_ids_batch = input_ids_batch.to(device)
@@ -56,8 +56,8 @@ def train(model, train_batch, eval_batch, test_batch, config, task):
                             visible_matrix=vms_batch)
             if torch.cuda.device_count() > 1:
                 loss = torch.mean(loss)
-            # else:
-            #     loss = loss.mean()
+            else:
+                loss = loss.mean()
             total_loss += loss.item()
             if (i + 1) % config.report_steps == 0:
                 time_dif = get_time_dif(start_time)

@@ -22,6 +22,7 @@ from evaluate import evaluate, evaluate_multi_label, evaluate_multi_label_slice
 from test import test
 import MultiLabelSequenceClassification as MLCModels
 import SingleLabelSequenceClassification as SLCModels
+import MultiLabelSequenceClassificationSlice as MLCSliceModels
 
 
 MLCModel = {
@@ -34,6 +35,18 @@ MLCModel = {
     'ernie-rcnn': MLCModels.ErnieRCNNForMultiLabelSequenceClassification,
     'ernie-cnn': MLCModels.ErnieCNNForMultiLabelSequenceClassification,
     'ernie-rnn': MLCModels.ErnieRNNForMultiLabelSequenceClassification
+}
+
+MLC_Slice_Model = {
+    'bert': MLCSliceModels.BertForMultiLabelSequenceClassificationSlice,
+    'bert': MLCSliceModels.BertForMultiLabelSequenceClassificationSlice,
+    'bert-rcnn': MLCSliceModels.BertRCNNForMultiLabelSequenceClassificationSlice,
+    'bert-cnn': MLCSliceModels.BertCNNForMultiLabelSequenceClassificationSlice,
+    'bert-rnn': MLCSliceModels.BertRNNForMultiLabelSequenceClassificationSlice,
+    'ernie': MLCSliceModels.ErnieForMultiLabelSequenceClassificationSlice,
+    'ernie-rcnn': MLCSliceModels.ErnieRCNNForMultiLabelSequenceClassificationSlice,
+    'ernie-cnn': MLCSliceModels.ErnieCNNForMultiLabelSequenceClassificationSlice,
+    'ernie-rnn': MLCSliceModels.ErnieRNNForMultiLabelSequenceClassificationSlice
 }
 
 SLCModel = {
@@ -149,7 +162,7 @@ def main():
     elif args.task == 'MLC':
         model = MLCModel[model_name].from_pretrained(config.pretrained_model_path, config=model_config, args = args)
     elif args.task == 'MLC-slice':
-        model = MLCModel[model_name].from_pretrained(config.pretrained_model_path, config=model_config, args = args)
+        model = MLC_Slice_Model[model_name].from_pretrained(config.pretrained_model_path, config=model_config, args = args)
     else:
         raise NameError("任务名称错误")
     
