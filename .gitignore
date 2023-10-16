@@ -2,3 +2,5 @@
 /bert_num_epochs=100_batch_size=16_learning_rate=2e-05_max_seq_length=512no_vm=True
 /New Folder
 /__pycache__
+brain/kgs/baiketriples.zip
+brain/kgs/baiketriples/baike_triples.txt
