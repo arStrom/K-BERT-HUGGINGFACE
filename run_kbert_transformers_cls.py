@@ -47,6 +47,7 @@ MLC_Slice_Model = {
     'ernie-rcnn': MLCSliceModels.ErnieRCNNForMultiLabelSequenceClassificationSlice,
     'ernie-rcnn-catmaxpool': MLCSliceModels.ErnieRCNNForMultiLabelSequenceClassificationSliceCatMaxPool,
     'ernie-rcnn-catlstm':MLCSliceModels.ErnieRCNNForMultiLabelSequenceClassificationSliceCatLSTM,
+    'ernie-rcnn-catlstmwide':MLCSliceModels.ErnieRCNNForMultiLabelSequenceClassificationSliceCatLSTMWide,
     'ernie-cnn': MLCSliceModels.ErnieCNNForMultiLabelSequenceClassificationSlice,
     'ernie-rnn': MLCSliceModels.ErnieRNNForMultiLabelSequenceClassificationSlice
 }
