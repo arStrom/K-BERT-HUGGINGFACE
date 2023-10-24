@@ -117,28 +117,38 @@
 # wait
 # echo "44号执行完毕"
 
-nohup python3 -u run_kbert_transformers_cls.py --model ernie-rcnn-catlstm  --pretrained ernie1 --task MLC-slice --dataset book_multilabels_task_slice  --seq_length 256 --epochs_num 20 --batch_size 8 --kg_name CnDbpedia --cuda  > ./outputs/ernie-rcnn-catlstm_ernie1_book_multilabels_task_slice_MLC-slice_256_0.1_0.1_20_8_2.00E-05_100_CnDbpedia_FALSE_FALSE_AdamW.log 2>&1  &
+# nohup python3 -u run_kbert_transformers_cls.py --model ernie-rcnn-catlstm  --pretrained ernie1 --task MLC-slice --dataset book_multilabels_task_slice  --seq_length 256 --epochs_num 20 --batch_size 8 --kg_name CnDbpedia --cuda  > ./outputs/ernie-rcnn-catlstm_ernie1_book_multilabels_task_slice_MLC-slice_256_0.1_0.1_20_8_2.00E-05_100_CnDbpedia_FALSE_FALSE_AdamW.log 2>&1  &
 
+# wait
+# echo "55号执行完毕"
+
+# nohup python3 -u run_kbert_transformers_cls.py --model ernie-rcnn-catlstm  --pretrained ernie1 --task MLC-slice --dataset book_multilabels_task_slice  --seq_length 256 --epochs_num 20 --batch_size 16 --kg_name CnDbpedia --no_kg --cuda  > ./outputs/ernie-rcnn-catlstm_ernie1_book_multilabels_task_slice_MLC-slice_256_0.1_0.1_20_16_2.00E-05_100_CnDbpedia_TRUE_TRUE_AdamW.log 2>&1  &
+
+# wait
+# echo "56号执行完毕"
+
+# nohup python3 -u run_kbert_transformers_cls.py --model ernie-rcnn-catlstm  --pretrained ernie1 --task MLC-slice --dataset book_multilabels_task_slice  --seq_length 256 --epochs_num 20 --batch_size 16 --kg_name CnDbpedia --cuda  > ./outputs/ernie-rcnn-catlstm_ernie1_book_multilabels_task_slice_MLC-slice_256_0.1_0.1_20_16_2.00E-05_100_CnDbpedia_FALSE_FALSE_AdamW.log 2>&1  &
+
+# wait
+# echo "57号执行完毕"
+
+# nohup python3 -u run_kbert_transformers_cls.py --model ernie-rcnn-catlstm  --pretrained ernie1 --task MLC-slice --dataset book_multilabels_task_slice  --seq_length 256 --epochs_num 20 --batch_size 32 --kg_name CnDbpedia --no_kg --cuda  > ./outputs/ernie-rcnn-catlstm_ernie1_book_multilabels_task_slice_MLC-slice_256_0.1_0.1_20_32_2.00E-05_100_CnDbpedia_TRUE_TRUE_AdamW.log 2>&1  &
+
+# wait
+# echo "58号执行完毕"
+
+# nohup python3 -u run_kbert_transformers_cls.py --model ernie-rcnn-catlstm  --pretrained ernie1 --task MLC-slice --dataset book_multilabels_task_slice  --seq_length 256 --epochs_num 20 --batch_size 32 --kg_name CnDbpedia --cuda  > ./outputs/ernie-rcnn-catlstm_ernie1_book_multilabels_task_slice_MLC-slice_256_0.1_0.1_20_32_2.00E-05_100_CnDbpedia_FALSE_FALSE_AdamW.log 2>&1  &
+
+# wait
+# echo "59号执行完毕"
+
+nohup python3 -u run_kbert_transformers_cls.py --model ernie-rcnn-catlstmwide  --pretrained ernie1 --task MLC-slice --dataset book_multilabels_task_slice --learning_rate 2e-5  --seq_length 256 --epochs_num 32 --batch_size 8 --kg_name CnDbpedia --no_kg --cuda  > ./outputs/93.log 2>&1  &
 wait
-echo "55号执行完毕"
+echo "93号执行完毕"
 
-nohup python3 -u run_kbert_transformers_cls.py --model ernie-rcnn-catlstm  --pretrained ernie1 --task MLC-slice --dataset book_multilabels_task_slice  --seq_length 256 --epochs_num 20 --batch_size 16 --kg_name CnDbpedia --no_kg --cuda  > ./outputs/ernie-rcnn-catlstm_ernie1_book_multilabels_task_slice_MLC-slice_256_0.1_0.1_20_16_2.00E-05_100_CnDbpedia_TRUE_TRUE_AdamW.log 2>&1  &
-
+nohup python3 -u run_kbert_transformers_cls.py --model ernie-rcnn-catlstmwide  --pretrained ernie1 --task MLC-slice --dataset book_multilabels_task_slice --learning_rate 2e-5  --seq_length 256 --epochs_num 32 --batch_size 8 --kg_name CnDbpedia --cuda  > ./outputs/94.log 2>&1  &
 wait
-echo "56号执行完毕"
+echo "94号执行完毕"
 
-nohup python3 -u run_kbert_transformers_cls.py --model ernie-rcnn-catlstm  --pretrained ernie1 --task MLC-slice --dataset book_multilabels_task_slice  --seq_length 256 --epochs_num 20 --batch_size 16 --kg_name CnDbpedia --cuda  > ./outputs/ernie-rcnn-catlstm_ernie1_book_multilabels_task_slice_MLC-slice_256_0.1_0.1_20_16_2.00E-05_100_CnDbpedia_FALSE_FALSE_AdamW.log 2>&1  &
 
-wait
-echo "57号执行完毕"
-
-nohup python3 -u run_kbert_transformers_cls.py --model ernie-rcnn-catlstm  --pretrained ernie1 --task MLC-slice --dataset book_multilabels_task_slice  --seq_length 256 --epochs_num 20 --batch_size 32 --kg_name CnDbpedia --no_kg --cuda  > ./outputs/ernie-rcnn-catlstm_ernie1_book_multilabels_task_slice_MLC-slice_256_0.1_0.1_20_32_2.00E-05_100_CnDbpedia_TRUE_TRUE_AdamW.log 2>&1  &
-
-wait
-echo "58号执行完毕"
-
-nohup python3 -u run_kbert_transformers_cls.py --model ernie-rcnn-catlstm  --pretrained ernie1 --task MLC-slice --dataset book_multilabels_task_slice  --seq_length 256 --epochs_num 20 --batch_size 32 --kg_name CnDbpedia --cuda  > ./outputs/ernie-rcnn-catlstm_ernie1_book_multilabels_task_slice_MLC-slice_256_0.1_0.1_20_32_2.00E-05_100_CnDbpedia_FALSE_FALSE_AdamW.log 2>&1  &
-
-wait
-echo "59号执行完毕"
 

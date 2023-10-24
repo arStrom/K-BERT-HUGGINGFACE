@@ -1,0 +1,22 @@
+nohup: 忽略输入
+  0%|          | 0/82 [00:00<?, ?it/s]100%|██████████| 82/82 [00:00<00:00, 1158023.33it/s]
+Vocabulary file line 344 has bad format token
+Vocabulary Size:  21128
+[BertClassifier] use visible_matrix: False
+Some weights of the model checkpoint at ./models/bert were not used when initializing BertCNNForMultiLabelSequenceClassification: ['bert.pooler.dense.weight', 'cls.predictions.bias', 'cls.seq_relationship.bias', 'cls.predictions.transform.dense.weight', 'cls.predictions.transform.LayerNorm.bias', 'cls.predictions.decoder.weight', 'cls.predictions.transform.dense.bias', 'cls.seq_relationship.weight', 'bert.pooler.dense.bias', 'cls.predictions.transform.LayerNorm.weight']
+- This IS expected if you are initializing BertCNNForMultiLabelSequenceClassification from the checkpoint of a model trained on another task or with another architecture (e.g. initializing a BertForSequenceClassification model from a BertForPreTraining model).
+- This IS NOT expected if you are initializing BertCNNForMultiLabelSequenceClassification from the checkpoint of a model that you expect to be exactly identical (initializing a BertForSequenceClassification model from a BertForSequenceClassification model).
+Some weights of BertCNNForMultiLabelSequenceClassification were not initialized from the model checkpoint at ./models/bert and are newly initialized: ['convs.0.weight', 'convs.2.bias', 'convs.1.weight', 'classifier.bias', 'convs.2.weight', 'classifier.weight', 'convs.1.bias', 'convs.0.bias']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+1 GPUs are available. Let's use them.
+device:  cuda
+Start training.
+Loading sentences from ./datasets/book_multilabels_task/train.tsv
+There are 9098 sentence in total. We use 1 processes to inject knowledge into sentences.
+Progress of process 0: 0/9098
+Loading sentences from ./datasets/book_multilabels_task/dev.tsv
+There are 2084 sentence in total. We use 1 processes to inject knowledge into sentences.
+Progress of process 0: 0/2084
+Loading sentences from ./datasets/book_multilabels_task/test.tsv
+There are 2067 sentence in total. We use 1 processes to inject knowledge into sentences.
+Progress of process 0: 0/2067

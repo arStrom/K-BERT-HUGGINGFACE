@@ -10,66 +10,65 @@ class tokenizer:
         self.kg = kg
         self.max_length = max_length
 
+    # def encode(self, sentences, p_id=0):
+    #     sentences_num = len(sentences)
+    #     dataset = []
+    #     columns = {"label":0, "text_a":1}
+    #     for line_id, line in enumerate(sentences):
+    #         if line_id % 10000 == 0:
+    #             print("Progress of process {}: {}/{}".format(p_id, line_id, sentences_num))
+    #             sys.stdout.flush()
+    #         # line = line.strip().split('\t')
+    #         try:
+    #             label = line[columns["label"]]
+    #             tokens = [CLS_TOKEN] + list(line[columns["text_a"]])
+    #             tokens_lenth = len(tokens)
+    #             token_ids = [self.vocab.get(t) for t in tokens]
+    #             pos_ids = [i for i in range(0, tokens_lenth)]
+    #             mask = [1 for i in range(0, tokens_lenth)]
+    #             if tokens_lenth < self.max_length:
+    #                 pad_num = self.max_length - tokens_lenth
+    #                 token_ids += [self.vocab.get(PAD_TOKEN)] * pad_num
+    #                 pos_ids += [self.max_length-1] * pad_num
+    #                 mask += [0] * pad_num
+    #             else:
+    #                 token_ids = token_ids[:self.max_length]
+    #                 pos_ids = pos_ids[:self.max_length]
+    #                 mask = mask[:self.max_length]
+    #             dataset.append((token_ids, label, mask, pos_ids, np.zeros(1)))
+    #         except:
+    #             print("Error line: ", line_id)
+    #     return dataset
+
+
+    # def encode_with_knowledge(self, sentences, p_id=0):
+    #     sentences_num = len(sentences)
+    #     dataset = []
+    #     columns = {"label":0, "text_a":1}
+    #     for line_id, line in enumerate(sentences):
+    #         if line_id % 10000 == 0:
+    #             print("Progress of process {}: {}/{}".format(p_id, line_id, sentences_num))
+    #             sys.stdout.flush()
+    #         # line = line.strip().split('\t')
+    #         try:
+    #             label = line[columns["label"]]
+    #             text = CLS_TOKEN + line[columns["text_a"]]
+
+    #             tokens, pos, vm, _ = self.kg.add_knowledge_with_vm([text], add_pad=True, max_length=self.max_length)
+    #             tokens = tokens[0]
+    #             pos = pos[0]
+    #             vm = vm[0].astype("bool")
+
+    #             token_ids = [self.vocab.get(t) for t in tokens]
+    #             mask = [1 if t != PAD_TOKEN else 0 for t in tokens]
+
+    #             dataset.append((token_ids, label, mask, pos, vm))
+    #         except:
+    #             print("Error line: ", line)
+    #     return dataset
+
 
     def encode(self, sentences, p_id=0):
-        sentences_num = len(sentences)
-        dataset = []
-        columns = {"label":0, "text_a":1}
-        for line_id, line in enumerate(sentences):
-            if line_id % 10000 == 0:
-                print("Progress of process {}: {}/{}".format(p_id, line_id, sentences_num))
-                sys.stdout.flush()
-            # line = line.strip().split('\t')
-            try:
-                label = line[columns["label"]]
-                tokens = [CLS_TOKEN] + list(line[columns["text_a"]])
-                tokens_lenth = len(tokens)
-                token_ids = [self.vocab.get(t) for t in tokens]
-                pos_ids = [i for i in range(0, tokens_lenth)]
-                mask = [1 for i in range(0, tokens_lenth)]
-                if tokens_lenth < self.max_length:
-                    pad_num = self.max_length - tokens_lenth
-                    token_ids += [self.vocab.get(PAD_TOKEN)] * pad_num
-                    pos_ids += [self.max_length-1] * pad_num
-                    mask += [0] * pad_num
-                else:
-                    token_ids = token_ids[:self.max_length]
-                    pos_ids = pos_ids[:self.max_length]
-                    mask = mask[:self.max_length]
-                dataset.append((token_ids, label, mask, pos_ids, np.zeros(1)))
-            except:
-                print("Error line: ", line_id)
-        return dataset
-
-
-    def encode_with_knowledge(self, sentences, p_id=0):
-        sentences_num = len(sentences)
-        dataset = []
-        columns = {"label":0, "text_a":1}
-        for line_id, line in enumerate(sentences):
-            if line_id % 10000 == 0:
-                print("Progress of process {}: {}/{}".format(p_id, line_id, sentences_num))
-                sys.stdout.flush()
-            # line = line.strip().split('\t')
-            try:
-                label = line[columns["label"]]
-                text = CLS_TOKEN + line[columns["text_a"]]
-
-                tokens, pos, vm, _ = self.kg.add_knowledge_with_vm([text], add_pad=True, max_length=self.max_length)
-                tokens = tokens[0]
-                pos = pos[0]
-                vm = vm[0].astype("bool")
-
-                token_ids = [self.vocab.get(t) for t in tokens]
-                mask = [1 if t != PAD_TOKEN else 0 for t in tokens]
-
-                dataset.append((token_ids, label, mask, pos, vm))
-            except:
-                print("Error line: ", line)
-        return dataset
-
-
-    def encode_slice(self, sentences, p_id=0):
         sentences_num = len(sentences)
         dataset = []
         for line_id, inputexample in enumerate(sentences):
@@ -77,69 +76,40 @@ class tokenizer:
                 print("Progress of process {}: {}/{}".format(p_id, line_id, sentences_num))
                 sys.stdout.flush()
             # line = line.strip().split('\t')
+            example = [[],[],[],[]]
             try:
-                label = inputexample.label
-                title_tokens = [CLS_TOKEN] + list(inputexample.title)
-                keyword_tokens = [CLS_TOKEN] + list(inputexample.keyword)
-                summary_tokens = [CLS_TOKEN] + list(inputexample.summary)
+                sentences = [inputexample.text_a, inputexample.text_b, inputexample.text_c]
+                for i,sentence in enumerate(sentences):
+                    if sentence is None:
+                        continue
+                    tokens = [CLS_TOKEN] + list(sentence)
+                    tokens_lenth = len(tokens)
+                    token_ids = [self.vocab.get(t) for t in tokens]
+                    pos_ids = [i for i in range(0, tokens_lenth)]
+                    mask = [1 for i in range(0, tokens_lenth)]
+                    if tokens_lenth < self.max_length:
+                        pad_num = self.max_length - tokens_lenth
+                        token_ids += [self.vocab.get(PAD_TOKEN)] * pad_num
+                        pos_ids += [self.max_length-1] * pad_num
+                        mask += [0] * pad_num
+                    else:
+                        token_ids = token_ids[:self.max_length]
+                        pos_ids = pos_ids[:self.max_length]
+                        mask = mask[:self.max_length]
 
-                title_tokens_lenth = len(title_tokens)
-                keyword_tokens_lenth = len(keyword_tokens)
-                summary_tokens_lenth = len(summary_tokens)
+                    example[0].append(token_ids)
+                    example[1].append(mask)
+                    example[2].append(pos_ids)
+                    example[3].append(np.ones(1))
 
-                title_token_ids = [self.vocab.get(t) for t in title_tokens]
-                keyword_token_ids = [self.vocab.get(t) for t in keyword_tokens]
-                summary_token_ids = [self.vocab.get(t) for t in summary_tokens]
-
-                title_pos_ids = [i for i in range(0, title_tokens_lenth)]
-                keyword_pos_ids = [i for i in range(0, keyword_tokens_lenth)]
-                summary_pos_ids = [i for i in range(0, summary_tokens_lenth)]
-
-                title_mask = [1 for i in range(0, title_tokens_lenth)]
-                keyword_mask = [1 for i in range(0, keyword_tokens_lenth)]
-                summary_mask = [1 for i in range(0, summary_tokens_lenth)]
-
-                if title_tokens_lenth < self.max_length:
-                    pad_num = self.max_length - title_tokens_lenth
-                    title_token_ids += [self.vocab.get(PAD_TOKEN)] * pad_num
-                    title_pos_ids += [self.max_length-1] * pad_num
-                    title_mask += [0] * pad_num
-                else:
-                    title_token_ids = title_token_ids[:self.max_length]
-                    title_pos_ids = title_pos_ids[:self.max_length]
-                    title_mask = title_mask[:self.max_length]
-
-                if keyword_tokens_lenth < self.max_length:
-                    pad_num = self.max_length - keyword_tokens_lenth
-                    keyword_token_ids += [self.vocab.get(PAD_TOKEN)] * pad_num
-                    keyword_pos_ids += [self.max_length-1] * pad_num
-                    keyword_mask += [0] * pad_num
-                else:
-                    keyword_token_ids = keyword_token_ids[:self.max_length]
-                    keyword_pos_ids = keyword_pos_ids[:self.max_length]
-                    keyword_mask = keyword_mask[:self.max_length]
-
-                if summary_tokens_lenth < self.max_length:
-                    pad_num = self.max_length - summary_tokens_lenth
-                    summary_token_ids += [self.vocab.get(PAD_TOKEN)] * pad_num
-                    summary_pos_ids += [self.max_length-1] * pad_num
-                    summary_mask += [0] * pad_num
-                else:
-                    summary_token_ids = summary_token_ids[:self.max_length]
-                    summary_pos_ids = summary_pos_ids[:self.max_length]
-                    summary_mask = summary_mask[:self.max_length]
-
-                dataset.append(((title_token_ids, keyword_token_ids, summary_token_ids), 
-                               (title_mask, keyword_mask, summary_mask), 
-                               (title_pos_ids, keyword_pos_ids, summary_pos_ids),
-                               (np.ones(1), np.ones(1), np.ones(1)),
-                               label))
+                example.append(inputexample.label)
+                dataset.append(example)
             except:
                 print("Error line: ", line_id)
         return dataset
     
 
-    def encode_with_knowledge_slice(self, sentences, p_id=0):
+    def encode_with_knowledge(self, sentences, p_id=0):
         sentences_num = len(sentences)
         dataset = []
         for line_id, inputexample in enumerate(sentences):
@@ -147,44 +117,43 @@ class tokenizer:
                 print("Progress of process {}: {}/{}".format(p_id, line_id, sentences_num))
                 sys.stdout.flush()
             # line = line.strip().split('\t')
-            # try:
-            label = inputexample.label
-            title_text = CLS_TOKEN + inputexample.title
-            keyword_text = CLS_TOKEN + inputexample.keyword
-            summary_text = CLS_TOKEN + inputexample.summary
+            example = [[],[],[],[]]
+            try:
+                sentences = [inputexample.text_a, inputexample.text_b, inputexample.text_c]
+                for i,sentence in enumerate(sentences):
+                    if sentence is None:
+                        continue
+                    text = CLS_TOKEN + sentence
+                    tokens, pos, vm, _ = self.kg.add_knowledge_with_vm([text], add_pad=True, max_length=self.max_length)
+                    tokens = tokens[0]
+                    pos = pos[0]
+                    vm = vm[0].astype("bool")
+                    token_ids = [self.vocab.get(t) for t in tokens]
+                    mask = [1 if t != PAD_TOKEN else 0 for t in tokens]
 
-            title_tokens, title_pos, title_vm, _ = self.kg.add_knowledge_with_vm([title_text], add_pad=True, max_length=self.max_length)
-            
-            title_tokens = title_tokens[0]
-            title_pos = title_pos[0]
-            title_vm = title_vm[0].astype("bool")
+                    tokens = [CLS_TOKEN] + list(sentence)
+                    tokens_lenth = len(tokens)
+                    token_ids = [self.vocab.get(t) for t in tokens_lenth]
+                    pos_ids = [i for i in range(0, tokens_lenth)]
+                    mask = [1 for i in range(0, tokens_lenth)]
+                    if tokens_lenth < self.max_length:
+                        pad_num = self.max_length - tokens_lenth
+                        token_ids += [self.vocab.get(PAD_TOKEN)] * pad_num
+                        pos_ids += [self.max_length-1] * pad_num
+                        mask += [0] * pad_num
+                    else:
+                        token_ids = token_ids[:self.max_length]
+                        pos_ids = pos_ids[:self.max_length]
+                        mask = mask[:self.max_length]
 
-            title_token_ids = [self.vocab.get(t) for t in title_tokens]
-            title_mask = [1 if t != PAD_TOKEN else 0 for t in title_tokens]
-            
-            keyword_tokens, keyword_pos, keyword_vm, _ = self.kg.add_knowledge_with_vm([keyword_text], add_pad=True, max_length=self.max_length)
-            
-            keyword_tokens = keyword_tokens[0]
-            keyword_pos = keyword_pos[0]
-            keyword_vm = keyword_vm[0].astype("bool")
+                    example[0].append(token_ids)
+                    example[1].append(mask)
+                    example[2].append(pos_ids)
+                    example[3].append(np.ones(1))
 
-            keyword_token_ids = [self.vocab.get(t) for t in keyword_tokens]
-            keyword_mask = [1 if t != PAD_TOKEN else 0 for t in keyword_tokens]
-            
-            summary_tokens, summary_pos, summary_vm, _ = self.kg.add_knowledge_with_vm([summary_text], add_pad=True, max_length=self.max_length)
-            
-            summary_tokens = summary_tokens[0]
-            summary_pos = summary_pos[0]
-            summary_vm = summary_vm[0].astype("bool")
+                example.append(inputexample.label)
+                dataset.append(example)
 
-            summary_token_ids = [self.vocab.get(t) for t in summary_tokens]
-            summary_mask = [1 if t != PAD_TOKEN else 0 for t in summary_tokens]
-
-            dataset.append(((title_token_ids, keyword_token_ids, summary_token_ids), 
-                            (title_mask, keyword_mask, summary_mask), 
-                            (title_pos, keyword_pos, summary_pos), 
-                            (title_vm, keyword_vm, summary_vm),
-                            label))
-            # except:
-            #     print("Error line: ", line_id)
+            except:
+                print("Error line: ", line_id)
         return dataset

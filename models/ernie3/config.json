@@ -14,7 +14,7 @@
     "layer_norm_eps": 1e-05,
     "model_type": "ernie",
     "architectures": [
-        "ErnieForMaskedLM"
+        "ErnieForSequenceClassification"
     ],
     "intermediate_size": 3072
 }

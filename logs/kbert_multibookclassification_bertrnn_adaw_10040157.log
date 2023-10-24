@@ -1,0 +1,353 @@
+  0%|          | 0/82 [00:00<?, ?it/s]100%|██████████| 82/82 [00:00<00:00, 1138850.75it/s]
+Vocabulary file line 344 has bad format token
+Vocabulary Size:  21128
+[BertClassifier] use visible_matrix: True
+Some weights of the model checkpoint at ./models/bert were not used when initializing BertRNNForMultiLabelSequenceClassification: ['cls.predictions.transform.dense.weight', 'cls.seq_relationship.weight', 'cls.predictions.decoder.weight', 'cls.seq_relationship.bias', 'cls.predictions.transform.LayerNorm.bias', 'cls.predictions.bias', 'bert.pooler.dense.bias', 'bert.pooler.dense.weight', 'cls.predictions.transform.dense.bias', 'cls.predictions.transform.LayerNorm.weight']
+- This IS expected if you are initializing BertRNNForMultiLabelSequenceClassification from the checkpoint of a model trained on another task or with another architecture (e.g. initializing a BertForSequenceClassification model from a BertForPreTraining model).
+- This IS NOT expected if you are initializing BertRNNForMultiLabelSequenceClassification from the checkpoint of a model that you expect to be exactly identical (initializing a BertForSequenceClassification model from a BertForSequenceClassification model).
+Some weights of BertRNNForMultiLabelSequenceClassification were not initialized from the model checkpoint at ./models/bert and are newly initialized: ['lstm.weight_hh_l1_reverse', 'lstm.bias_ih_l0_reverse', 'lstm.bias_hh_l1_reverse', 'lstm.weight_hh_l1', 'lstm.bias_ih_l0', 'classifier.bias', 'lstm.bias_hh_l1', 'lstm.weight_ih_l1_reverse', 'lstm.bias_ih_l1_reverse', 'lstm.weight_ih_l0', 'lstm.bias_hh_l0_reverse', 'lstm.weight_ih_l0_reverse', 'lstm.weight_hh_l0', 'lstm.weight_hh_l0_reverse', 'lstm.bias_ih_l1', 'classifier.weight', 'lstm.weight_ih_l1', 'lstm.bias_hh_l0']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+2 GPUs are available. Let's use them.
+device:  cuda
+[KnowledgeGraph] Loading spo from /home/lyq2021/experiment/K-BERT-HUGGINGFACE/brain/kgs/CnDbpedia.spo
+Start training.
+Loading sentences from ./datasets/book_multilabels_task/train.tsv
+There are 9098 sentence in total. We use 1 processes to inject knowledge into sentences.
+Progress of process 0: 0/9098
+Loading sentences from ./datasets/book_multilabels_task/dev.tsv
+There are 2084 sentence in total. We use 1 processes to inject knowledge into sentences.
+Progress of process 0: 0/2084
+Loading sentences from ./datasets/book_multilabels_task/test.tsv
+There are 2067 sentence in total. We use 1 processes to inject knowledge into sentences.
+Progress of process 0: 0/2067
+Epoch id: 1, Training steps: 100, Avg loss: 0.098, Time: 0:01:00
+Epoch id: 1, Training steps: 200, Avg loss: 0.091, Time: 0:01:58
+Epoch id: 1, Training steps: 300, Avg loss: 0.087, Time: 0:02:57
+Epoch id: 1, Training steps: 400, Avg loss: 0.093, Time: 0:03:55
+Epoch id: 1, Training steps: 500, Avg loss: 0.085, Time: 0:04:54
+Start evaluation on dev dataset.
+/home/lyq2021/.conda/envs/lyq2021/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1344: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total):  0.00%% Prec: 0.0000 F1: 0.0000
+Epoch id: 2, Training steps: 100, Avg loss: 0.080, Time: 0:07:08
+Epoch id: 2, Training steps: 200, Avg loss: 0.071, Time: 0:08:07
+Epoch id: 2, Training steps: 300, Avg loss: 0.090, Time: 0:09:05
+Epoch id: 2, Training steps: 400, Avg loss: 0.086, Time: 0:10:04
+Epoch id: 2, Training steps: 500, Avg loss: 0.070, Time: 0:11:03
+Start evaluation on dev dataset.
+/home/lyq2021/.conda/envs/lyq2021/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1344: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total):  0.00%% Prec: 0.0000 F1: 0.0000
+Epoch id: 3, Training steps: 100, Avg loss: 0.081, Time: 0:13:17
+Epoch id: 3, Training steps: 200, Avg loss: 0.092, Time: 0:14:16
+Epoch id: 3, Training steps: 300, Avg loss: 0.076, Time: 0:15:14
+Epoch id: 3, Training steps: 400, Avg loss: 0.072, Time: 0:16:13
+Epoch id: 3, Training steps: 500, Avg loss: 0.077, Time: 0:17:12
+Start evaluation on dev dataset.
+/home/lyq2021/.conda/envs/lyq2021/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1344: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total):  0.00%% Prec: 0.0000 F1: 0.0000
+Epoch id: 4, Training steps: 100, Avg loss: 0.071, Time: 0:19:26
+Epoch id: 4, Training steps: 200, Avg loss: 0.074, Time: 0:20:24
+Epoch id: 4, Training steps: 300, Avg loss: 0.072, Time: 0:21:23
+Epoch id: 4, Training steps: 400, Avg loss: 0.080, Time: 0:22:22
+Epoch id: 4, Training steps: 500, Avg loss: 0.071, Time: 0:23:20
+Start evaluation on dev dataset.
+/home/lyq2021/.conda/envs/lyq2021/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1344: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total):  0.00%% Prec: 0.0000 F1: 0.0000
+Epoch id: 5, Training steps: 100, Avg loss: 0.061, Time: 0:25:34
+Epoch id: 5, Training steps: 200, Avg loss: 0.061, Time: 0:26:32
+Epoch id: 5, Training steps: 300, Avg loss: 0.063, Time: 0:27:31
+Epoch id: 5, Training steps: 400, Avg loss: 0.075, Time: 0:28:55
+Epoch id: 5, Training steps: 500, Avg loss: 0.066, Time: 0:29:53
+Start evaluation on dev dataset.
+/home/lyq2021/.conda/envs/lyq2021/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1344: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total):  0.00%% Prec: 0.0000 F1: 0.0000
+Epoch id: 6, Training steps: 100, Avg loss: 0.054, Time: 0:32:07
+Epoch id: 6, Training steps: 200, Avg loss: 0.080, Time: 0:33:06
+Epoch id: 6, Training steps: 300, Avg loss: 0.055, Time: 0:34:04
+Epoch id: 6, Training steps: 400, Avg loss: 0.051, Time: 0:35:03
+Epoch id: 6, Training steps: 500, Avg loss: 0.048, Time: 0:36:02
+Start evaluation on dev dataset.
+/home/lyq2021/.conda/envs/lyq2021/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1344: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total):  0.00%% Prec: 0.0000 F1: 0.0000
+Epoch id: 7, Training steps: 100, Avg loss: 0.051, Time: 0:38:15
+Epoch id: 7, Training steps: 200, Avg loss: 0.052, Time: 0:39:14
+Epoch id: 7, Training steps: 300, Avg loss: 0.043, Time: 0:40:12
+Epoch id: 7, Training steps: 400, Avg loss: 0.046, Time: 0:41:11
+Epoch id: 7, Training steps: 500, Avg loss: 0.048, Time: 0:42:10
+Start evaluation on dev dataset.
+/home/lyq2021/.conda/envs/lyq2021/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1344: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total):  0.77%% Prec: 0.0345 F1: 0.0256
+Start evaluation on test dataset.
+torch.Size([3, 512])
+/home/lyq2021/.conda/envs/lyq2021/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1344: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total):  0.34%% Prec: 0.0339 F1: 0.0237
+Epoch id: 8, Training steps: 100, Avg loss: 0.043, Time: 0:44:59
+Epoch id: 8, Training steps: 200, Avg loss: 0.039, Time: 0:45:58
+Epoch id: 8, Training steps: 300, Avg loss: 0.046, Time: 0:46:56
+Epoch id: 8, Training steps: 400, Avg loss: 0.053, Time: 0:47:55
+Epoch id: 8, Training steps: 500, Avg loss: 0.038, Time: 0:48:53
+Start evaluation on dev dataset.
+/home/lyq2021/.conda/envs/lyq2021/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1344: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total):  6.00%% Prec: 0.1209 F1: 0.1003
+Start evaluation on test dataset.
+torch.Size([3, 512])
+/home/lyq2021/.conda/envs/lyq2021/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1344: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total):  6.87%% Prec: 0.1717 F1: 0.1373
+Epoch id: 9, Training steps: 100, Avg loss: 0.048, Time: 0:51:44
+Epoch id: 9, Training steps: 200, Avg loss: 0.066, Time: 0:52:43
+Epoch id: 9, Training steps: 300, Avg loss: 0.060, Time: 0:53:41
+Epoch id: 9, Training steps: 400, Avg loss: 0.056, Time: 0:54:40
+Epoch id: 9, Training steps: 500, Avg loss: 0.048, Time: 0:55:38
+Start evaluation on dev dataset.
+/home/lyq2021/.conda/envs/lyq2021/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1344: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 11.85%% Prec: 0.1792 F1: 0.1595
+Start evaluation on test dataset.
+torch.Size([3, 512])
+/home/lyq2021/.conda/envs/lyq2021/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1344: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 13.50%% Prec: 0.2346 F1: 0.2027
+Epoch id: 10, Training steps: 100, Avg loss: 0.052, Time: 0:58:29
+Epoch id: 10, Training steps: 200, Avg loss: 0.048, Time: 0:59:28
+Epoch id: 10, Training steps: 300, Avg loss: 0.034, Time: 1:00:26
+Epoch id: 10, Training steps: 400, Avg loss: 0.036, Time: 1:01:25
+Epoch id: 10, Training steps: 500, Avg loss: 0.055, Time: 1:02:23
+Start evaluation on dev dataset.
+/home/lyq2021/.conda/envs/lyq2021/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1344: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 10.65%% Prec: 0.2248 F1: 0.1851
+Epoch id: 11, Training steps: 100, Avg loss: 0.047, Time: 1:04:37
+Epoch id: 11, Training steps: 200, Avg loss: 0.036, Time: 1:05:36
+Epoch id: 11, Training steps: 300, Avg loss: 0.046, Time: 1:06:34
+Epoch id: 11, Training steps: 400, Avg loss: 0.038, Time: 1:07:33
+Epoch id: 11, Training steps: 500, Avg loss: 0.037, Time: 1:08:31
+Start evaluation on dev dataset.
+/home/lyq2021/.conda/envs/lyq2021/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1344: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 14.64%% Prec: 0.2356 F1: 0.2087
+Start evaluation on test dataset.
+torch.Size([3, 512])
+/home/lyq2021/.conda/envs/lyq2021/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1344: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 16.50%% Prec: 0.2499 F1: 0.2231
+Epoch id: 12, Training steps: 100, Avg loss: 0.034, Time: 1:11:22
+Epoch id: 12, Training steps: 200, Avg loss: 0.031, Time: 1:12:21
+Epoch id: 12, Training steps: 300, Avg loss: 0.032, Time: 1:13:19
+Epoch id: 12, Training steps: 400, Avg loss: 0.038, Time: 1:14:18
+Epoch id: 12, Training steps: 500, Avg loss: 0.045, Time: 1:15:16
+Start evaluation on dev dataset.
+/home/lyq2021/.conda/envs/lyq2021/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1344: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 23.56%% Prec: 0.3642 F1: 0.3228
+Start evaluation on test dataset.
+torch.Size([3, 512])
+/home/lyq2021/.conda/envs/lyq2021/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1344: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 28.79%% Prec: 0.4045 F1: 0.3687
+Epoch id: 13, Training steps: 100, Avg loss: 0.034, Time: 1:18:07
+Epoch id: 13, Training steps: 200, Avg loss: 0.056, Time: 1:19:05
+Epoch id: 13, Training steps: 300, Avg loss: 0.030, Time: 1:20:04
+Epoch id: 13, Training steps: 400, Avg loss: 0.031, Time: 1:21:02
+Epoch id: 13, Training steps: 500, Avg loss: 0.036, Time: 1:22:01
+Start evaluation on dev dataset.
+/home/lyq2021/.conda/envs/lyq2021/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1344: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 17.66%% Prec: 0.3131 F1: 0.2679
+Epoch id: 14, Training steps: 100, Avg loss: 0.041, Time: 1:24:15
+Epoch id: 14, Training steps: 200, Avg loss: 0.045, Time: 1:25:13
+Epoch id: 14, Training steps: 300, Avg loss: 0.046, Time: 1:26:12
+Epoch id: 14, Training steps: 400, Avg loss: 0.036, Time: 1:27:10
+Epoch id: 14, Training steps: 500, Avg loss: 0.032, Time: 1:28:09
+Start evaluation on dev dataset.
+/home/lyq2021/.conda/envs/lyq2021/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1344: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 26.39%% Prec: 0.4000 F1: 0.3593
+Start evaluation on test dataset.
+torch.Size([3, 512])
+/home/lyq2021/.conda/envs/lyq2021/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1344: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 31.40%% Prec: 0.4386 F1: 0.4000
+Epoch id: 15, Training steps: 100, Avg loss: 0.045, Time: 1:30:59
+Epoch id: 15, Training steps: 200, Avg loss: 0.026, Time: 1:31:58
+Epoch id: 15, Training steps: 300, Avg loss: 0.022, Time: 1:32:56
+Epoch id: 15, Training steps: 400, Avg loss: 0.050, Time: 1:33:55
+Epoch id: 15, Training steps: 500, Avg loss: 0.047, Time: 1:34:53
+Start evaluation on dev dataset.
+/home/lyq2021/.conda/envs/lyq2021/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1344: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 22.07%% Prec: 0.3786 F1: 0.3270
+Epoch id: 16, Training steps: 100, Avg loss: 0.020, Time: 1:37:07
+Epoch id: 16, Training steps: 200, Avg loss: 0.031, Time: 1:38:05
+Epoch id: 16, Training steps: 300, Avg loss: 0.043, Time: 1:39:04
+Epoch id: 16, Training steps: 400, Avg loss: 0.036, Time: 1:40:03
+Epoch id: 16, Training steps: 500, Avg loss: 0.017, Time: 1:41:01
+Start evaluation on dev dataset.
+/home/lyq2021/.conda/envs/lyq2021/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1344: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 27.06%% Prec: 0.4208 F1: 0.3762
+Start evaluation on test dataset.
+torch.Size([3, 512])
+/home/lyq2021/.conda/envs/lyq2021/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1344: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 34.01%% Prec: 0.4799 F1: 0.4382
+Epoch id: 17, Training steps: 100, Avg loss: 0.027, Time: 1:43:51
+Epoch id: 17, Training steps: 200, Avg loss: 0.025, Time: 1:44:50
+Epoch id: 17, Training steps: 300, Avg loss: 0.027, Time: 1:46:19
+Epoch id: 17, Training steps: 400, Avg loss: 0.038, Time: 1:47:18
+Epoch id: 17, Training steps: 500, Avg loss: 0.026, Time: 1:48:16
+Start evaluation on dev dataset.
+/home/lyq2021/.conda/envs/lyq2021/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1344: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 30.04%% Prec: 0.4350 F1: 0.3925
+Start evaluation on test dataset.
+torch.Size([3, 512])
+/home/lyq2021/.conda/envs/lyq2021/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1344: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 31.98%% Prec: 0.4773 F1: 0.4286
+Epoch id: 18, Training steps: 100, Avg loss: 0.032, Time: 1:51:06
+Epoch id: 18, Training steps: 200, Avg loss: 0.025, Time: 1:52:04
+Epoch id: 18, Training steps: 300, Avg loss: 0.036, Time: 1:53:03
+Epoch id: 18, Training steps: 400, Avg loss: 0.045, Time: 1:54:01
+Epoch id: 18, Training steps: 500, Avg loss: 0.025, Time: 1:55:00
+Start evaluation on dev dataset.
+/home/lyq2021/.conda/envs/lyq2021/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1344: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 30.09%% Prec: 0.4643 F1: 0.4112
+Start evaluation on test dataset.
+torch.Size([3, 512])
+/home/lyq2021/.conda/envs/lyq2021/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1344: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 33.62%% Prec: 0.5184 F1: 0.4596
+Epoch id: 19, Training steps: 100, Avg loss: 0.046, Time: 1:57:50
+Epoch id: 19, Training steps: 200, Avg loss: 0.020, Time: 1:58:49
+Epoch id: 19, Training steps: 300, Avg loss: 0.020, Time: 1:59:47
+Epoch id: 19, Training steps: 400, Avg loss: 0.029, Time: 2:00:46
+Epoch id: 19, Training steps: 500, Avg loss: 0.019, Time: 2:01:44
+Start evaluation on dev dataset.
+/home/lyq2021/.conda/envs/lyq2021/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1344: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 24.18%% Prec: 0.3798 F1: 0.3344
+Epoch id: 20, Training steps: 100, Avg loss: 0.031, Time: 2:03:58
+Epoch id: 20, Training steps: 200, Avg loss: 0.028, Time: 2:04:56
+Epoch id: 20, Training steps: 300, Avg loss: 0.035, Time: 2:05:55
+Epoch id: 20, Training steps: 400, Avg loss: 0.023, Time: 2:06:53
+Epoch id: 20, Training steps: 500, Avg loss: 0.030, Time: 2:07:51
+Start evaluation on dev dataset.
+/home/lyq2021/.conda/envs/lyq2021/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1344: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 31.72%% Prec: 0.4774 F1: 0.4260
+Start evaluation on test dataset.
+torch.Size([3, 512])
+/home/lyq2021/.conda/envs/lyq2021/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1344: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 34.35%% Prec: 0.5106 F1: 0.4598
+Final evaluation on the test dataset.
+The number of evaluation instances:  2067
+torch.Size([3, 512])
+/home/lyq2021/.conda/envs/lyq2021/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1344: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+/home/lyq2021/.conda/envs/lyq2021/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1344: UndefinedMetricWarning: Precision and F-score are ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+/home/lyq2021/.conda/envs/lyq2021/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1344: UndefinedMetricWarning: Precision and F-score are ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 34.35% Prec: 0.5106 F1: 0.4598
+Precision, Recall and F1-Score...
+              precision    recall  f1-score   support
+
+         教育学     0.8480    0.8797    0.8635       241
+          法学     0.8785    0.8393    0.8584       224
+      中国语言文学     0.8609    0.7027    0.7738       185
+         政治学     0.7093    0.3742    0.4900       163
+         社会学     0.9106    0.7134    0.8000       157
+         心理学     0.7727    0.5528    0.6445       123
+       应用经济学     0.5714    0.1709    0.2632       117
+         历史学     0.9259    0.2294    0.3676       109
+     环境科学与工程     0.8021    0.7130    0.7549       108
+          哲学     0.7021    0.3402    0.4583        97
+      外国语言文学     0.7679    0.5059    0.6099        85
+         生物学     0.8333    0.5063    0.6299        79
+      交通运输工程     0.8182    0.9231    0.8675        78
+        临床医学     0.8205    0.4211    0.5565        76
+    计算机科学与技术     0.9062    0.4085    0.5631        71
+        土木工程     0.0000    0.0000    0.0000        66
+   航空宇航科学与技术     0.8654    0.7377    0.7965        61
+         民族学     0.0000    0.0000    0.0000        55
+   公共卫生与预防医学     0.8667    0.2549    0.3939        51
+         美术学     0.8679    0.9200    0.8932        50
+         艺术学     0.8400    0.4884    0.6176        43
+         地理学     0.8182    0.2143    0.3396        42
+         体育学     0.8750    0.1750    0.2917        40
+       理论经济学     0.0000    0.0000    0.0000        38
+         中医学     0.8929    0.6757    0.7692        37
+         物理学     1.0000    0.0556    0.1053        36
+          林学     0.0000    0.0000    0.0000        33
+          数学     0.0000    0.0000    0.0000        32
+     电子科学与技术     0.0000    0.0000    0.0000        31
+        基础医学     0.0000    0.0000    0.0000        29
+        工商管理     0.0000    0.0000    0.0000        27
+       新闻传播学     0.0000    0.0000    0.0000        22
+         天文学     0.0000    0.0000    0.0000        22
+         地质学     0.0000    0.0000    0.0000        21
+         畜牧学     0.0000    0.0000    0.0000        21
+   军事思想及军事历史     0.0000    0.0000    0.0000        20
+     管理科学与工程     0.0000    0.0000    0.0000        18
+     测绘科学与技术     0.0000    0.0000    0.0000        17
+        水利工程     0.0000    0.0000    0.0000        16
+        大气科学     0.0000    0.0000    0.0000        16
+     兵器科学与技术     0.0000    0.0000    0.0000        15
+       地球物理学     0.0000    0.0000    0.0000        14
+        电气工程     0.0000    0.0000    0.0000        13
+         作物学     0.0000    0.0000    0.0000        13
+     控制科学与工程     0.0000    0.0000    0.0000        13
+     信息与通信工程     0.0000    0.0000    0.0000        13
+        公共管理     0.0000    0.0000    0.0000        13
+         建筑学     0.0000    0.0000    0.0000        13
+     化学工程与技术     0.0000    0.0000    0.0000        12
+          力学     0.0000    0.0000    0.0000        11
+        海洋科学     0.0000    0.0000    0.0000        11
+     轻工技术与工程     0.0000    0.0000    0.0000        11
+        农业工程     0.0000    0.0000    0.0000        10
+         园艺学     0.0000    0.0000    0.0000        10
+       中西医结合     0.0000    0.0000    0.0000        10
+        机械工程     0.0000    0.0000    0.0000         9
+       科学技术史     0.0000    0.0000    0.0000         8
+     船舶与海洋工程     0.0000    0.0000    0.0000         8
+   图书情报与档案管理     0.0000    0.0000    0.0000         8
+        植物保护     0.0000    0.0000    0.0000         8
+     材料科学与工程     0.0000    0.0000    0.0000         8
+         统计学     0.0000    0.0000    0.0000         8
+          化学     0.0000    0.0000    0.0000         8
+     食品科学与工程     0.0000    0.0000    0.0000         8
+          水产     0.0000    0.0000    0.0000         7
+          药学     0.0000    0.0000    0.0000         7
+     农业资源与环境     0.0000    0.0000    0.0000         7
+         世界史     0.0000    0.0000    0.0000         7
+        系统科学     0.0000    0.0000    0.0000         7
+      农林经济管理     0.0000    0.0000    0.0000         5
+       军队指挥学     0.0000    0.0000    0.0000         5
+        矿业工程     0.0000    0.0000    0.0000         5
+     纺织科学与工程     0.0000    0.0000    0.0000         5
+  动力工程及工程热物理     0.0000    0.0000    0.0000         4
+        林业工程     0.0000    0.0000    0.0000         4
+     仪器科学与技术     0.0000    0.0000    0.0000         3
+         战略学     0.0000    0.0000    0.0000         3
+   地质资源与地质工程     0.0000    0.0000    0.0000         3
+        旅游管理     0.0000    0.0000    0.0000         3
+ 图书馆、情报与档案管理     0.0000    0.0000    0.0000         2
+        冶金工程     0.0000    0.0000    0.0000         2
+      核科学与技术     0.0000    0.0000    0.0000         2
+
+   micro avg     0.8323    0.4235    0.5614      3093
+   macro avg     0.2336    0.1439    0.1672      3093
+weighted avg     0.6056    0.4235    0.4768      3093
+ samples avg     0.5106    0.4359    0.4598      3093
+

@@ -1,0 +1,123 @@
+nohup: 忽略输入
+  0%|          | 0/82 [00:00<?, ?it/s]100%|██████████| 82/82 [00:00<00:00, 1123963.82it/s]
+Vocabulary file line 344 has bad format token
+Vocabulary Size:  21128
+[BertClassifier] use visible_matrix: True
+Some weights of the model checkpoint at ./models/google were not used when initializing BertForMultiLabelSequenceClassification: ['cls.seq_relationship.weight', 'cls.predictions.bias', 'cls.predictions.transform.dense.weight', 'cls.predictions.transform.dense.bias', 'cls.seq_relationship.bias', 'cls.predictions.transform.LayerNorm.bias', 'cls.predictions.transform.LayerNorm.weight', 'bert.pooler.dense.bias', 'cls.predictions.decoder.weight', 'bert.pooler.dense.weight']
+- This IS expected if you are initializing BertForMultiLabelSequenceClassification from the checkpoint of a model trained on another task or with another architecture (e.g. initializing a BertForSequenceClassification model from a BertForPreTraining model).
+- This IS NOT expected if you are initializing BertForMultiLabelSequenceClassification from the checkpoint of a model that you expect to be exactly identical (initializing a BertForSequenceClassification model from a BertForSequenceClassification model).
+Some weights of BertForMultiLabelSequenceClassification were not initialized from the model checkpoint at ./models/google and are newly initialized: ['output_layer_1.weight', 'output_layer_2.bias', 'output_layer_2.weight', 'output_layer_1.bias']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+2 GPUs are available. Let's use them.
+device:  cuda
+[KnowledgeGraph] Loading spo from /home/lyq2021/experiment/K-BERT-HUGGINGFACE/brain/kgs/CnDbpedia.spo
+Start training.
+Loading sentences from ./datasets/book_multilabels_task/train.tsv
+There are 9098 sentence in total. We use 1 processes to inject knowledge into sentences.
+Progress of process 0: 0/9098
+Loading sentences from ./datasets/book_multilabels_task/dev.tsv
+There are 2084 sentence in total. We use 1 processes to inject knowledge into sentences.
+Progress of process 0: 0/2084
+Loading sentences from ./datasets/book_multilabels_task/test.tsv
+There are 2067 sentence in total. We use 1 processes to inject knowledge into sentences.
+Progress of process 0: 0/2067
+Final evaluation on the test dataset.
+The number of evaluation instances:  2067
+/home/lyq2021/.conda/envs/lyq2021/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1344: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+/home/lyq2021/.conda/envs/lyq2021/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1344: UndefinedMetricWarning: Precision and F-score are ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+/home/lyq2021/.conda/envs/lyq2021/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1344: UndefinedMetricWarning: Precision and F-score are ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 0.5883 (168101/2067) Prec: 0.7777 F1: 0.7258
+Precision, Recall and F1-Score...
+              precision    recall  f1-score   support
+
+         教育学     0.9136    0.9212    0.9174       241
+          法学     0.9100    0.8125    0.8585       224
+      中国语言文学     0.8432    0.8432    0.8432       185
+         政治学     0.9531    0.3742    0.5374       163
+         社会学     0.8182    0.8025    0.8103       157
+         心理学     0.9028    0.5285    0.6667       123
+       应用经济学     0.7294    0.5299    0.6139       117
+         历史学     0.8395    0.6239    0.7158       109
+     环境科学与工程     0.9011    0.7593    0.8241       108
+          哲学     0.7547    0.4124    0.5333        97
+      外国语言文学     0.7111    0.7529    0.7314        85
+         生物学     0.8442    0.8228    0.8333        79
+      交通运输工程     0.9048    0.9744    0.9383        78
+        临床医学     0.8871    0.7237    0.7971        76
+    计算机科学与技术     0.7067    0.7465    0.7260        71
+        土木工程     0.9014    0.9697    0.9343        66
+   航空宇航科学与技术     0.9508    0.9508    0.9508        61
+         民族学     0.6415    0.6182    0.6296        55
+   公共卫生与预防医学     0.6774    0.4118    0.5122        51
+         美术学     0.9231    0.9600    0.9412        50
+         艺术学     0.8462    0.7674    0.8049        43
+         地理学     0.9032    0.6667    0.7671        42
+         体育学     0.8462    0.5500    0.6667        40
+       理论经济学     0.6562    0.5526    0.6000        38
+         中医学     0.9259    0.6757    0.7813        37
+         物理学     0.9091    0.8333    0.8696        36
+          林学     0.8636    0.5758    0.6909        33
+          数学     0.7500    0.4688    0.5769        32
+     电子科学与技术     0.6111    0.3548    0.4490        31
+        基础医学     0.5238    0.3793    0.4400        29
+        工商管理     0.8095    0.6296    0.7083        27
+       新闻传播学     0.7647    0.5909    0.6667        22
+         天文学     0.8500    0.7727    0.8095        22
+         地质学     0.8824    0.7143    0.7895        21
+         畜牧学     0.8182    0.8571    0.8372        21
+   军事思想及军事历史     0.8571    0.6000    0.7059        20
+     管理科学与工程     0.6875    0.6111    0.6471        18
+     测绘科学与技术     0.7333    0.6471    0.6875        17
+        水利工程     1.0000    0.5000    0.6667        16
+        大气科学     0.9167    0.6875    0.7857        16
+     兵器科学与技术     0.8333    0.6667    0.7407        15
+       地球物理学     0.7500    0.2143    0.3333        14
+        电气工程     1.0000    0.5385    0.7000        13
+         作物学     0.7778    0.5385    0.6364        13
+     控制科学与工程     0.1667    0.0769    0.1053        13
+     信息与通信工程     0.6429    0.6923    0.6667        13
+        公共管理     1.0000    0.1538    0.2667        13
+         建筑学     1.0000    0.1538    0.2667        13
+     化学工程与技术     0.9091    0.8333    0.8696        12
+          力学     0.8333    0.4545    0.5882        11
+        海洋科学     1.0000    0.6364    0.7778        11
+     轻工技术与工程     0.3636    0.3636    0.3636        11
+        农业工程     1.0000    0.5000    0.6667        10
+         园艺学     0.9000    0.9000    0.9000        10
+       中西医结合     1.0000    0.1000    0.1818        10
+        机械工程     1.0000    0.6667    0.8000         9
+       科学技术史     1.0000    0.3750    0.5455         8
+     船舶与海洋工程     0.8333    0.6250    0.7143         8
+   图书情报与档案管理     0.7500    0.3750    0.5000         8
+        植物保护     1.0000    0.7500    0.8571         8
+     材料科学与工程     1.0000    0.2500    0.4000         8
+         统计学     0.5833    0.8750    0.7000         8
+          化学     0.7143    0.6250    0.6667         8
+     食品科学与工程     1.0000    0.3750    0.5455         8
+          水产     1.0000    0.8571    0.9231         7
+          药学     1.0000    0.5714    0.7273         7
+     农业资源与环境     1.0000    0.5714    0.7273         7
+         世界史     1.0000    0.4286    0.6000         7
+        系统科学     0.5714    0.5714    0.5714         7
+      农林经济管理     0.5000    0.4000    0.4444         5
+       军队指挥学     1.0000    0.4000    0.5714         5
+        矿业工程     0.5000    0.2000    0.2857         5
+     纺织科学与工程     0.7143    1.0000    0.8333         5
+  动力工程及工程热物理     0.0000    0.0000    0.0000         4
+        林业工程     1.0000    0.2500    0.4000         4
+     仪器科学与技术     0.0000    0.0000    0.0000         3
+         战略学     1.0000    0.3333    0.5000         3
+   地质资源与地质工程     0.0000    0.0000    0.0000         3
+        旅游管理     1.0000    0.6667    0.8000         3
+ 图书馆、情报与档案管理     0.0000    0.0000    0.0000         2
+        冶金工程     0.0000    0.0000    0.0000         2
+      核科学与技术     0.0000    0.0000    0.0000         2
+
+   micro avg     0.8381    0.6812    0.7516      3093
+   macro avg     0.7709    0.5483    0.6151      3093
+weighted avg     0.8373    0.6812    0.7349      3093
+ samples avg     0.7777    0.7031    0.7258      3093
+

@@ -1,0 +1,122 @@
+nohup: 忽略输入
+  0%|          | 0/82 [00:00<?, ?it/s]100%|██████████| 82/82 [00:00<00:00, 1102349.13it/s]
+Vocabulary file line 344 has bad format token
+Vocabulary Size:  21128
+[BertClassifier] use visible_matrix: False
+Some weights of the model checkpoint at ./models/bert were not used when initializing BertForMultiLabelSequenceClassification: ['cls.seq_relationship.bias', 'cls.predictions.transform.LayerNorm.bias', 'cls.predictions.bias', 'cls.predictions.transform.LayerNorm.weight', 'cls.predictions.decoder.weight', 'cls.seq_relationship.weight', 'cls.predictions.transform.dense.bias', 'cls.predictions.transform.dense.weight']
+- This IS expected if you are initializing BertForMultiLabelSequenceClassification from the checkpoint of a model trained on another task or with another architecture (e.g. initializing a BertForSequenceClassification model from a BertForPreTraining model).
+- This IS NOT expected if you are initializing BertForMultiLabelSequenceClassification from the checkpoint of a model that you expect to be exactly identical (initializing a BertForSequenceClassification model from a BertForSequenceClassification model).
+Some weights of BertForMultiLabelSequenceClassification were not initialized from the model checkpoint at ./models/bert and are newly initialized: ['output_layer_2.bias', 'output_layer_1.bias', 'output_layer_2.weight', 'output_layer_1.weight']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+2 GPUs are available. Let's use them.
+device:  cuda
+Start training.
+Loading sentences from ./datasets/book_multilabels_task/train.tsv
+There are 9098 sentence in total. We use 1 processes to inject knowledge into sentences.
+Progress of process 0: 0/9098
+Loading sentences from ./datasets/book_multilabels_task/dev.tsv
+There are 2084 sentence in total. We use 1 processes to inject knowledge into sentences.
+Progress of process 0: 0/2084
+Loading sentences from ./datasets/book_multilabels_task/test.tsv
+There are 2067 sentence in total. We use 1 processes to inject knowledge into sentences.
+Progress of process 0: 0/2067
+Final evaluation on the test dataset.
+The number of evaluation instances:  2067
+/home/lyq2021/.conda/envs/lyq2021/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1344: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+/home/lyq2021/.conda/envs/lyq2021/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1344: UndefinedMetricWarning: Precision and F-score are ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+/home/lyq2021/.conda/envs/lyq2021/lib/python3.10/site-packages/sklearn/metrics/_classification.py:1344: UndefinedMetricWarning: Precision and F-score are ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 0.6284 (168244/2067) Prec: 0.8083 F1: 0.7622
+Precision, Recall and F1-Score...
+              precision    recall  f1-score   support
+
+         教育学     0.9190    0.9419    0.9303       241
+          法学     0.9083    0.8839    0.8959       224
+      中国语言文学     0.8875    0.7676    0.8232       185
+         政治学     0.8000    0.6135    0.6944       163
+         社会学     0.8889    0.8153    0.8505       157
+         心理学     0.9067    0.5528    0.6869       123
+       应用经济学     0.7419    0.5897    0.6571       117
+         历史学     0.8987    0.6514    0.7553       109
+     环境科学与工程     0.8866    0.7963    0.8390       108
+          哲学     0.8103    0.4845    0.6065        97
+      外国语言文学     0.8630    0.7412    0.7975        85
+         生物学     0.8961    0.8734    0.8846        79
+      交通运输工程     0.8846    0.8846    0.8846        78
+        临床医学     0.9194    0.7500    0.8261        76
+    计算机科学与技术     0.8689    0.7465    0.8030        71
+        土木工程     0.8714    0.9242    0.8971        66
+   航空宇航科学与技术     0.9322    0.9016    0.9167        61
+         民族学     0.6905    0.5273    0.5979        55
+   公共卫生与预防医学     0.7222    0.7647    0.7429        51
+         美术学     0.8750    0.9800    0.9245        50
+         艺术学     0.8250    0.7674    0.7952        43
+         地理学     0.7857    0.7857    0.7857        42
+         体育学     0.8750    0.3500    0.5000        40
+       理论经济学     0.7273    0.8421    0.7805        38
+         中医学     0.9697    0.8649    0.9143        37
+         物理学     0.8421    0.8889    0.8649        36
+          林学     0.9000    0.5455    0.6792        33
+          数学     0.8636    0.5938    0.7037        32
+     电子科学与技术     0.7917    0.6129    0.6909        31
+        基础医学     0.4000    0.6897    0.5063        29
+        工商管理     0.9545    0.7778    0.8571        27
+       新闻传播学     0.7895    0.6818    0.7317        22
+         天文学     0.8636    0.8636    0.8636        22
+         地质学     1.0000    0.5238    0.6875        21
+         畜牧学     0.7917    0.9048    0.8444        21
+   军事思想及军事历史     0.7895    0.7500    0.7692        20
+     管理科学与工程     0.6667    0.7778    0.7179        18
+     测绘科学与技术     0.7778    0.4118    0.5385        17
+        水利工程     1.0000    0.4375    0.6087        16
+        大气科学     1.0000    0.8125    0.8966        16
+     兵器科学与技术     0.7059    0.8000    0.7500        15
+       地球物理学     0.6000    0.2143    0.3158        14
+        电气工程     1.0000    0.5385    0.7000        13
+         作物学     0.6667    0.4615    0.5455        13
+     控制科学与工程     0.3636    0.3077    0.3333        13
+     信息与通信工程     0.8750    0.5385    0.6667        13
+        公共管理     0.5000    0.1538    0.2353        13
+         建筑学     1.0000    0.2308    0.3750        13
+     化学工程与技术     0.8000    0.6667    0.7273        12
+          力学     1.0000    0.4545    0.6250        11
+        海洋科学     1.0000    0.9091    0.9524        11
+     轻工技术与工程     0.5000    0.5455    0.5217        11
+        农业工程     1.0000    0.2000    0.3333        10
+         园艺学     0.8889    0.8000    0.8421        10
+       中西医结合     1.0000    0.3000    0.4615        10
+        机械工程     1.0000    0.6667    0.8000         9
+       科学技术史     0.8333    0.6250    0.7143         8
+     船舶与海洋工程     1.0000    0.3750    0.5455         8
+   图书情报与档案管理     0.7500    0.7500    0.7500         8
+        植物保护     1.0000    0.7500    0.8571         8
+     材料科学与工程     0.8000    0.5000    0.6154         8
+         统计学     0.6000    0.7500    0.6667         8
+          化学     1.0000    0.6250    0.7692         8
+     食品科学与工程     1.0000    0.6250    0.7692         8
+          水产     1.0000    0.4286    0.6000         7
+          药学     0.8333    0.7143    0.7692         7
+     农业资源与环境     1.0000    0.4286    0.6000         7
+         世界史     0.7778    1.0000    0.8750         7
+        系统科学     0.5714    0.5714    0.5714         7
+      农林经济管理     1.0000    0.4000    0.5714         5
+       军队指挥学     1.0000    0.4000    0.5714         5
+        矿业工程     0.5000    0.2000    0.2857         5
+     纺织科学与工程     0.7143    1.0000    0.8333         5
+  动力工程及工程热物理     0.0000    0.0000    0.0000         4
+        林业工程     0.3333    0.2500    0.2857         4
+     仪器科学与技术     0.0000    0.0000    0.0000         3
+         战略学     1.0000    0.3333    0.5000         3
+   地质资源与地质工程     1.0000    0.3333    0.5000         3
+        旅游管理     1.0000    0.6667    0.8000         3
+ 图书馆、情报与档案管理     0.0000    0.0000    0.0000         2
+        冶金工程     0.0000    0.0000    0.0000         2
+      核科学与技术     0.0000    0.0000    0.0000         2
+
+   micro avg     0.8489    0.7249    0.7820      3093
+   macro avg     0.7853    0.5925    0.6510      3093
+weighted avg     0.8515    0.7249    0.7714      3093
+ samples avg     0.8083    0.7439    0.7622      3093
+

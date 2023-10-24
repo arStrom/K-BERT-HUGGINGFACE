@@ -1,0 +1,32 @@
+  0%|          | 0/82 [00:00<?, ?it/s]100%|██████████| 82/82 [00:00<00:00, 1177852.49it/s]
+Vocabulary Size:  17964
+[BertClassifier] use visible_matrix: False
+Some weights of the model checkpoint at ./models/ernie1 were not used when initializing ErnieRCNNForMultiLabelSequenceClassification: ['ernie.pooler.dense.bias', 'cls.predictions.bias', 'cls.predictions.transform.dense.bias', 'cls.predictions.transform.LayerNorm.bias', 'cls.predictions.transform.LayerNorm.weight', 'ernie.pooler.dense.weight', 'cls.predictions.transform.dense.weight']
+- This IS expected if you are initializing ErnieRCNNForMultiLabelSequenceClassification from the checkpoint of a model trained on another task or with another architecture (e.g. initializing a BertForSequenceClassification model from a BertForPreTraining model).
+- This IS NOT expected if you are initializing ErnieRCNNForMultiLabelSequenceClassification from the checkpoint of a model that you expect to be exactly identical (initializing a BertForSequenceClassification model from a BertForSequenceClassification model).
+Some weights of ErnieRCNNForMultiLabelSequenceClassification were not initialized from the model checkpoint at ./models/ernie1 and are newly initialized: ['classifier.bias', 'lstm.weight_ih_l1_reverse', 'lstm.weight_ih_l0', 'lstm.bias_hh_l1', 'lstm.weight_hh_l1', 'lstm.bias_ih_l0', 'output_layer_1.bias', 'lstm.weight_hh_l0_reverse', 'lstm.bias_ih_l1', 'classifier.weight', 'lstm.bias_ih_l1_reverse', 'lstm.bias_hh_l1_reverse', 'lstm.bias_hh_l0_reverse', 'lstm.weight_ih_l1', 'lstm.bias_hh_l0', 'lstm.weight_hh_l1_reverse', 'lstm.bias_ih_l0_reverse', 'lstm.weight_hh_l0', 'output_layer_1.weight', 'lstm.weight_ih_l0_reverse']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+1 GPUs are available. Let's use them.
+device:  cuda
+Start training.
+Loading sentences from ./datasets/book_multilabels_task/train.tsv
+There are 9098 sentence in total. We use 1 processes to inject knowledge into sentences.
+Progress of process 0: 0/9098
+Loading sentences from ./datasets/book_multilabels_task/dev.tsv
+There are 2084 sentence in total. We use 1 processes to inject knowledge into sentences.
+Progress of process 0: 0/2084
+Loading sentences from ./datasets/book_multilabels_task/test.tsv
+There are 2067 sentence in total. We use 1 processes to inject knowledge into sentences.
+Progress of process 0: 0/2067
+Traceback (most recent call last):
+  File "/home/lyq2021/experiment/K-BERT-HUGGINGFACE/run_kbert_transformers_cls.py", line 170, in <module>
+    main()
+  File "/home/lyq2021/experiment/K-BERT-HUGGINGFACE/run_kbert_transformers_cls.py", line 163, in main
+    train(model, train_batch, dev_batch, test_batch, config=config, is_MLC=True)
+  File "/home/lyq2021/experiment/K-BERT-HUGGINGFACE/train.py", line 66, in train
+    loss.backward()
+  File "/home/lyq2021/.conda/envs/lyq2021/lib/python3.10/site-packages/torch/_tensor.py", line 487, in backward
+    torch.autograd.backward(
+  File "/home/lyq2021/.conda/envs/lyq2021/lib/python3.10/site-packages/torch/autograd/__init__.py", line 200, in backward
+    Variable._execution_engine.run_backward(  # Calls into the C++ engine to run the backward pass
+KeyboardInterrupt

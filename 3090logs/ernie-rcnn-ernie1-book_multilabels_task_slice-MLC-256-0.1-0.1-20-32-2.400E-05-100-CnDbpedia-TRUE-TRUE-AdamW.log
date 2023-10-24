@@ -1,0 +1,310 @@
+/root/miniconda3/envs/lyq/lib/python3.8/site-packages/scipy/__init__.py:146: UserWarning: A NumPy version >=1.16.5 and <1.23.0 is required for this version of SciPy (detected version 1.23.5
+  warnings.warn(f"A NumPy version >={np_minversion} and <{np_maxversion}"
+  0%|          | 0/82 [00:00<?, ?it/s]100%|██████████| 82/82 [00:00<00:00, 369026.75it/s]
+model:  ernie-rcnn
+pretrained:  ernie1
+task:  MLC
+dataset:  book_multilabels_task
+seq_length:  256
+hidden_dropout_prob:  0.1
+attention_probs_dropout_prob:  0.1
+epochs_num:  20
+batch_size:  32
+learning_rate:  2.4e-05
+report_steps:  100
+kg_name:  CnDbpedia
+no_kg:  False
+no_vm:  False
+Vocabulary Size:  17964
+[BertClassifier] use visible_matrix: True
+Some weights of ErnieRCNNForMultiLabelSequenceClassification were not initialized from the model checkpoint at ./models/ernie1 and are newly initialized: ['classifier.weight', 'lstm.bias_ih_l1', 'lstm.bias_ih_l0', 'lstm.weight_ih_l0', 'lstm.weight_ih_l0_reverse', 'output_layer_1.weight', 'output_layer_1.bias', 'lstm.weight_hh_l1', 'lstm.bias_hh_l0_reverse', 'lstm.bias_hh_l1_reverse', 'lstm.bias_hh_l1', 'lstm.weight_ih_l1', 'lstm.weight_hh_l0_reverse', 'classifier.bias', 'lstm.weight_hh_l1_reverse', 'lstm.bias_hh_l0', 'lstm.weight_hh_l0', 'lstm.weight_ih_l1_reverse', 'lstm.bias_ih_l0_reverse', 'lstm.bias_ih_l1_reverse']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+1 GPUs are available. Let's use them.
+device:  cuda
+[KnowledgeGraph] Loading spo from /Lyq/experiment/K-BERT-HUGGINGFACE/brain/kgs/CnDbpedia.spo
+Start training.
+Loading sentences from ./datasets/book_multilabels_task/train.tsv
+There are 9097 sentence in total. We use 1 processes to inject knowledge into sentences.
+Progress of process 0: 0/9097
+Loading sentences from ./datasets/book_multilabels_task/dev.tsv
+There are 2084 sentence in total. We use 1 processes to inject knowledge into sentences.
+Progress of process 0: 0/2084
+Loading sentences from ./datasets/book_multilabels_task/test.tsv
+There are 2067 sentence in total. We use 1 processes to inject knowledge into sentences.
+Progress of process 0: 0/2067
+Epoch id: 1, Training steps: 100, Avg loss: 0.222, Time: 0:00:51
+Epoch id: 1, Training steps: 200, Avg loss: 0.085, Time: 0:01:39
+Start evaluation on dev dataset.
+/root/miniconda3/envs/lyq/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1469: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total):  0.00%% Prec: 0.0000 F1: 0.0000
+Epoch id: 2, Training steps: 100, Avg loss: 0.142, Time: 0:03:33
+Epoch id: 2, Training steps: 200, Avg loss: 0.068, Time: 0:04:25
+Start evaluation on dev dataset.
+/root/miniconda3/envs/lyq/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1469: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total):  0.38%% Prec: 0.0062 F1: 0.0054
+Start evaluation on test dataset.
+/root/miniconda3/envs/lyq/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1469: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total):  0.29%% Prec: 0.0063 F1: 0.0051
+Epoch id: 3, Training steps: 100, Avg loss: 0.108, Time: 0:06:30
+Epoch id: 3, Training steps: 200, Avg loss: 0.050, Time: 0:07:21
+Start evaluation on dev dataset.
+/root/miniconda3/envs/lyq/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1469: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 13.92%% Prec: 0.2488 F1: 0.2125
+Start evaluation on test dataset.
+/root/miniconda3/envs/lyq/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1469: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 14.03%% Prec: 0.2731 F1: 0.2282
+Epoch id: 4, Training steps: 100, Avg loss: 0.080, Time: 0:09:33
+Epoch id: 4, Training steps: 200, Avg loss: 0.039, Time: 0:10:22
+Start evaluation on dev dataset.
+/root/miniconda3/envs/lyq/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1469: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 21.93%% Prec: 0.3608 F1: 0.3147
+Start evaluation on test dataset.
+/root/miniconda3/envs/lyq/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1469: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 25.40%% Prec: 0.3926 F1: 0.3474
+Epoch id: 5, Training steps: 100, Avg loss: 0.064, Time: 0:12:30
+Epoch id: 5, Training steps: 200, Avg loss: 0.032, Time: 0:13:24
+Start evaluation on dev dataset.
+/root/miniconda3/envs/lyq/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1469: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 31.57%% Prec: 0.4698 F1: 0.4222
+Start evaluation on test dataset.
+/root/miniconda3/envs/lyq/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1469: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 34.16%% Prec: 0.5063 F1: 0.4554
+Epoch id: 6, Training steps: 100, Avg loss: 0.054, Time: 0:15:36
+Epoch id: 6, Training steps: 200, Avg loss: 0.026, Time: 0:16:28
+Start evaluation on dev dataset.
+/root/miniconda3/envs/lyq/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1469: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 32.63%% Prec: 0.4976 F1: 0.4434
+Start evaluation on test dataset.
+/root/miniconda3/envs/lyq/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1469: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 37.49%% Prec: 0.5440 F1: 0.4906
+Epoch id: 7, Training steps: 100, Avg loss: 0.046, Time: 0:18:46
+Epoch id: 7, Training steps: 200, Avg loss: 0.023, Time: 0:19:42
+Start evaluation on dev dataset.
+/root/miniconda3/envs/lyq/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1469: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 33.78%% Prec: 0.5278 F1: 0.4685
+Start evaluation on test dataset.
+/root/miniconda3/envs/lyq/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1469: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 41.07%% Prec: 0.5881 F1: 0.5322
+Epoch id: 8, Training steps: 100, Avg loss: 0.038, Time: 0:21:54
+Epoch id: 8, Training steps: 200, Avg loss: 0.019, Time: 0:22:53
+Start evaluation on dev dataset.
+/root/miniconda3/envs/lyq/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1469: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 37.24%% Prec: 0.5444 F1: 0.4921
+Start evaluation on test dataset.
+/root/miniconda3/envs/lyq/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1469: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 41.90%% Prec: 0.5989 F1: 0.5424
+Epoch id: 9, Training steps: 100, Avg loss: 0.032, Time: 0:25:04
+Epoch id: 9, Training steps: 200, Avg loss: 0.016, Time: 0:25:52
+Start evaluation on dev dataset.
+/root/miniconda3/envs/lyq/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1469: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 40.36%% Prec: 0.5960 F1: 0.5415
+Start evaluation on test dataset.
+/root/miniconda3/envs/lyq/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1469: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 45.57%% Prec: 0.6384 F1: 0.5859
+Epoch id: 10, Training steps: 100, Avg loss: 0.027, Time: 0:28:03
+Epoch id: 10, Training steps: 200, Avg loss: 0.013, Time: 0:28:57
+Start evaluation on dev dataset.
+/root/miniconda3/envs/lyq/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1469: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 41.22%% Prec: 0.6160 F1: 0.5583
+Start evaluation on test dataset.
+/root/miniconda3/envs/lyq/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1469: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 47.80%% Prec: 0.6659 F1: 0.6114
+Epoch id: 11, Training steps: 100, Avg loss: 0.022, Time: 0:31:05
+Epoch id: 11, Training steps: 200, Avg loss: 0.011, Time: 0:31:54
+Start evaluation on dev dataset.
+/root/miniconda3/envs/lyq/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1469: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 42.95%% Prec: 0.6276 F1: 0.5701
+Start evaluation on test dataset.
+/root/miniconda3/envs/lyq/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1469: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 47.46%% Prec: 0.6643 F1: 0.6090
+Epoch id: 12, Training steps: 100, Avg loss: 0.018, Time: 0:34:12
+Epoch id: 12, Training steps: 200, Avg loss: 0.010, Time: 0:35:06
+Start evaluation on dev dataset.
+/root/miniconda3/envs/lyq/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1469: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 42.56%% Prec: 0.6251 F1: 0.5698
+Epoch id: 13, Training steps: 100, Avg loss: 0.016, Time: 0:36:50
+Epoch id: 13, Training steps: 200, Avg loss: 0.008, Time: 0:37:42
+Start evaluation on dev dataset.
+/root/miniconda3/envs/lyq/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1469: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 42.90%% Prec: 0.6319 F1: 0.5769
+Epoch id: 14, Training steps: 100, Avg loss: 0.015, Time: 0:39:41
+Epoch id: 14, Training steps: 200, Avg loss: 0.007, Time: 0:40:28
+Start evaluation on dev dataset.
+/root/miniconda3/envs/lyq/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1469: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 44.87%% Prec: 0.6515 F1: 0.5966
+Start evaluation on test dataset.
+/root/miniconda3/envs/lyq/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1469: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 50.85%% Prec: 0.6953 F1: 0.6420
+Epoch id: 15, Training steps: 100, Avg loss: 0.012, Time: 0:42:40
+Epoch id: 15, Training steps: 200, Avg loss: 0.006, Time: 0:43:31
+Start evaluation on dev dataset.
+/root/miniconda3/envs/lyq/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1469: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 45.54%% Prec: 0.6626 F1: 0.6078
+Start evaluation on test dataset.
+/root/miniconda3/envs/lyq/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1469: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 51.48%% Prec: 0.7041 F1: 0.6547
+Epoch id: 16, Training steps: 100, Avg loss: 0.009, Time: 0:45:46
+Epoch id: 16, Training steps: 200, Avg loss: 0.005, Time: 0:46:34
+Start evaluation on dev dataset.
+/root/miniconda3/envs/lyq/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1469: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 47.12%% Prec: 0.6639 F1: 0.6157
+Start evaluation on test dataset.
+/root/miniconda3/envs/lyq/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1469: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 53.31%% Prec: 0.7090 F1: 0.6638
+Epoch id: 17, Training steps: 100, Avg loss: 0.008, Time: 0:48:53
+Epoch id: 17, Training steps: 200, Avg loss: 0.004, Time: 0:49:48
+Start evaluation on dev dataset.
+/root/miniconda3/envs/lyq/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1469: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 46.40%% Prec: 0.6652 F1: 0.6148
+Epoch id: 18, Training steps: 100, Avg loss: 0.007, Time: 0:51:37
+Epoch id: 18, Training steps: 200, Avg loss: 0.004, Time: 0:52:34
+Start evaluation on dev dataset.
+/root/miniconda3/envs/lyq/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1469: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 48.03%% Prec: 0.6785 F1: 0.6329
+Start evaluation on test dataset.
+/root/miniconda3/envs/lyq/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1469: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 54.38%% Prec: 0.7246 F1: 0.6822
+Epoch id: 19, Training steps: 100, Avg loss: 0.006, Time: 0:54:52
+Epoch id: 19, Training steps: 200, Avg loss: 0.003, Time: 0:55:44
+Start evaluation on dev dataset.
+/root/miniconda3/envs/lyq/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1469: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 47.79%% Prec: 0.6759 F1: 0.6371
+Epoch id: 20, Training steps: 100, Avg loss: 0.006, Time: 0:57:38
+Epoch id: 20, Training steps: 200, Avg loss: 0.003, Time: 0:58:34
+Start evaluation on dev dataset.
+/root/miniconda3/envs/lyq/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1469: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 47.36%% Prec: 0.6691 F1: 0.6237
+Final evaluation on the test dataset.
+The number of evaluation instances:  2067
+/root/miniconda3/envs/lyq/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1469: UndefinedMetricWarning: Precision is ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+/root/miniconda3/envs/lyq/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1469: UndefinedMetricWarning: Precision and F-score are ill-defined and being set to 0.0 in labels with no predicted samples. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+/root/miniconda3/envs/lyq/lib/python3.8/site-packages/sklearn/metrics/_classification.py:1469: UndefinedMetricWarning: Precision and F-score are ill-defined and being set to 0.0 in samples with no predicted labels. Use `zero_division` parameter to control this behavior.
+  _warn_prf(average, modifier, msg_start, len(result))
+Acc. (Correct/Total): 54.38% Prec: 0.7246 F1: 0.6822
+Precision, Recall and F1-Score...
+              precision    recall  f1-score   support
+
+         教育学     0.8251    0.9004    0.8611       241
+          法学     0.8095    0.8348    0.8220       224
+      中国语言文学     0.7705    0.7622    0.7663       185
+         政治学     0.7712    0.5583    0.6477       163
+         社会学     0.7716    0.7962    0.7837       157
+         心理学     0.8276    0.3902    0.5304       123
+       应用经济学     0.7126    0.5299    0.6078       117
+         历史学     0.8788    0.5321    0.6629       109
+     环境科学与工程     0.9059    0.7130    0.7979       108
+          哲学     0.6744    0.5979    0.6339        97
+      外国语言文学     0.7895    0.5294    0.6338        85
+         生物学     0.8000    0.7089    0.7517        79
+      交通运输工程     0.8810    0.9487    0.9136        78
+        临床医学     0.8929    0.3289    0.4808        76
+    计算机科学与技术     0.6944    0.7042    0.6993        71
+        土木工程     0.9375    0.9091    0.9231        66
+   航空宇航科学与技术     0.9483    0.9016    0.9244        61
+         民族学     0.5455    0.4364    0.4848        55
+   公共卫生与预防医学     0.6500    0.5098    0.5714        51
+         美术学     0.8800    0.8800    0.8800        50
+         艺术学     0.8205    0.7442    0.7805        43
+         地理学     0.7778    0.6667    0.7179        42
+         体育学     1.0000    0.5000    0.6667        40
+       理论经济学     0.7619    0.4211    0.5424        38
+         中医学     0.9032    0.7568    0.8235        37
+         物理学     0.8158    0.8611    0.8378        36
+          林学     0.7895    0.4545    0.5769        33
+          数学     0.7500    0.3750    0.5000        32
+     电子科学与技术     0.4828    0.4516    0.4667        31
+        基础医学     0.4688    0.5172    0.4918        29
+        工商管理     1.0000    0.3333    0.5000        27
+       新闻传播学     0.8000    0.7273    0.7619        22
+         天文学     0.8182    0.8182    0.8182        22
+         地质学     0.7778    0.6667    0.7179        21
+         畜牧学     0.8261    0.9048    0.8636        21
+   军事思想及军事历史     0.8333    0.7500    0.7895        20
+     管理科学与工程     0.4483    0.7222    0.5532        18
+     测绘科学与技术     0.6111    0.6471    0.6286        17
+        水利工程     0.9167    0.6875    0.7857        16
+        大气科学     0.8000    0.5000    0.6154        16
+     兵器科学与技术     0.6471    0.7333    0.6875        15
+       地球物理学     0.5000    0.3571    0.4167        14
+        电气工程     1.0000    0.3077    0.4706        13
+         作物学     0.6667    0.4615    0.5455        13
+     控制科学与工程     0.5000    0.2308    0.3158        13
+     信息与通信工程     1.0000    0.4615    0.6316        13
+        公共管理     0.0000    0.0000    0.0000        13
+         建筑学     0.8000    0.3077    0.4444        13
+     化学工程与技术     0.7500    0.7500    0.7500        12
+          力学     0.7143    0.4545    0.5556        11
+        海洋科学     0.8889    0.7273    0.8000        11
+     轻工技术与工程     0.4286    0.5455    0.4800        11
+        农业工程     1.0000    0.2000    0.3333        10
+         园艺学     0.8750    0.7000    0.7778        10
+       中西医结合     1.0000    0.7000    0.8235        10
+        机械工程     1.0000    0.4444    0.6154         9
+       科学技术史     1.0000    0.2500    0.4000         8
+     船舶与海洋工程     1.0000    0.6250    0.7692         8
+   图书情报与档案管理     0.7143    0.6250    0.6667         8
+        植物保护     1.0000    0.7500    0.8571         8
+     材料科学与工程     0.7143    0.6250    0.6667         8
+         统计学     0.5455    0.7500    0.6316         8
+          化学     1.0000    0.7500    0.8571         8
+     食品科学与工程     0.6667    0.5000    0.5714         8
+          水产     1.0000    0.5714    0.7273         7
+          药学     1.0000    0.7143    0.8333         7
+     农业资源与环境     1.0000    0.1429    0.2500         7
+         世界史     0.4000    0.2857    0.3333         7
+        系统科学     0.8333    0.7143    0.7692         7
+      农林经济管理     0.8000    0.8000    0.8000         5
+       军队指挥学     1.0000    0.4000    0.5714         5
+        矿业工程     0.6667    0.4000    0.5000         5
+     纺织科学与工程     0.6667    0.8000    0.7273         5
+  动力工程及工程热物理     0.0000    0.0000    0.0000         4
+        林业工程     0.0000    0.0000    0.0000         4
+     仪器科学与技术     0.0000    0.0000    0.0000         3
+         战略学     0.2500    0.3333    0.2857         3
+   地质资源与地质工程     1.0000    0.3333    0.5000         3
+        旅游管理     0.0000    0.0000    0.0000         3
+ 图书馆、情报与档案管理     0.0000    0.0000    0.0000         2
+        冶金工程     1.0000    0.5000    0.6667         2
+      核科学与技术     0.0000    0.0000    0.0000         2
+
+   micro avg     0.7841    0.6550    0.7138      3093
+   macro avg     0.7243    0.5394    0.5957      3093
+weighted avg     0.7874    0.6550    0.6996      3093
+ samples avg     0.7246    0.6676    0.6822      3093
+

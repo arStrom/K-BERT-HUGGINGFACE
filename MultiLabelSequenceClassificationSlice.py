@@ -6,10 +6,9 @@ from transformers import BertPreTrainedModel, \
 from torch import nn
 import torch.nn.functional as F
 
-
 class BertForMultiLabelSequenceClassificationSlice(BertPreTrainedModel):
 
-    def __init__(self, config, args):
+    def __init__(self, config, base_config):
         super(BertForMultiLabelSequenceClassificationSlice, self).__init__(config)
         self.num_labels = config.num_labels
         self.bert = BertModel(config, add_pooling_layer=False)
@@ -18,10 +17,10 @@ class BertForMultiLabelSequenceClassificationSlice(BertPreTrainedModel):
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
         self.output_layer_1 = nn.Linear(config.hidden_size, config.hidden_size)
         self.output_layer_2 = nn.Linear(config.hidden_size, config.num_labels)
-        self.pooling = args.pooling
+        self.pooling = base_config.pooling
         self.sigmoid = nn.Sigmoid()
         self.criterion = nn.BCELoss(reduction='none')
-        self.use_vm = False if args.no_vm or args.no_kg else True
+        self.use_vm = False if base_config.no_vm or base_config.no_kg else True
         print("[BertClassifier] use visible_matrix: {}".format(self.use_vm))
         self.init_weights()
 
@@ -75,7 +74,7 @@ class BertForMultiLabelSequenceClassificationSlice(BertPreTrainedModel):
 
 class BertRCNNForMultiLabelSequenceClassificationSlice(BertPreTrainedModel):
 
-    def __init__(self, config, args):
+    def __init__(self, config, base_config):
         super(BertRCNNForMultiLabelSequenceClassificationSlice, self).__init__(config)
         self.num_labels = config.num_labels
         self.bert = BertModel(config, add_pooling_layer=False)
@@ -86,8 +85,8 @@ class BertRCNNForMultiLabelSequenceClassificationSlice(BertPreTrainedModel):
         self.rnn_hidden = 256
         self.num_layers = 2
         self.dropout_rnn = 0.2
-        self.pad_size = args.seq_length  # 每句话处理成的长度(短填长切)
-        self.pooling = args.pooling
+        self.pad_size = base_config.max_seq_length  # 每句话处理成的长度(短填长切)
+        self.pooling = base_config.pooling
         self.lstm = nn.LSTM(
             config.hidden_size, self.rnn_hidden, self.num_layers,
             bidirectional=True, batch_first=True, dropout=self.dropout_rnn
@@ -98,7 +97,7 @@ class BertRCNNForMultiLabelSequenceClassificationSlice(BertPreTrainedModel):
         self.maxpool = nn.MaxPool1d(self.pad_size)
         self.sigmoid = nn.Sigmoid()
         self.criterion = nn.BCELoss(reduction='none')
-        self.use_vm = False if args.no_vm or args.no_kg else True
+        self.use_vm = False if base_config.no_vm or base_config.no_kg else True
         print("[BertClassifier] use visible_matrix: {}".format(self.use_vm))
         self.init_weights()
 
@@ -152,7 +151,7 @@ class BertRCNNForMultiLabelSequenceClassificationSlice(BertPreTrainedModel):
 
 class BertRNNForMultiLabelSequenceClassificationSlice(BertPreTrainedModel):
 
-    def __init__(self, config, args):
+    def __init__(self, config, base_config):
         super(BertRNNForMultiLabelSequenceClassificationSlice, self).__init__(config)
         self.num_labels = config.num_labels
         self.bert = BertModel(config, add_pooling_layer=False)
@@ -162,7 +161,7 @@ class BertRNNForMultiLabelSequenceClassificationSlice(BertPreTrainedModel):
         self.rnn_hidden = 768
         self.num_layers = 2
         self.dropout_rnn = 0.2
-        self.pad_size = args.seq_length  # 每句话处理成的长度(短填长切)
+        self.pad_size = base_config.max_seq_length  # 每句话处理成的长度(短填长切)
         self.lstm = nn.LSTM(
             config.hidden_size, self.rnn_hidden, self.num_layers,
             bidirectional=True, batch_first=True, dropout=self.dropout_rnn
@@ -171,7 +170,7 @@ class BertRNNForMultiLabelSequenceClassificationSlice(BertPreTrainedModel):
         self.classifier = nn.Linear(self.rnn_hidden * 2, self.config.num_labels)
         self.sigmoid = nn.Sigmoid()
         self.criterion = nn.BCELoss(reduction='none')
-        self.use_vm = False if args.no_vm or args.no_kg else True
+        self.use_vm = False if base_config.no_vm or base_config.no_kg else True
         print("[BertClassifier] use visible_matrix: {}".format(self.use_vm))
         self.init_weights()
 
@@ -220,7 +219,7 @@ class BertRNNForMultiLabelSequenceClassificationSlice(BertPreTrainedModel):
 
 class BertCNNForMultiLabelSequenceClassificationSlice(BertPreTrainedModel):
 
-    def __init__(self, config, args):
+    def __init__(self, config, base_config):
         super(BertCNNForMultiLabelSequenceClassificationSlice, self).__init__(config)
         self.num_labels = config.num_labels
         self.bert = BertModel(config, add_pooling_layer=False)
@@ -237,7 +236,7 @@ class BertCNNForMultiLabelSequenceClassificationSlice(BertPreTrainedModel):
         self.cat = torch.cat
         self.sigmoid = nn.Sigmoid()
         self.criterion = nn.BCELoss(reduction='none')
-        self.use_vm = False if args.no_vm or args.no_kg else True
+        self.use_vm = False if base_config.no_vm or base_config.no_kg else True
         print("[BertClassifier] use visible_matrix: {}".format(self.use_vm))
         self.init_weights()
 
@@ -291,7 +290,7 @@ class BertCNNForMultiLabelSequenceClassificationSlice(BertPreTrainedModel):
 
 class ErnieForMultiLabelSequenceClassificationSlice(ErniePreTrainedModel):
 
-    def __init__(self, config, args):
+    def __init__(self, config, base_config):
         super(ErnieForMultiLabelSequenceClassificationSlice, self).__init__(config)
         self.num_labels = config.num_labels
         self.ernie = ErnieModel(config, add_pooling_layer=False)
@@ -300,10 +299,10 @@ class ErnieForMultiLabelSequenceClassificationSlice(ErniePreTrainedModel):
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
         self.output_layer_1 = nn.Linear(config.hidden_size, config.hidden_size)
         self.output_layer_2 = nn.Linear(config.hidden_size, config.num_labels)
-        self.pooling = args.pooling
+        self.pooling = base_config.pooling
         self.sigmoid = nn.Sigmoid()
         self.criterion = nn.BCELoss(reduction='none')
-        self.use_vm = False if args.no_vm or args.no_kg else True
+        self.use_vm = False if base_config.no_vm or base_config.no_kg else True
         print("[BertClassifier] use visible_matrix: {}".format(self.use_vm))
         self.init_weights()
 
@@ -357,7 +356,7 @@ class ErnieForMultiLabelSequenceClassificationSlice(ErniePreTrainedModel):
 
 class ErnieRCNNForMultiLabelSequenceClassificationSlice(ErniePreTrainedModel):
 
-    def __init__(self, config, args):
+    def __init__(self, config, base_config):
         super(ErnieRCNNForMultiLabelSequenceClassificationSlice, self).__init__(config)
         self.num_labels = config.num_labels
         self.ernie = ErnieModel(config, add_pooling_layer=False)
@@ -368,8 +367,8 @@ class ErnieRCNNForMultiLabelSequenceClassificationSlice(ErniePreTrainedModel):
         self.rnn_hidden = 256
         self.num_layers = 2
         self.dropout_rnn = 0.2
-        self.pad_size = args.seq_length  # 每句话处理成的长度(短填长切)
-        self.pooling = args.pooling
+        self.pad_size = base_config.max_seq_length  # 每句话处理成的长度(短填长切)
+        self.pooling = base_config.pooling
         self.lstm = nn.LSTM(
             config.hidden_size, self.rnn_hidden, self.num_layers,
             bidirectional=True, batch_first=True, dropout=self.dropout_rnn
@@ -380,7 +379,7 @@ class ErnieRCNNForMultiLabelSequenceClassificationSlice(ErniePreTrainedModel):
         self.maxpool = nn.MaxPool1d(self.pad_size)
         self.sigmoid = nn.Sigmoid()
         self.criterion = nn.BCELoss(reduction='none')
-        self.use_vm = False if args.no_vm or args.no_kg else True
+        self.use_vm = False if base_config.no_vm or base_config.no_kg else True
         print("[BertClassifier] use visible_matrix: {}".format(self.use_vm))
         self.init_weights()
 
@@ -432,7 +431,7 @@ class ErnieRCNNForMultiLabelSequenceClassificationSlice(ErniePreTrainedModel):
 
 class ErnieRCNNForMultiLabelSequenceClassificationSliceCatMaxPool(ErniePreTrainedModel):
 
-    def __init__(self, config, args):
+    def __init__(self, config, base_config):
         super(ErnieRCNNForMultiLabelSequenceClassificationSliceCatMaxPool, self).__init__(config)
         self.num_labels = config.num_labels
         self.ernie = ErnieModel(config, add_pooling_layer=False)
@@ -443,8 +442,8 @@ class ErnieRCNNForMultiLabelSequenceClassificationSliceCatMaxPool(ErniePreTraine
         self.rnn_hidden = 256
         self.num_layers = 2
         self.dropout_rnn = 0.2
-        self.pad_size = args.seq_length  # 每句话处理成的长度(短填长切)
-        self.pooling = args.pooling
+        self.pad_size = base_config.max_seq_length  # 每句话处理成的长度(短填长切)
+        self.pooling = base_config.pooling
         self.lstm = nn.LSTM(
             config.hidden_size, self.rnn_hidden, self.num_layers,
             bidirectional=True, batch_first=True, dropout=self.dropout_rnn
@@ -455,7 +454,7 @@ class ErnieRCNNForMultiLabelSequenceClassificationSliceCatMaxPool(ErniePreTraine
         self.maxpool = nn.MaxPool1d(self.pad_size * 3)
         self.sigmoid = nn.Sigmoid()
         self.criterion = nn.BCELoss(reduction='none')
-        self.use_vm = False if args.no_vm or args.no_kg else True
+        self.use_vm = False if base_config.no_vm or base_config.no_kg else True
         print("[BertClassifier] use visible_matrix: {}".format(self.use_vm))
         self.init_weights()
 
@@ -507,7 +506,7 @@ class ErnieRCNNForMultiLabelSequenceClassificationSliceCatMaxPool(ErniePreTraine
 
 class ErnieRCNNForMultiLabelSequenceClassificationSliceCatLSTM(ErniePreTrainedModel):
 
-    def __init__(self, config, args):
+    def __init__(self, config, base_config):
         super(ErnieRCNNForMultiLabelSequenceClassificationSliceCatLSTM, self).__init__(config)
         self.num_labels = config.num_labels
         self.ernie = ErnieModel(config, add_pooling_layer=False)
@@ -518,8 +517,8 @@ class ErnieRCNNForMultiLabelSequenceClassificationSliceCatLSTM(ErniePreTrainedMo
         self.rnn_hidden = 256
         self.num_layers = 2
         self.dropout_rnn = 0.2
-        self.pad_size = args.seq_length  # 每句话处理成的长度(短填长切)
-        self.pooling = args.pooling
+        self.pad_size = base_config.max_seq_length  # 每句话处理成的长度(短填长切)
+        self.pooling = base_config.pooling
         self.lstm = nn.LSTM(
             config.hidden_size * 3, self.rnn_hidden, self.num_layers,
             bidirectional=True, batch_first=True, dropout=self.dropout_rnn
@@ -530,7 +529,7 @@ class ErnieRCNNForMultiLabelSequenceClassificationSliceCatLSTM(ErniePreTrainedMo
         self.maxpool = nn.MaxPool1d(self.pad_size)
         self.sigmoid = nn.Sigmoid()
         self.criterion = nn.BCELoss(reduction='none')
-        self.use_vm = False if args.no_vm or args.no_kg else True
+        self.use_vm = False if base_config.no_vm or base_config.no_kg else True
         print("[BertClassifier] use visible_matrix: {}".format(self.use_vm))
         self.init_weights()
 
@@ -582,37 +581,38 @@ class ErnieRCNNForMultiLabelSequenceClassificationSliceCatLSTM(ErniePreTrainedMo
     
 class ErnieRCNNForMultiLabelSequenceClassificationSliceCatLSTMWide(ErniePreTrainedModel):
 
-    def __init__(self, config, args):
+    def __init__(self, config, base_config):
         super(ErnieRCNNForMultiLabelSequenceClassificationSliceCatLSTMWide, self).__init__(config)
+        self.sentence_num = base_config.sentence_num
         self.num_labels = config.num_labels
         self.ernie = ErnieModel(config, add_pooling_layer=False)
         for param in self.ernie.parameters():
             param.requires_grad = True
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
         self.output_layer_1 = nn.Linear(config.hidden_size, config.hidden_size)
-        self.rnn_hidden = 256 * 3
+        self.rnn_hidden = 256 * self.sentence_num
         self.num_layers = 2
         self.dropout_rnn = 0.2
-        self.pad_size = args.seq_length  # 每句话处理成的长度(短填长切)
-        self.pooling = args.pooling
+        self.pad_size = base_config.max_seq_length  # 每句话处理成的长度(短填长切)
+        self.pooling = base_config.pooling
         self.lstm = nn.LSTM(
-            config.hidden_size * 3, self.rnn_hidden, self.num_layers,
+            config.hidden_size * self.sentence_num, self.rnn_hidden, self.num_layers,
             bidirectional=True, batch_first=True, dropout=self.dropout_rnn
         )
-        self.classifier = nn.Linear(self.rnn_hidden * 2 + config.hidden_size * 3, self.config.num_labels)
+        self.classifier = nn.Linear(self.rnn_hidden * 2 + config.hidden_size * self.sentence_num, self.config.num_labels)
         self.cat = torch.cat
         self.relu = F.relu
         self.maxpool = nn.MaxPool1d(self.pad_size)
         self.sigmoid = nn.Sigmoid()
-        self.criterion = nn.BCELoss(reduction='none')
-        self.use_vm = False if args.no_vm or args.no_kg else True
+        self.criterion = nn.BCELoss()
+        self.use_vm = False if base_config.no_vm or base_config.no_kg else True
         print("[BertClassifier] use visible_matrix: {}".format(self.use_vm))
         self.init_weights()
 
     def forward(self, input_ids_batch, mask_ids_batch, pos_ids_batch, vms_batch, labels):
         
         output_batch = []
-        for i in range(3):
+        for i in range(self.sentence_num):
             input_ids = input_ids_batch[i]
             attention_mask = mask_ids_batch[i]
             position_ids = pos_ids_batch[i]
@@ -641,24 +641,30 @@ class ErnieRCNNForMultiLabelSequenceClassificationSliceCatLSTMWide(ErniePreTrain
                                 position_ids=position_ids)
             output_batch.append(outputs[0])
 
-        output = torch.cat((output_batch[0], output_batch[1], output_batch[2]), 2)
+        output = torch.cat(output_batch, 2)
 
         out, _ = self.lstm(output)
         out = self.cat((output, out), 2)
         out = self.relu(out)
         out = out.permute(0, 2, 1)
         out = self.maxpool(out).squeeze()
-        # out = out.permute(0, 2, 1)
         # out = self.dropouts(out)
         logits = self.sigmoid(self.classifier(out))
 
-        loss = self.criterion(logits.view(-1, self.num_labels), labels.view(-1, self.num_labels))
-        return loss, logits
+        # loss = self.criterion(logits.view(-1, self.num_labels), labels.view(-1, self.num_labels))
+        # return loss, logits
+    
+        outputs = (logits,) + outputs[2:]  # add hidden states and attention if they are here
+        if labels is not None:
+            loss_fct = nn.BCELoss()
+            loss = loss_fct(logits.view(-1, self.num_labels), labels.view(-1, self.num_labels))
+            outputs = (loss,) + outputs
+        return outputs  # (loss), logits, (hidden_states), (attentions)
 
 
 class ErnieRNNForMultiLabelSequenceClassificationSlice(ErniePreTrainedModel):
 
-    def __init__(self, config, args):
+    def __init__(self, config, base_config):
         super(ErnieRNNForMultiLabelSequenceClassificationSlice, self).__init__(config)
         self.num_labels = config.num_labels
         self.ernie = ErnieModel(config, add_pooling_layer=False)
@@ -668,7 +674,7 @@ class ErnieRNNForMultiLabelSequenceClassificationSlice(ErniePreTrainedModel):
         self.rnn_hidden = 768
         self.num_layers = 2
         self.dropout_rnn = 0.2
-        self.pad_size = args.seq_length  # 每句话处理成的长度(短填长切)
+        self.pad_size = base_config.max_seq_length  # 每句话处理成的长度(短填长切)
         self.lstm = nn.LSTM(
             config.hidden_size, self.rnn_hidden, self.num_layers,
             bidirectional=True, batch_first=True, dropout=self.dropout_rnn
@@ -677,7 +683,7 @@ class ErnieRNNForMultiLabelSequenceClassificationSlice(ErniePreTrainedModel):
         self.classifier = nn.Linear(self.rnn_hidden * 2, self.config.num_labels)
         self.sigmoid = nn.Sigmoid()
         self.criterion = nn.BCELoss(reduction='none')
-        self.use_vm = False if args.no_vm or args.no_kg else True
+        self.use_vm = False if base_config.no_vm or base_config.no_kg else True
         print("[BertClassifier] use visible_matrix: {}".format(self.use_vm))
         self.init_weights()
 
@@ -725,7 +731,7 @@ class ErnieRNNForMultiLabelSequenceClassificationSlice(ErniePreTrainedModel):
 
 class ErnieCNNForMultiLabelSequenceClassificationSlice(ErniePreTrainedModel):
 
-    def __init__(self, config, args):
+    def __init__(self, config, base_config):
         super(ErnieCNNForMultiLabelSequenceClassificationSlice, self).__init__(config)
         self.num_labels = config.num_labels
         self.ernie = ErnieModel(config, add_pooling_layer=False)
@@ -742,7 +748,7 @@ class ErnieCNNForMultiLabelSequenceClassificationSlice(ErniePreTrainedModel):
         self.cat = torch.cat
         self.sigmoid = nn.Sigmoid()
         self.criterion = nn.BCELoss(reduction='none')
-        self.use_vm = False if args.no_vm or args.no_kg else True
+        self.use_vm = False if base_config.no_vm or base_config.no_kg else True
         print("[BertClassifier] use visible_matrix: {}".format(self.use_vm))
         self.init_weights()
 

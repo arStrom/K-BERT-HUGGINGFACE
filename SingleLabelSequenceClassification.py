@@ -88,7 +88,89 @@ class BertForSequenceClassification(BertPreTrainedModel):
         else:
             output = output[:, 0, :]
         output = torch.tanh(self.output_layer_1(output))
+
         logits = self.output_layer_2(output)
         loss = self.criterion(self.softmax(logits.view(-1, self.num_labels)), labels.view(-1))
         return loss, logits
 
+class ErnieRCNNForSequenceClassificationSliceCatLSTMWide(ErniePreTrainedModel):
+
+    def __init__(self, config, base_config):
+        super(ErnieRCNNForSequenceClassificationSliceCatLSTMWide, self).__init__(config)
+        self.sentence_num = base_config.sentence_num
+        self.num_labels = config.num_labels
+        self.ernie = ErnieModel(config)
+        for param in self.ernie.parameters():
+            param.requires_grad = True
+        self.dropout = nn.Dropout(config.hidden_dropout_prob)
+        self.output_layer_1 = nn.Linear(config.hidden_size, config.hidden_size)
+        self.rnn_hidden = 256 * base_config.sentence_num
+        self.num_layers = 2
+        self.dropout_rnn = 0.2
+        self.pad_size = base_config.max_seq_length  # 每句话处理成的长度(短填长切)
+        self.pooling = base_config.pooling
+        self.lstm = nn.LSTM(
+            config.hidden_size * base_config.sentence_num, self.rnn_hidden, self.num_layers,
+            bidirectional=True, batch_first=True, dropout=self.dropout_rnn
+        )
+        self.classifier = nn.Linear(self.rnn_hidden * 2 + config.hidden_size * base_config.sentence_num, self.config.num_labels)
+        self.cat = torch.cat
+        self.relu = F.relu
+        self.maxpool = nn.MaxPool1d(self.pad_size)
+        self.softmax = nn.Softmax(dim=-1)
+        self.criterion = nn.CrossEntropyLoss()
+        self.use_vm = False if base_config.no_vm or base_config.no_kg else True
+        print("[BertClassifier] use visible_matrix: {}".format(self.use_vm))
+        self.init_weights()
+
+    def forward(self, input_ids_batch, mask_ids_batch, pos_ids_batch, vms_batch, labels):
+        
+        output_batch = []
+        for i in range(self.sentence_num):
+            input_ids = input_ids_batch[i]
+            attention_mask = mask_ids_batch[i]
+            position_ids = pos_ids_batch[i]
+            visible_matrix = vms_batch[i]
+
+            seq_length = input_ids.size(1)
+                
+            # Generate mask according to segment indicators.
+            # mask: [batch_size x 1 x seq_length x seq_length]
+            if visible_matrix is None or not self.use_vm:
+                encoder_attention_mask = (attention_mask > 0). \
+                        unsqueeze(1). \
+                        repeat(1, seq_length, 1). \
+                        unsqueeze(1)
+                encoder_attention_mask = encoder_attention_mask.float()
+                encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
+            else:
+                encoder_attention_mask = visible_matrix.unsqueeze(1)
+                encoder_attention_mask = encoder_attention_mask.float()
+                encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
+
+            # token_type_ids实际上是attention_mask
+            outputs = self.ernie(input_ids,
+                                attention_mask=attention_mask,
+                                encoder_attention_mask=encoder_attention_mask,
+                                position_ids=position_ids)
+            output_batch.append(outputs[0])
+
+        output = torch.cat(output_batch, 2)
+
+        out, _ = self.lstm(output)
+        out = self.cat((output, out), 2)
+        out = self.relu(out)
+        out = out.permute(0, 2, 1)
+        out = self.maxpool(out).squeeze()
+        # out = self.dropouts(out)
+
+        loss = self.criterion(logits.view(-1, self.num_labels), labels.view(-1, self.num_labels))
+        logits = self.softmax(self.classifier(out))
+        return loss, logits
+    
+        # outputs = (logits,) + outputs[2:]  # add hidden states and attention if they are here
+        # if labels is not None:
+        #     loss_fct = nn.BCELoss()
+        #     loss = loss_fct(logits.view(-1, self.num_labels), labels.view(-1, self.num_labels))
+        #     outputs = (loss,) + outputs
+        # return outputs  # (loss), logits, (hidden_states), (attentions)

@@ -54,6 +54,14 @@ MLC_Slice_Model = {
 
 SLCModel = {
     'bert': SLCModels.BertForSequenceClassification,
+    'ernie-rcnn-catlstmwide': SLCModels.ErnieRCNNForSequenceClassificationSliceCatLSTMWide,
+}
+
+
+sentence_num = {
+    'tnews_public': 2,
+    'book_multilabels_task_slice': 3,
+    'book_multilabels_task': 1,
 }
 
 def main():
@@ -66,7 +74,7 @@ def main():
     parser.add_argument('--dataset', default='book_review', help='dataset name')
 
     # Model options.
-
+    parser.add_argument("--No", type=int, required=True, help="Experiment number.")
     parser.add_argument("--seq_length", type=int, default=256,
                         help="Sequence length.")
     parser.add_argument("--bidirectional", action="store_true", help="Specific to recurrent model.")
@@ -115,20 +123,20 @@ def main():
     # 如果启用kg，vm根据用户自定义
     args.no_vm = args.no_kg if args.no_kg else args.no_vm
     model_name = args.model
-    config = BaseConfig(args.cuda, model_name, args.pretrained, args.dataset, args.seq_length, args.dropout, 
-                        args.epochs_num, args.batch_size, args.learning_rate, args.report_steps,
+    base_config = BaseConfig(args.cuda, model_name, args.pretrained, args.dataset, sentence_num[args.dataset], args.No, args.seq_length, args.dropout, 
+                        args.epochs_num, args.batch_size, args.learning_rate, args.report_steps, args.pooling,
                         args.no_kg, args.no_vm)
 
     model_type = model_name.split('-')
     if model_type[0] == 'bert':
         model_config = BertConfig.from_pretrained(
-            config.pretrained_model_path + '/config.json',
-            num_labels = config.label_number
+            base_config.pretrained_model_path + '/config.json',
+            num_labels = base_config.label_number
         )
     else:
         model_config = ErnieConfig.from_pretrained(
-            config.pretrained_model_path + '/config.json',
-            num_labels = config.label_number
+            base_config.pretrained_model_path + '/config.json',
+            num_labels = base_config.label_number
         )
 
     print("model: ",args.model)
@@ -146,26 +154,26 @@ def main():
     print("kg_name: ",args.kg_name)
     print("no_kg: ",args.no_kg)
     print("no_vm: ",args.no_vm)
-
-
+    print("GPU: ",torch.cuda.get_device_name(0) if torch.cuda.is_available() else "CPU")
 
     # 设置随机种子
-    set_seed(config.seed)
+    set_seed(base_config.seed)
 
-    args.labels_num = config.label_number 
+    args.labels_num = base_config.label_number 
 
     # 加载词汇表.
     vocab = Vocab()
-    vocab.load(config.pretrained_model_path + '/vocab.txt')
+    vocab.load(base_config.pretrained_model_path + '/vocab.txt')
     args.vocab = vocab
 
+    args.sentence_num = sentence_num[args.dataset]
     # 加载分类模型
     if args.task == 'SLC':
-        model = SLCModel[model_name].from_pretrained(config.pretrained_model_path, config=model_config, args = args)
+        model = SLCModel[model_name].from_pretrained(base_config.pretrained_model_path, config=model_config, base_config = base_config)
     elif args.task == 'MLC':
-        model = MLCModel[model_name].from_pretrained(config.pretrained_model_path, config=model_config, args = args)
+        model = MLCModel[model_name].from_pretrained(base_config.pretrained_model_path, config=model_config, base_config = base_config)
     elif args.task == 'MLC-slice':
-        model = MLC_Slice_Model[model_name].from_pretrained(config.pretrained_model_path, config=model_config, args = args)
+        model = MLC_Slice_Model[model_name].from_pretrained(base_config.pretrained_model_path, config=model_config, base_config = base_config)
     else:
         raise NameError("任务名称错误")
     
@@ -173,8 +181,8 @@ def main():
     if torch.cuda.device_count() > 1:
         model = nn.DataParallel(model)
     print("{} GPUs are available. Let's use them.".format(torch.cuda.device_count()))
-    print("device: ",config.device)
-    model = model.to(config.device)
+    print("device: ",base_config.device)
+    model = model.to(base_config.device)
 
     # 构建知识图谱.
     if args.kg_name == 'none':
@@ -190,40 +198,41 @@ def main():
     #训练.
     print("Start training.")
 
-    tokenizer = Tokenizer(vocab, config.max_seq_length, kg)
+    tokenizer = Tokenizer(vocab, base_config.max_seq_length, kg)
 
-    Dataseter = dataloader.myDataset_slice if args.task == "MLC-slice" else dataloader.myDataset
+    # 训练数据
+    train_dataset = dataloader.read_dataset(base_config.train_path, tokenizer, 
+                                            workers_num=args.workers_num, dataset=args.dataset, 
+                                            class_list=base_config.class_list, with_kg=not args.no_kg)
+    train_dataset = dataloader.myDataset(train_dataset)
+    train_batch = DataLoader(train_dataset,batch_size=base_config.batch_size, shuffle=True)
 
-    train_dataset = dataloader.read_dataset(config.train_path, tokenizer, 
-                                            workers_num=args.workers_num, task=args.task, 
-                                            class_list=config.class_list, with_kg=not args.no_kg)
-    train_dataset = Dataseter(train_dataset)
-    train_batch = DataLoader(train_dataset,batch_size=config.batch_size, shuffle=True)
+    # 验证数据
+    dev_dataset = dataloader.read_dataset(base_config.dev_path, tokenizer, 
+                                          workers_num=args.workers_num, dataset=args.dataset, 
+                                          class_list=base_config.class_list, with_kg=not args.no_kg)
+    dev_dataset = dataloader.myDataset(dev_dataset)
+    dev_batch = DataLoader(dev_dataset,batch_size=base_config.batch_size)
 
-    dev_dataset = dataloader.read_dataset(config.dev_path, tokenizer, 
-                                          workers_num=args.workers_num, task=args.task, 
-                                          class_list=config.class_list, with_kg=not args.no_kg)
-    dev_dataset = Dataseter(dev_dataset)
-    dev_batch = DataLoader(dev_dataset,batch_size=config.batch_size)
+    # 测试数据
+    test_dataset = dataloader.read_dataset(base_config.test_path, tokenizer, 
+                                           workers_num=args.workers_num, dataset=args.dataset, 
+                                           class_list=base_config.class_list, with_kg=not args.no_kg)
+    test_dataset = dataloader.myDataset(test_dataset)
+    test_batch = DataLoader(test_dataset,batch_size=base_config.batch_size)
 
-    test_dataset = dataloader.read_dataset(config.test_path, tokenizer, 
-                                           workers_num=args.workers_num, task=args.task, 
-                                           class_list=config.class_list, with_kg=not args.no_kg)
-    test_dataset = Dataseter(test_dataset)
-    test_batch = DataLoader(test_dataset,batch_size=config.batch_size)
-
-    # evaluate(model, dev_batch, config, is_test = False)
+    # evaluate(model, dev_batch, base_config, is_test = False)
     # evaluate_multi_label(model, dev_batch, config, is_test = False)
     # evaluate_multi_label_slice(model, dev_batch, config, is_test = False)
 
     if args.task == 'MLC-slice':
-        train_slice(model, train_batch, dev_batch, test_batch, config=config, task=args.task)
+        train_slice(model, train_batch, dev_batch, test_batch, config=base_config, task=args.task)
     else:
-        train(model, train_batch, dev_batch, test_batch, config=config, task=args.task)
+        train(model, train_batch, dev_batch, test_batch, config=base_config, task=args.task)
 
     # Evaluation phase.
     print("Final evaluation on the test dataset.")
-    test(model,test_batch,config,task=args.task)
+    test(model,test_batch,base_config,task=args.task)
 
 if __name__ == "__main__":
     main()

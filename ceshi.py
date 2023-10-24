@@ -89,4 +89,17 @@ def creat_multi_label_sentences_slice(path, class_list):
 # print("y.add ", y)
 
 
-print(np.ones(1))
+# print(np.ones(1))
+
+input_file = "datasets/tnews_public/train.json"
+
+def read_json(input_file):
+    """Reads a json list file."""
+    with open(input_file, "r", encoding='UTF-8') as f:
+        reader = f.readlines()
+        return [json.loads(line.strip()) for line in reader]
+    
+lines = read_json(input_file)
+
+
+print(lines)

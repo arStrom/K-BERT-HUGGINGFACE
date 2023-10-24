@@ -1,0 +1,9 @@
+  0%|          | 0/82 [00:00<?, ?it/s]100%|██████████| 82/82 [00:00<00:00, 1154137.34it/s]
+Traceback (most recent call last):
+  File "/home/lyq2021/experiment/K-BERT-HUGGINGFACE/run_kbert_transformers_cls.py", line 170, in <module>
+    main()
+  File "/home/lyq2021/experiment/K-BERT-HUGGINGFACE/run_kbert_transformers_cls.py", line 117, in main
+    vocab.load(config.pretrained_model_path + '/vocab.txt')
+  File "/home/lyq2021/experiment/K-BERT-HUGGINGFACE/utils/vocab.py", line 38, in load
+    assert len(self.w2i) == len(self.i2w)
+AssertionError
