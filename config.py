@@ -30,18 +30,27 @@ def best_learning_rate(pretrained):
     return 2e-5
 
 dataset_files = {
+    # tnews_public
     'tnews_public_train': './datasets/tnews_public/train.json',
     'tnews_public_dev': './datasets/tnews_public/dev.json',
     'tnews_public_test': './datasets/tnews_public/test.json',
     'tnews_public_labels': './datasets/tnews_public/labels.json',
-    'book_multilabels_task_slice_train': './datasets/book_multilabels_task_slice/train.tsv',
-    'book_multilabels_task_slice_dev': './datasets/book_multilabels_task_slice/dev.tsv',
-    'book_multilabels_task_slice_test': './datasets/book_multilabels_task_slice/test.tsv',
-    'book_multilabels_task_slice_labels': './datasets/book_multilabels_task_slice/labels.txt',
+    # tnews_public_slice
+    'tnews_public_slice_train': './datasets/tnews_public_slice/train.json',
+    'tnews_public_slice_dev': './datasets/tnews_public_slice/dev.json',
+    'tnews_public_slice_test': './datasets/tnews_public_slice/test.json',
+    'tnews_public_slice_labels': './datasets/tnews_public_slice/labels.json',
+    # book_multilabels_task
     'book_multilabels_task_train': './datasets/book_multilabels_task/train.tsv',
     'book_multilabels_task_dev': './datasets/book_multilabels_task/dev.tsv',
     'book_multilabels_task_test': './datasets/book_multilabels_task/test.tsv',
     'book_multilabels_task_labels': './datasets/book_multilabels_task/labels.txt',
+    # book_multilabels_task_slice
+    'book_multilabels_task_slice_train': './datasets/book_multilabels_task_slice/train.tsv',
+    'book_multilabels_task_slice_dev': './datasets/book_multilabels_task_slice/dev.tsv',
+    'book_multilabels_task_slice_test': './datasets/book_multilabels_task_slice/test.tsv',
+    'book_multilabels_task_slice_labels': './datasets/book_multilabels_task_slice/labels.txt',
+    
 }
 
 class BaseConfig(object):

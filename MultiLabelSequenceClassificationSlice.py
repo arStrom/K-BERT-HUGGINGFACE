@@ -451,6 +451,7 @@ class ErnieRCNNForMultiLabelSequenceClassificationSliceCatMaxPool(ErniePreTraine
         self.classifier = nn.Linear(self.rnn_hidden * 2 + config.hidden_size, self.config.num_labels)
         self.cat = torch.cat
         self.relu = F.relu
+        # 在池化层拼接
         self.maxpool = nn.MaxPool1d(self.pad_size * 3)
         self.sigmoid = nn.Sigmoid()
         self.criterion = nn.BCELoss(reduction='none')
@@ -583,6 +584,7 @@ class ErnieRCNNForMultiLabelSequenceClassificationSliceCatLSTMWide(ErniePreTrain
 
     def __init__(self, config, base_config):
         super(ErnieRCNNForMultiLabelSequenceClassificationSliceCatLSTMWide, self).__init__(config)
+        # 句子个数
         self.sentence_num = base_config.sentence_num
         self.num_labels = config.num_labels
         self.ernie = ErnieModel(config, add_pooling_layer=False)

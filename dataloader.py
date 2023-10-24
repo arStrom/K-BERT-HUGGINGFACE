@@ -80,7 +80,25 @@ def creat_multi_label_sentences(path, class_list):
     return sentences
 
 
-def creat_THNEWS_slice(path, class_list):
+def creat_TNEWS(path, class_list):
+    """Creates examples for the training and dev sets."""
+    label_number = len(class_list)
+    sentences = []
+    lines = read_json(path)
+    for (i, line) in enumerate(lines):
+        sentence = line['sentence']
+        keywords = line['keywords']
+        label_name = line['label_desc']
+        label = np.zeros((label_number,), dtype=int)
+        for (x,class_name) in enumerate(class_list):
+            if class_name == label_name:
+                label[x] = 1
+                break
+        sentences.append(InputExample(text_a=sentence + keywords, label=label))
+    return sentences
+
+
+def creat_TNEWS_slice(path, class_list):
     """Creates examples for the training and dev sets."""
     label_number = len(class_list)
     sentences = []
@@ -122,9 +140,10 @@ def creat_multi_label_sentences_slice(path, class_list):
 def read_dataset(path, tokenizer, workers_num=1, dataset=None, class_list=None, with_kg = True):
 
     read_dataset_process = {
-        'tnews_public': creat_THNEWS_slice,
-        'book_multilabels_task_slice': creat_multi_label_sentences_slice,
+        'tnews_public': creat_TNEWS,
+        'tnews_public_slice': creat_TNEWS_slice,
         'book_multilabels_task': creat_multi_label_sentences,
+        'book_multilabels_task_slice': creat_multi_label_sentences_slice,
     }
 
     print("Loading sentences from {}".format(path))

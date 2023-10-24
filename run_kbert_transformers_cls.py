@@ -17,8 +17,8 @@ import dataloader
 from torch.utils.data import DataLoader, RandomSampler, SequentialSampler
 from tokenizer import tokenizer as Tokenizer
 import numpy as np
-from train import train, train_slice
-from evaluate import evaluate, evaluate_multi_label, evaluate_multi_label_slice
+from train import train
+from evaluate import evaluate
 from test import test
 import MultiLabelSequenceClassification as MLCModels
 import SingleLabelSequenceClassification as SLCModels
@@ -27,41 +27,29 @@ import MultiLabelSequenceClassificationSlice as MLCSliceModels
 
 MLCModel = {
     'bert': MLCModels.BertForMultiLabelSequenceClassification,
-    'bert-slice': MLCModels.BertForMultiLabelSequenceClassificationSlice,
     'bert-rcnn': MLCModels.BertRCNNForMultiLabelSequenceClassification,
     'bert-cnn': MLCModels.BertCNNForMultiLabelSequenceClassification,
     'bert-rnn': MLCModels.BertRNNForMultiLabelSequenceClassification,
     'ernie': MLCModels.ErnieForMultiLabelSequenceClassification,
     'ernie-rcnn': MLCModels.ErnieRCNNForMultiLabelSequenceClassification,
+    'ernie-rcnn-catmaxpool': MLCModels.ErnieRCNNForMultiLabelSequenceClassificationCatMaxPool,
+    'ernie-rcnn-catlstm':MLCModels.ErnieRCNNForMultiLabelSequenceClassificationCatLSTM,
+    'ernie-rcnn-catlstmwide':MLCModels.ErnieRCNNForMultiLabelSequenceClassificationCatLSTMWide,
     'ernie-cnn': MLCModels.ErnieCNNForMultiLabelSequenceClassification,
     'ernie-rnn': MLCModels.ErnieRNNForMultiLabelSequenceClassification
 }
 
-MLC_Slice_Model = {
-    'bert': MLCSliceModels.BertForMultiLabelSequenceClassificationSlice,
-    'bert': MLCSliceModels.BertForMultiLabelSequenceClassificationSlice,
-    'bert-rcnn': MLCSliceModels.BertRCNNForMultiLabelSequenceClassificationSlice,
-    'bert-cnn': MLCSliceModels.BertCNNForMultiLabelSequenceClassificationSlice,
-    'bert-rnn': MLCSliceModels.BertRNNForMultiLabelSequenceClassificationSlice,
-    'ernie': MLCSliceModels.ErnieForMultiLabelSequenceClassificationSlice,
-    'ernie-rcnn': MLCSliceModels.ErnieRCNNForMultiLabelSequenceClassificationSlice,
-    'ernie-rcnn-catmaxpool': MLCSliceModels.ErnieRCNNForMultiLabelSequenceClassificationSliceCatMaxPool,
-    'ernie-rcnn-catlstm':MLCSliceModels.ErnieRCNNForMultiLabelSequenceClassificationSliceCatLSTM,
-    'ernie-rcnn-catlstmwide':MLCSliceModels.ErnieRCNNForMultiLabelSequenceClassificationSliceCatLSTMWide,
-    'ernie-cnn': MLCSliceModels.ErnieCNNForMultiLabelSequenceClassificationSlice,
-    'ernie-rnn': MLCSliceModels.ErnieRNNForMultiLabelSequenceClassificationSlice
-}
-
 SLCModel = {
     'bert': SLCModels.BertForSequenceClassification,
-    'ernie-rcnn-catlstmwide': SLCModels.ErnieRCNNForSequenceClassificationSliceCatLSTMWide,
+    'ernie-rcnn': SLCModels.ErnieRCNNForSequenceClassification,
 }
 
 
 sentence_num = {
-    'tnews_public': 2,
-    'book_multilabels_task_slice': 3,
+    'tnews_public': 1,
+    'tnews_public_slice': 2,
     'book_multilabels_task': 1,
+    'book_multilabels_task_slice': 3,
 }
 
 def main():
@@ -172,8 +160,6 @@ def main():
         model = SLCModel[model_name].from_pretrained(base_config.pretrained_model_path, config=model_config, base_config = base_config)
     elif args.task == 'MLC':
         model = MLCModel[model_name].from_pretrained(base_config.pretrained_model_path, config=model_config, base_config = base_config)
-    elif args.task == 'MLC-slice':
-        model = MLC_Slice_Model[model_name].from_pretrained(base_config.pretrained_model_path, config=model_config, base_config = base_config)
     else:
         raise NameError("任务名称错误")
     
@@ -205,7 +191,7 @@ def main():
                                             workers_num=args.workers_num, dataset=args.dataset, 
                                             class_list=base_config.class_list, with_kg=not args.no_kg)
     train_dataset = dataloader.myDataset(train_dataset)
-    train_batch = DataLoader(train_dataset,batch_size=base_config.batch_size, shuffle=True)
+    train_batch = DataLoader(train_dataset,batch_size=base_config.batch_size, shuffle=False)
 
     # 验证数据
     dev_dataset = dataloader.read_dataset(base_config.dev_path, tokenizer, 
@@ -222,17 +208,12 @@ def main():
     test_batch = DataLoader(test_dataset,batch_size=base_config.batch_size)
 
     # evaluate(model, dev_batch, base_config, is_test = False)
-    # evaluate_multi_label(model, dev_batch, config, is_test = False)
-    # evaluate_multi_label_slice(model, dev_batch, config, is_test = False)
 
-    if args.task == 'MLC-slice':
-        train_slice(model, train_batch, dev_batch, test_batch, config=base_config, task=args.task)
-    else:
-        train(model, train_batch, dev_batch, test_batch, config=base_config, task=args.task)
+    train(model, train_batch, dev_batch, test_batch, config=base_config, task=args.task)
 
     # Evaluation phase.
     print("Final evaluation on the test dataset.")
-    test(model,test_batch,base_config,task=args.task)
+    test(model,test_batch,base_config)
 
 if __name__ == "__main__":
     main()

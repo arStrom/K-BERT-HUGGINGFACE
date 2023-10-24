@@ -93,13 +93,13 @@ class BertForSequenceClassification(BertPreTrainedModel):
         loss = self.criterion(self.softmax(logits.view(-1, self.num_labels)), labels.view(-1))
         return loss, logits
 
-class ErnieRCNNForSequenceClassificationSliceCatLSTMWide(ErniePreTrainedModel):
+class ErnieRCNNForSequenceClassification(ErniePreTrainedModel):
 
     def __init__(self, config, base_config):
-        super(ErnieRCNNForSequenceClassificationSliceCatLSTMWide, self).__init__(config)
+        super(ErnieRCNNForSequenceClassification, self).__init__(config)
         self.sentence_num = base_config.sentence_num
         self.num_labels = config.num_labels
-        self.ernie = ErnieModel(config)
+        self.ernie = ErnieModel(config, add_pooling_layer=False)
         for param in self.ernie.parameters():
             param.requires_grad = True
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
@@ -117,7 +117,7 @@ class ErnieRCNNForSequenceClassificationSliceCatLSTMWide(ErniePreTrainedModel):
         self.cat = torch.cat
         self.relu = F.relu
         self.maxpool = nn.MaxPool1d(self.pad_size)
-        self.softmax = nn.Softmax(dim=-1)
+        self.softmax = nn.Softmax(dim=1)
         self.criterion = nn.CrossEntropyLoss()
         self.use_vm = False if base_config.no_vm or base_config.no_kg else True
         print("[BertClassifier] use visible_matrix: {}".format(self.use_vm))
@@ -164,8 +164,9 @@ class ErnieRCNNForSequenceClassificationSliceCatLSTMWide(ErniePreTrainedModel):
         out = self.maxpool(out).squeeze()
         # out = self.dropouts(out)
 
+        logits = self.classifier(out)
         loss = self.criterion(logits.view(-1, self.num_labels), labels.view(-1, self.num_labels))
-        logits = self.softmax(self.classifier(out))
+        logits = self.softmax(logits)
         return loss, logits
     
         # outputs = (logits,) + outputs[2:]  # add hidden states and attention if they are here
