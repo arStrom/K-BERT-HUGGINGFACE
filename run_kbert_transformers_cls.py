@@ -127,23 +127,6 @@ def main():
             num_labels = base_config.label_number
         )
 
-    print("model: ",args.model)
-    print("pretrained: ",args.pretrained)
-    print("task: ",args.task)
-    print("dataset: ",args.dataset)
-
-    print("seq_length: ",args.seq_length)
-    print("hidden_dropout_prob: ",model_config.hidden_dropout_prob)
-    print("attention_probs_dropout_prob: ",model_config.attention_probs_dropout_prob)
-    print("epochs_num: ",args.epochs_num)
-    print("batch_size: ",args.batch_size)
-    print("learning_rate: ",args.learning_rate)
-    print("report_steps: ",args.report_steps)
-    print("kg_name: ",args.kg_name)
-    print("no_kg: ",args.no_kg)
-    print("no_vm: ",args.no_vm)
-    print("GPU: ",torch.cuda.get_device_name(0) if torch.cuda.is_available() else "CPU")
-
     # 设置随机种子
     set_seed(base_config.seed)
 
@@ -162,6 +145,26 @@ def main():
         model = MLCModel[model_name].from_pretrained(base_config.pretrained_model_path, config=model_config, base_config = base_config)
     else:
         raise NameError("任务名称错误")
+    
+    print("model: ",args.model)
+    print("pretrained: ",args.pretrained)
+    print("dataset: ",args.dataset)
+    print("task: ",args.task)
+
+    print("seq_length: ",args.seq_length)
+    print("hidden_dropout_prob: ",model_config.hidden_dropout_prob)
+    print("attention_probs_dropout_prob: ",model_config.attention_probs_dropout_prob)
+    print("dropout_rnn: ",model.dropout_rnn if hasattr(model, 'dropout_rnn') else 'None')
+    print("rnn_hidden: ",model.rnn_hidden if hasattr(model, 'rnn_hidden') else 'None')
+    print("epochs_num: ",args.epochs_num)
+    print("batch_size: ",args.batch_size)
+    print("learning_rate: ",args.learning_rate)
+    print("report_steps: ",args.report_steps)
+    print("acc_percent: ",base_config.acc_percent)
+    print("kg_name: ",args.kg_name)
+    print("no_kg: ",args.no_kg)
+    print("no_vm: ",args.no_vm)
+    print("GPU: ",torch.cuda.get_device_name(0) if torch.cuda.is_available() else "CPU")
     
     # 使用DataParallel包装器来使用多个GPU
     if torch.cuda.device_count() > 1:
@@ -191,7 +194,7 @@ def main():
                                             workers_num=args.workers_num, dataset=args.dataset, 
                                             class_list=base_config.class_list, with_kg=not args.no_kg)
     train_dataset = dataloader.myDataset(train_dataset)
-    train_batch = DataLoader(train_dataset,batch_size=base_config.batch_size, shuffle=False)
+    train_batch = DataLoader(train_dataset,batch_size=base_config.batch_size, shuffle=True)
 
     # 验证数据
     dev_dataset = dataloader.read_dataset(base_config.dev_path, tokenizer, 
@@ -213,7 +216,7 @@ def main():
 
     # Evaluation phase.
     print("Final evaluation on the test dataset.")
-    test(model,test_batch,base_config)
+    test(model,test_batch,base_config,args.task)
 
 if __name__ == "__main__":
     main()

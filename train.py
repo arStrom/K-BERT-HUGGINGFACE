@@ -85,8 +85,15 @@ def train(model, train_batch, eval_batch, test_batch, config, task):
 
             if (i + 1) % config.report_steps == 0:
                 label = label_ids_batch.data.cpu()
-                predictions = (logits == logits.max(dim=1, keepdim=True)[0]).to(dtype=torch.int32).cpu()
-                train_acc = metrics.accuracy_score(label, predictions)
+                preds = logits.cpu()
+                if task == 'SLC':
+                    preds = (logits == logits.max(dim=1, keepdim=True)[0]).to(dtype=torch.int32)
+                    preds = preds.cpu()
+                elif task == 'MLC':
+                    preds = normalize_prediction(preds, config.acc_percent)
+                preds[preds >= config.acc_percent] = 1
+                preds[preds < config.acc_percent] = 0
+                train_acc = metrics.accuracy_score(label, preds)
                 time_dif = get_time_dif(start_time)
                 print("Epoch id: {0}, Training steps: {1},  Train Loss: {2:>5.2},  Train Acc: {3:>6.2%},  Train Avg Loss: {4:.3f},  Time: {5}"
                       .format(epoch, i+1, loss.item(), train_acc, total_loss/config.report_steps, time_dif))
