@@ -3,12 +3,12 @@ import sys
 import torch
 import torch.nn as nn
 import time
+from datetime import timedelta
 from evaluate import evaluate
 import transformers
 from torch.optim import Adam, AdamW
 from utils.optimizers import BertAdam
 # from transformers import AdamW
-from datetime import timedelta
 import sklearn.metrics as metrics
 
 def get_time_dif(start_time):
@@ -95,7 +95,7 @@ def train(model, train_batch, eval_batch, test_batch, config, task):
                 preds[preds < config.acc_percent] = 0
                 train_acc = metrics.accuracy_score(label, preds)
                 time_dif = get_time_dif(start_time)
-                print("Epoch id: {0}, Training steps: {1},  Train Loss: {2:>5.2},  Train Acc: {3:>6.2%},  Train Avg Loss: {4:.3f},  Time: {5}"
+                print("Epoch id: {0:0>2}, Training steps: {1:0>4},  Train Loss: {2:0<6.6f},  Train Acc: {3:0>6.2%},  Train Avg Loss: {4:0<6.6f},  Time: {5}"
                       .format(epoch, i+1, loss.item(), train_acc, total_loss/config.report_steps, time_dif))
                 sys.stdout.flush()
                 total_loss = 0.0
