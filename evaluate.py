@@ -67,12 +67,17 @@ def evaluate(model, eval_batch, config, task, is_test):
                 predict_all = np.append(predict_all, preds, axis=0)
 
     acc = metrics.accuracy_score(labels_all, predict_all)
-    prec = metrics.precision_score(y_true=labels_all, y_pred=predict_all, average='samples', zero_division=0)
-    recall = metrics.recall_score(labels_all, predict_all, average='samples', zero_division=0)
-    f1 = metrics.f1_score(labels_all, predict_all, average='samples', zero_division=0)
+    if task == 'SLC':
+        prec = metrics.precision_score(y_true=labels_all, y_pred=predict_all, average='weighted', zero_division=0)
+        recall = metrics.recall_score(labels_all, predict_all, average='weighted', zero_division=0)
+        f1 = metrics.f1_score(labels_all, predict_all, average='weighted', zero_division=0)
+    elif task == 'MLC':
+        prec = metrics.precision_score(y_true=labels_all, y_pred=predict_all, average='micro', zero_division=0)
+        recall = metrics.recall_score(labels_all, predict_all, average='micro', zero_division=0)
+        f1 = metrics.f1_score(labels_all, predict_all, average='micro', zero_division=0)
 
     print("Acc. (Correct/Total): {:>6.2%} micro-Prec: {:.4f} micro-Recall:{:.4f} micro-F1: {:.4f} dev loss: {:.6f}"
-          .format(acc, prec, recall, f1, total_loss / len(eval_batch))) 
+        .format(acc, prec, recall, f1, total_loss / len(eval_batch))) 
     if is_test:
         report = metrics.classification_report(labels_all, predict_all, target_names=config.class_list, digits=4, zero_division=0)
         print(report)

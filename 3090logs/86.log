@@ -1,0 +1,67 @@
+nohup: ignoring input
+  0%|          | 0/82 [00:00<?, ?it/s]100%|██████████| 82/82 [00:00<00:00, 881879.30it/s]
+model:  ernie-rcnn-catlstmwide
+pretrained:  ernie1
+task:  MLC-slice
+dataset:  book_multilabels_task_slice
+seq_length:  256
+hidden_dropout_prob:  0.1
+attention_probs_dropout_prob:  0.1
+epochs_num:  20
+batch_size:  8
+learning_rate:  2e-05
+report_steps:  100
+kg_name:  CnDbpedia
+no_kg:  True
+no_vm:  True
+GPU:  NVIDIA GeForce RTX 3090
+Vocabulary Size:  17964
+[BertClassifier] use visible_matrix: False
+Some weights of ErnieRCNNForMultiLabelSequenceClassificationSliceCatLSTMWide were not initialized from the model checkpoint at ./models/ernie1 and are newly initialized: ['lstm.bias_hh_l0_reverse', 'lstm.weight_hh_l1_reverse', 'lstm.bias_ih_l0_reverse', 'classifier.weight', 'output_layer_1.bias', 'lstm.bias_hh_l0', 'lstm.bias_ih_l0', 'lstm.weight_ih_l0', 'lstm.weight_ih_l0_reverse', 'lstm.weight_ih_l1', 'lstm.weight_hh_l0_reverse', 'output_layer_1.weight', 'lstm.bias_hh_l1_reverse', 'lstm.bias_ih_l1', 'lstm.weight_hh_l0', 'lstm.bias_hh_l1', 'lstm.weight_hh_l1', 'lstm.bias_ih_l1_reverse', 'lstm.weight_ih_l1_reverse', 'classifier.bias']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+1 GPUs are available. Let's use them.
+device:  cuda
+Start training.
+Loading sentences from ./datasets/book_multilabels_task_slice/train.tsv
+There are 9097 sentence in total. We use 1 processes to inject knowledge into sentences.
+Progress of process 0: 0/9097
+Loading sentences from ./datasets/book_multilabels_task_slice/dev.tsv
+There are 2084 sentence in total. We use 1 processes to inject knowledge into sentences.
+Progress of process 0: 0/2084
+Loading sentences from ./datasets/book_multilabels_task_slice/test.tsv
+There are 2067 sentence in total. We use 1 processes to inject knowledge into sentences.
+Progress of process 0: 0/2067
+/root/miniconda3/envs/lyq/lib/python3.8/site-packages/transformers/optimization.py:411: FutureWarning: This implementation of AdamW is deprecated and will be removed in a future version. Use the PyTorch implementation torch.optim.AdamW instead, or set `no_deprecation_warning=True` to disable this warning
+  warnings.warn(
+Traceback (most recent call last):
+  File "run_kbert_transformers_cls.py", line 228, in <module>
+    main()
+  File "run_kbert_transformers_cls.py", line 219, in main
+    train_slice(model, train_batch, dev_batch, test_batch, config=config, task=args.task)
+  File "/Zy/experiment/K-BERT-HUGGINGFACE/train.py", line 174, in train_slice
+    loss, logits = model(input_ids_batch, 
+  File "/root/miniconda3/envs/lyq/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/Zy/experiment/K-BERT-HUGGINGFACE/MultiLabelSequenceClassificationSlice.py", line 638, in forward
+    outputs = self.ernie(input_ids,
+  File "/root/miniconda3/envs/lyq/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/root/miniconda3/envs/lyq/lib/python3.8/site-packages/transformers/models/ernie/modeling_ernie.py", line 952, in forward
+    encoder_outputs = self.encoder(
+  File "/root/miniconda3/envs/lyq/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/root/miniconda3/envs/lyq/lib/python3.8/site-packages/transformers/models/ernie/modeling_ernie.py", line 525, in forward
+    layer_outputs = layer_module(
+  File "/root/miniconda3/envs/lyq/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/root/miniconda3/envs/lyq/lib/python3.8/site-packages/transformers/models/ernie/modeling_ernie.py", line 409, in forward
+    self_attention_outputs = self.attention(
+  File "/root/miniconda3/envs/lyq/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/root/miniconda3/envs/lyq/lib/python3.8/site-packages/transformers/models/ernie/modeling_ernie.py", line 336, in forward
+    self_outputs = self.self(
+  File "/root/miniconda3/envs/lyq/lib/python3.8/site-packages/torch/nn/modules/module.py", line 1501, in _call_impl
+    return forward_call(*args, **kwargs)
+  File "/root/miniconda3/envs/lyq/lib/python3.8/site-packages/transformers/models/ernie/modeling_ernie.py", line 232, in forward
+    attention_scores = torch.matmul(query_layer, key_layer.transpose(-1, -2))
+torch.cuda.OutOfMemoryError: CUDA out of memory. Tried to allocate 20.00 MiB (GPU 0; 23.70 GiB total capacity; 1.31 GiB already allocated; 21.56 MiB free; 1.35 GiB reserved in total by PyTorch) If reserved memory is >> allocated memory try setting max_split_size_mb to avoid fragmentation.  See documentation for Memory Management and PYTORCH_CUDA_ALLOC_CONF

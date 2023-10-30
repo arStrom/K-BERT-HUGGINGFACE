@@ -1,0 +1,589 @@
+  0%|          | 0/82 [00:00<?, ?it/s]100%|██████████| 82/82 [00:00<00:00, 1005651.84it/s]
+Vocabulary file line 344 has bad format token
+Vocabulary Size:  21128
+[BertClassifier] use visible_matrix: False
+Some weights of BertRNNForMultiLabelSequenceClassification were not initialized from the model checkpoint at ./models/bert and are newly initialized: ['lstm.weight_ih_l0_reverse', 'lstm.bias_hh_l0', 'lstm.weight_hh_l1', 'lstm.bias_ih_l0', 'lstm.bias_hh_l0_reverse', 'lstm.bias_hh_l1_reverse', 'classifier.weight', 'lstm.bias_ih_l1_reverse', 'lstm.bias_ih_l1', 'classifier.bias', 'lstm.weight_hh_l0', 'lstm.weight_ih_l1_reverse', 'lstm.bias_ih_l0_reverse', 'lstm.weight_ih_l0', 'lstm.weight_hh_l0_reverse', 'lstm.weight_ih_l1', 'lstm.weight_hh_l1_reverse', 'lstm.bias_hh_l1']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+model:  bert-rnn
+pretrained:  bert
+dataset:  book_multilabels_task
+task:  MLC
+seq_length:  256
+hidden_dropout_prob:  0.1
+attention_probs_dropout_prob:  0.1
+dropout_rnn:  0.2
+rnn_hidden:  768
+epochs_num:  32
+batch_size:  8
+learning_rate:  2e-05
+report_steps:  100
+acc_percent:  0.9
+kg_name:  CnDbpedia
+no_kg:  True
+no_vm:  True
+GPU:  NVIDIA GeForce RTX 2080 Ti
+1 GPUs are available. Let's use them.
+device:  cuda
+Start training.
+Loading sentences from ./datasets/book_multilabels_task/train.tsv
+There are 9097 sentence in total. We use 1 processes to inject knowledge into sentences.
+Progress of process 0: 0/9097
+Loading sentences from ./datasets/book_multilabels_task/dev.tsv
+There are 2084 sentence in total. We use 1 processes to inject knowledge into sentences.
+Progress of process 0: 0/2084
+Loading sentences from ./datasets/book_multilabels_task/test.tsv
+There are 2067 sentence in total. We use 1 processes to inject knowledge into sentences.
+Progress of process 0: 0/2067
+Epoch id: 01, Training steps: 0100,  Train Loss: 0.684768,  Train Acc: 00.00%,  Train Avg Loss: 0.691552,  Time: 0:00:24
+Epoch id: 01, Training steps: 0200,  Train Loss: 0.644042,  Train Acc: 00.00%,  Train Avg Loss: 0.668661,  Time: 0:00:48
+Epoch id: 01, Training steps: 0300,  Train Loss: 0.529431,  Train Acc: 00.00%,  Train Avg Loss: 0.595121,  Time: 0:01:11
+Epoch id: 01, Training steps: 0400,  Train Loss: 0.318334,  Train Acc: 00.00%,  Train Avg Loss: 0.427026,  Time: 0:01:35
+Epoch id: 01, Training steps: 0500,  Train Loss: 0.197969,  Train Acc: 00.00%,  Train Avg Loss: 0.250494,  Time: 0:01:58
+Epoch id: 01, Training steps: 0600,  Train Loss: 0.129820,  Train Acc: 00.00%,  Train Avg Loss: 0.162892,  Time: 0:02:22
+Epoch id: 01, Training steps: 0700,  Train Loss: 0.120408,  Train Acc: 00.00%,  Train Avg Loss: 0.122777,  Time: 0:02:46
+Epoch id: 01, Training steps: 0800,  Train Loss: 0.100823,  Train Acc: 00.00%,  Train Avg Loss: 0.104265,  Time: 0:03:09
+Epoch id: 01, Training steps: 0900,  Train Loss: 0.095914,  Train Acc: 00.00%,  Train Avg Loss: 0.095005,  Time: 0:03:33
+Epoch id: 01, Training steps: 1000,  Train Loss: 0.090380,  Train Acc: 00.00%,  Train Avg Loss: 0.090065,  Time: 0:03:57
+Epoch id: 01, Training steps: 1100,  Train Loss: 0.091983,  Train Acc: 00.00%,  Train Avg Loss: 0.088807,  Time: 0:04:20
+Start evaluation on dev dataset.
+Acc. (Correct/Total):  0.00% micro-Prec: 0.0000 micro-Recall:0.0000 micro-F1: 0.0000 dev loss: 0.081169
+Epoch id: 02, Training steps: 0100,  Train Loss: 0.086340,  Train Acc: 00.00%,  Train Avg Loss: 0.119183,  Time: 0:05:17
+Epoch id: 02, Training steps: 0200,  Train Loss: 0.090503,  Train Acc: 00.00%,  Train Avg Loss: 0.086155,  Time: 0:05:41
+Epoch id: 02, Training steps: 0300,  Train Loss: 0.088758,  Train Acc: 00.00%,  Train Avg Loss: 0.085371,  Time: 0:06:05
+Epoch id: 02, Training steps: 0400,  Train Loss: 0.083385,  Train Acc: 00.00%,  Train Avg Loss: 0.083428,  Time: 0:06:28
+Epoch id: 02, Training steps: 0500,  Train Loss: 0.085324,  Train Acc: 00.00%,  Train Avg Loss: 0.083242,  Time: 0:06:52
+Epoch id: 02, Training steps: 0600,  Train Loss: 0.086789,  Train Acc: 00.00%,  Train Avg Loss: 0.083526,  Time: 0:07:16
+Epoch id: 02, Training steps: 0700,  Train Loss: 0.088598,  Train Acc: 00.00%,  Train Avg Loss: 0.083821,  Time: 0:07:39
+Epoch id: 02, Training steps: 0800,  Train Loss: 0.089596,  Train Acc: 00.00%,  Train Avg Loss: 0.084235,  Time: 0:08:03
+Epoch id: 02, Training steps: 0900,  Train Loss: 0.077696,  Train Acc: 00.00%,  Train Avg Loss: 0.084232,  Time: 0:08:26
+Epoch id: 02, Training steps: 1000,  Train Loss: 0.077816,  Train Acc: 00.00%,  Train Avg Loss: 0.084715,  Time: 0:08:50
+Epoch id: 02, Training steps: 1100,  Train Loss: 0.096789,  Train Acc: 00.00%,  Train Avg Loss: 0.085325,  Time: 0:09:14
+Start evaluation on dev dataset.
+Acc. (Correct/Total):  0.00% micro-Prec: 0.0000 micro-Recall:0.0000 micro-F1: 0.0000 dev loss: 0.078622
+Epoch id: 03, Training steps: 0100,  Train Loss: 0.084020,  Train Acc: 00.00%,  Train Avg Loss: 0.116818,  Time: 0:10:10
+Epoch id: 03, Training steps: 0200,  Train Loss: 0.079738,  Train Acc: 00.00%,  Train Avg Loss: 0.083276,  Time: 0:10:34
+Epoch id: 03, Training steps: 0300,  Train Loss: 0.074441,  Train Acc: 00.00%,  Train Avg Loss: 0.083690,  Time: 0:10:57
+Epoch id: 03, Training steps: 0400,  Train Loss: 0.093186,  Train Acc: 00.00%,  Train Avg Loss: 0.080607,  Time: 0:11:21
+Epoch id: 03, Training steps: 0500,  Train Loss: 0.089300,  Train Acc: 00.00%,  Train Avg Loss: 0.083018,  Time: 0:11:45
+Epoch id: 03, Training steps: 0600,  Train Loss: 0.059755,  Train Acc: 00.00%,  Train Avg Loss: 0.080809,  Time: 0:12:08
+Epoch id: 03, Training steps: 0700,  Train Loss: 0.094686,  Train Acc: 00.00%,  Train Avg Loss: 0.078419,  Time: 0:12:32
+Epoch id: 03, Training steps: 0800,  Train Loss: 0.079525,  Train Acc: 00.00%,  Train Avg Loss: 0.076746,  Time: 0:12:56
+Epoch id: 03, Training steps: 0900,  Train Loss: 0.069183,  Train Acc: 00.00%,  Train Avg Loss: 0.076948,  Time: 0:13:19
+Epoch id: 03, Training steps: 1000,  Train Loss: 0.089986,  Train Acc: 00.00%,  Train Avg Loss: 0.075013,  Time: 0:13:43
+Epoch id: 03, Training steps: 1100,  Train Loss: 0.069165,  Train Acc: 00.00%,  Train Avg Loss: 0.074255,  Time: 0:14:07
+Start evaluation on dev dataset.
+Acc. (Correct/Total):  0.00% micro-Prec: 0.0000 micro-Recall:0.0000 micro-F1: 0.0000 dev loss: 0.068792
+Epoch id: 04, Training steps: 0100,  Train Loss: 0.079343,  Train Acc: 00.00%,  Train Avg Loss: 0.096762,  Time: 0:15:04
+Epoch id: 04, Training steps: 0200,  Train Loss: 0.065054,  Train Acc: 00.00%,  Train Avg Loss: 0.069244,  Time: 0:15:27
+Epoch id: 04, Training steps: 0300,  Train Loss: 0.068153,  Train Acc: 00.00%,  Train Avg Loss: 0.067141,  Time: 0:15:51
+Epoch id: 04, Training steps: 0400,  Train Loss: 0.064225,  Train Acc: 00.00%,  Train Avg Loss: 0.067068,  Time: 0:16:15
+Epoch id: 04, Training steps: 0500,  Train Loss: 0.078548,  Train Acc: 00.00%,  Train Avg Loss: 0.064399,  Time: 0:16:39
+Epoch id: 04, Training steps: 0600,  Train Loss: 0.061047,  Train Acc: 00.00%,  Train Avg Loss: 0.061063,  Time: 0:17:02
+Epoch id: 04, Training steps: 0700,  Train Loss: 0.051753,  Train Acc: 00.00%,  Train Avg Loss: 0.060163,  Time: 0:17:26
+Epoch id: 04, Training steps: 0800,  Train Loss: 0.056562,  Train Acc: 00.00%,  Train Avg Loss: 0.058742,  Time: 0:17:49
+Epoch id: 04, Training steps: 0900,  Train Loss: 0.050647,  Train Acc: 00.00%,  Train Avg Loss: 0.058344,  Time: 0:18:13
+Epoch id: 04, Training steps: 1000,  Train Loss: 0.061575,  Train Acc: 00.00%,  Train Avg Loss: 0.054328,  Time: 0:18:37
+Epoch id: 04, Training steps: 1100,  Train Loss: 0.060549,  Train Acc: 00.00%,  Train Avg Loss: 0.054119,  Time: 0:19:00
+Start evaluation on dev dataset.
+Acc. (Correct/Total):  0.00% micro-Prec: 0.0000 micro-Recall:0.0000 micro-F1: 0.0000 dev loss: 0.052485
+Epoch id: 05, Training steps: 0100,  Train Loss: 0.055637,  Train Acc: 00.00%,  Train Avg Loss: 0.072093,  Time: 0:19:57
+Epoch id: 05, Training steps: 0200,  Train Loss: 0.042199,  Train Acc: 00.00%,  Train Avg Loss: 0.050216,  Time: 0:20:20
+Epoch id: 05, Training steps: 0300,  Train Loss: 0.056050,  Train Acc: 00.00%,  Train Avg Loss: 0.049253,  Time: 0:20:44
+Epoch id: 05, Training steps: 0400,  Train Loss: 0.032187,  Train Acc: 25.00%,  Train Avg Loss: 0.047712,  Time: 0:21:08
+Epoch id: 05, Training steps: 0500,  Train Loss: 0.030805,  Train Acc: 00.00%,  Train Avg Loss: 0.048592,  Time: 0:21:31
+Epoch id: 05, Training steps: 0600,  Train Loss: 0.044881,  Train Acc: 00.00%,  Train Avg Loss: 0.048914,  Time: 0:21:55
+Epoch id: 05, Training steps: 0700,  Train Loss: 0.049898,  Train Acc: 00.00%,  Train Avg Loss: 0.047228,  Time: 0:22:19
+Epoch id: 05, Training steps: 0800,  Train Loss: 0.035049,  Train Acc: 00.00%,  Train Avg Loss: 0.047063,  Time: 0:22:42
+Epoch id: 05, Training steps: 0900,  Train Loss: 0.055158,  Train Acc: 00.00%,  Train Avg Loss: 0.043955,  Time: 0:23:06
+Epoch id: 05, Training steps: 1000,  Train Loss: 0.037607,  Train Acc: 00.00%,  Train Avg Loss: 0.044858,  Time: 0:23:29
+Epoch id: 05, Training steps: 1100,  Train Loss: 0.041002,  Train Acc: 00.00%,  Train Avg Loss: 0.046259,  Time: 0:23:53
+Start evaluation on dev dataset.
+Acc. (Correct/Total):  0.29% micro-Prec: 0.0298 micro-Recall:0.0163 micro-F1: 0.0208 dev loss: 0.046681
+Start evaluation on test dataset.
+Acc. (Correct/Total):  0.05% micro-Prec: 0.0421 micro-Recall:0.0213 micro-F1: 0.0282 dev loss: 0.043958
+Epoch id: 06, Training steps: 0100,  Train Loss: 0.033033,  Train Acc: 00.00%,  Train Avg Loss: 0.058335,  Time: 0:25:15
+Epoch id: 06, Training steps: 0200,  Train Loss: 0.050783,  Train Acc: 00.00%,  Train Avg Loss: 0.041094,  Time: 0:25:38
+Epoch id: 06, Training steps: 0300,  Train Loss: 0.029624,  Train Acc: 12.50%,  Train Avg Loss: 0.039529,  Time: 0:26:02
+Epoch id: 06, Training steps: 0400,  Train Loss: 0.036307,  Train Acc: 00.00%,  Train Avg Loss: 0.041359,  Time: 0:26:26
+Epoch id: 06, Training steps: 0500,  Train Loss: 0.049763,  Train Acc: 12.50%,  Train Avg Loss: 0.040001,  Time: 0:26:49
+Epoch id: 06, Training steps: 0600,  Train Loss: 0.043419,  Train Acc: 00.00%,  Train Avg Loss: 0.038672,  Time: 0:27:13
+Epoch id: 06, Training steps: 0700,  Train Loss: 0.060590,  Train Acc: 12.50%,  Train Avg Loss: 0.038182,  Time: 0:27:37
+Epoch id: 06, Training steps: 0800,  Train Loss: 0.027750,  Train Acc: 00.00%,  Train Avg Loss: 0.040335,  Time: 0:28:00
+Epoch id: 06, Training steps: 0900,  Train Loss: 0.045914,  Train Acc: 00.00%,  Train Avg Loss: 0.038067,  Time: 0:28:24
+Epoch id: 06, Training steps: 1000,  Train Loss: 0.031012,  Train Acc: 00.00%,  Train Avg Loss: 0.038281,  Time: 0:28:47
+Epoch id: 06, Training steps: 1100,  Train Loss: 0.032877,  Train Acc: 12.50%,  Train Avg Loss: 0.040449,  Time: 0:29:11
+Start evaluation on dev dataset.
+Acc. (Correct/Total):  4.27% micro-Prec: 0.0893 micro-Recall:0.0684 micro-F1: 0.0747 dev loss: 0.043241
+Start evaluation on test dataset.
+Acc. (Correct/Total):  3.58% micro-Prec: 0.1166 micro-Recall:0.0762 micro-F1: 0.0896 dev loss: 0.041111
+Epoch id: 07, Training steps: 0100,  Train Loss: 0.042983,  Train Acc: 00.00%,  Train Avg Loss: 0.052940,  Time: 0:30:32
+Epoch id: 07, Training steps: 0200,  Train Loss: 0.042525,  Train Acc: 00.00%,  Train Avg Loss: 0.036616,  Time: 0:30:56
+Epoch id: 07, Training steps: 0300,  Train Loss: 0.020780,  Train Acc: 00.00%,  Train Avg Loss: 0.035585,  Time: 0:31:19
+Epoch id: 07, Training steps: 0400,  Train Loss: 0.025179,  Train Acc: 00.00%,  Train Avg Loss: 0.035261,  Time: 0:31:43
+Epoch id: 07, Training steps: 0500,  Train Loss: 0.035246,  Train Acc: 25.00%,  Train Avg Loss: 0.034258,  Time: 0:32:07
+Epoch id: 07, Training steps: 0600,  Train Loss: 0.032297,  Train Acc: 25.00%,  Train Avg Loss: 0.033260,  Time: 0:32:30
+Epoch id: 07, Training steps: 0700,  Train Loss: 0.059999,  Train Acc: 00.00%,  Train Avg Loss: 0.033460,  Time: 0:32:54
+Epoch id: 07, Training steps: 0800,  Train Loss: 0.038363,  Train Acc: 00.00%,  Train Avg Loss: 0.032623,  Time: 0:33:17
+Epoch id: 07, Training steps: 0900,  Train Loss: 0.042298,  Train Acc: 12.50%,  Train Avg Loss: 0.035578,  Time: 0:33:41
+Epoch id: 07, Training steps: 1000,  Train Loss: 0.049908,  Train Acc: 12.50%,  Train Avg Loss: 0.033521,  Time: 0:34:05
+Epoch id: 07, Training steps: 1100,  Train Loss: 0.020685,  Train Acc: 25.00%,  Train Avg Loss: 0.031641,  Time: 0:34:28
+Start evaluation on dev dataset.
+Acc. (Correct/Total): 12.19% micro-Prec: 0.2524 micro-Recall:0.1911 micro-F1: 0.2105 dev loss: 0.040920
+Start evaluation on test dataset.
+Acc. (Correct/Total): 15.05% micro-Prec: 0.2956 micro-Recall:0.2244 micro-F1: 0.2477 dev loss: 0.037722
+Epoch id: 08, Training steps: 0100,  Train Loss: 0.044991,  Train Acc: 25.00%,  Train Avg Loss: 0.042642,  Time: 0:35:49
+Epoch id: 08, Training steps: 0200,  Train Loss: 0.040627,  Train Acc: 12.50%,  Train Avg Loss: 0.028440,  Time: 0:36:13
+Epoch id: 08, Training steps: 0300,  Train Loss: 0.029885,  Train Acc: 37.50%,  Train Avg Loss: 0.030576,  Time: 0:36:36
+Epoch id: 08, Training steps: 0400,  Train Loss: 0.023093,  Train Acc: 37.50%,  Train Avg Loss: 0.031354,  Time: 0:37:00
+Epoch id: 08, Training steps: 0500,  Train Loss: 0.022153,  Train Acc: 37.50%,  Train Avg Loss: 0.029665,  Time: 0:37:24
+Epoch id: 08, Training steps: 0600,  Train Loss: 0.017085,  Train Acc: 12.50%,  Train Avg Loss: 0.029644,  Time: 0:37:47
+Epoch id: 08, Training steps: 0700,  Train Loss: 0.053245,  Train Acc: 00.00%,  Train Avg Loss: 0.030897,  Time: 0:38:11
+Epoch id: 08, Training steps: 0800,  Train Loss: 0.017717,  Train Acc: 50.00%,  Train Avg Loss: 0.031386,  Time: 0:38:35
+Epoch id: 08, Training steps: 0900,  Train Loss: 0.026339,  Train Acc: 37.50%,  Train Avg Loss: 0.029379,  Time: 0:38:58
+Epoch id: 08, Training steps: 1000,  Train Loss: 0.031652,  Train Acc: 12.50%,  Train Avg Loss: 0.029769,  Time: 0:39:22
+Epoch id: 08, Training steps: 1100,  Train Loss: 0.025258,  Train Acc: 12.50%,  Train Avg Loss: 0.027938,  Time: 0:39:45
+Start evaluation on dev dataset.
+Acc. (Correct/Total): 22.65% micro-Prec: 0.3534 micro-Recall:0.2960 micro-F1: 0.3137 dev loss: 0.039259
+Start evaluation on test dataset.
+Acc. (Correct/Total): 27.43% micro-Prec: 0.3764 micro-Recall:0.3280 micro-F1: 0.3439 dev loss: 0.035971
+Epoch id: 09, Training steps: 0100,  Train Loss: 0.030000,  Train Acc: 12.50%,  Train Avg Loss: 0.037628,  Time: 0:41:07
+Epoch id: 09, Training steps: 0200,  Train Loss: 0.024103,  Train Acc: 37.50%,  Train Avg Loss: 0.025904,  Time: 0:41:31
+Epoch id: 09, Training steps: 0300,  Train Loss: 0.014637,  Train Acc: 75.00%,  Train Avg Loss: 0.027444,  Time: 0:41:55
+Epoch id: 09, Training steps: 0400,  Train Loss: 0.024494,  Train Acc: 25.00%,  Train Avg Loss: 0.025796,  Time: 0:42:18
+Epoch id: 09, Training steps: 0500,  Train Loss: 0.016347,  Train Acc: 62.50%,  Train Avg Loss: 0.027055,  Time: 0:42:42
+Epoch id: 09, Training steps: 0600,  Train Loss: 0.037119,  Train Acc: 12.50%,  Train Avg Loss: 0.026711,  Time: 0:43:05
+Epoch id: 09, Training steps: 0700,  Train Loss: 0.023042,  Train Acc: 12.50%,  Train Avg Loss: 0.026251,  Time: 0:43:29
+Epoch id: 09, Training steps: 0800,  Train Loss: 0.019384,  Train Acc: 37.50%,  Train Avg Loss: 0.026624,  Time: 0:43:53
+Epoch id: 09, Training steps: 0900,  Train Loss: 0.041001,  Train Acc: 25.00%,  Train Avg Loss: 0.024754,  Time: 0:44:16
+Epoch id: 09, Training steps: 1000,  Train Loss: 0.026069,  Train Acc: 00.00%,  Train Avg Loss: 0.025259,  Time: 0:44:40
+Epoch id: 09, Training steps: 1100,  Train Loss: 0.023057,  Train Acc: 25.00%,  Train Avg Loss: 0.025686,  Time: 0:45:04
+Start evaluation on dev dataset.
+Acc. (Correct/Total): 22.70% micro-Prec: 0.3371 micro-Recall:0.2875 micro-F1: 0.3030 dev loss: 0.038834
+Start evaluation on test dataset.
+Acc. (Correct/Total): 26.95% micro-Prec: 0.3672 micro-Recall:0.3220 micro-F1: 0.3368 dev loss: 0.033976
+Epoch id: 10, Training steps: 0100,  Train Loss: 0.007512,  Train Acc: 75.00%,  Train Avg Loss: 0.032279,  Time: 0:46:24
+Epoch id: 10, Training steps: 0200,  Train Loss: 0.033546,  Train Acc: 37.50%,  Train Avg Loss: 0.023048,  Time: 0:46:47
+Epoch id: 10, Training steps: 0300,  Train Loss: 0.010091,  Train Acc: 25.00%,  Train Avg Loss: 0.022868,  Time: 0:47:11
+Epoch id: 10, Training steps: 0400,  Train Loss: 0.035809,  Train Acc: 25.00%,  Train Avg Loss: 0.022293,  Time: 0:47:35
+Epoch id: 10, Training steps: 0500,  Train Loss: 0.018725,  Train Acc: 12.50%,  Train Avg Loss: 0.022363,  Time: 0:47:58
+Epoch id: 10, Training steps: 0600,  Train Loss: 0.013994,  Train Acc: 12.50%,  Train Avg Loss: 0.022323,  Time: 0:48:22
+Epoch id: 10, Training steps: 0700,  Train Loss: 0.019849,  Train Acc: 25.00%,  Train Avg Loss: 0.020425,  Time: 0:48:45
+Epoch id: 10, Training steps: 0800,  Train Loss: 0.017012,  Train Acc: 50.00%,  Train Avg Loss: 0.023528,  Time: 0:49:09
+Epoch id: 10, Training steps: 0900,  Train Loss: 0.005341,  Train Acc: 62.50%,  Train Avg Loss: 0.023288,  Time: 0:49:33
+Epoch id: 10, Training steps: 1000,  Train Loss: 0.039938,  Train Acc: 12.50%,  Train Avg Loss: 0.022920,  Time: 0:49:56
+Epoch id: 10, Training steps: 1100,  Train Loss: 0.023422,  Train Acc: 25.00%,  Train Avg Loss: 0.025004,  Time: 0:50:20
+Start evaluation on dev dataset.
+Acc. (Correct/Total): 24.47% micro-Prec: 0.3810 micro-Recall:0.3181 micro-F1: 0.3377 dev loss: 0.035901
+Start evaluation on test dataset.
+Acc. (Correct/Total): 29.66% micro-Prec: 0.4301 micro-Recall:0.3674 micro-F1: 0.3879 dev loss: 0.032448
+Epoch id: 11, Training steps: 0100,  Train Loss: 0.030272,  Train Acc: 25.00%,  Train Avg Loss: 0.031456,  Time: 0:51:41
+Epoch id: 11, Training steps: 0200,  Train Loss: 0.028140,  Train Acc: 50.00%,  Train Avg Loss: 0.020448,  Time: 0:52:05
+Epoch id: 11, Training steps: 0300,  Train Loss: 0.021155,  Train Acc: 25.00%,  Train Avg Loss: 0.019861,  Time: 0:52:29
+Epoch id: 11, Training steps: 0400,  Train Loss: 0.019933,  Train Acc: 37.50%,  Train Avg Loss: 0.022000,  Time: 0:52:52
+Epoch id: 11, Training steps: 0500,  Train Loss: 0.018629,  Train Acc: 62.50%,  Train Avg Loss: 0.020584,  Time: 0:53:16
+Epoch id: 11, Training steps: 0600,  Train Loss: 0.011766,  Train Acc: 62.50%,  Train Avg Loss: 0.020742,  Time: 0:53:40
+Epoch id: 11, Training steps: 0700,  Train Loss: 0.028879,  Train Acc: 25.00%,  Train Avg Loss: 0.021208,  Time: 0:54:03
+Epoch id: 11, Training steps: 0800,  Train Loss: 0.010574,  Train Acc: 50.00%,  Train Avg Loss: 0.019872,  Time: 0:54:27
+Epoch id: 11, Training steps: 0900,  Train Loss: 0.004296,  Train Acc: 75.00%,  Train Avg Loss: 0.019353,  Time: 0:54:50
+Epoch id: 11, Training steps: 1000,  Train Loss: 0.022601,  Train Acc: 37.50%,  Train Avg Loss: 0.018829,  Time: 0:55:14
+Epoch id: 11, Training steps: 1100,  Train Loss: 0.033119,  Train Acc: 25.00%,  Train Avg Loss: 0.020601,  Time: 0:55:38
+Start evaluation on dev dataset.
+Acc. (Correct/Total): 30.04% micro-Prec: 0.4475 micro-Recall:0.3791 micro-F1: 0.4008 dev loss: 0.036652
+Start evaluation on test dataset.
+Acc. (Correct/Total): 34.35% micro-Prec: 0.4935 micro-Recall:0.4226 micro-F1: 0.4458 dev loss: 0.032081
+Epoch id: 12, Training steps: 0100,  Train Loss: 0.012500,  Train Acc: 37.50%,  Train Avg Loss: 0.026963,  Time: 0:56:59
+Epoch id: 12, Training steps: 0200,  Train Loss: 0.008468,  Train Acc: 50.00%,  Train Avg Loss: 0.017837,  Time: 0:57:22
+Epoch id: 12, Training steps: 0300,  Train Loss: 0.012852,  Train Acc: 50.00%,  Train Avg Loss: 0.016954,  Time: 0:57:46
+Epoch id: 12, Training steps: 0400,  Train Loss: 0.007625,  Train Acc: 50.00%,  Train Avg Loss: 0.017255,  Time: 0:58:10
+Epoch id: 12, Training steps: 0500,  Train Loss: 0.004063,  Train Acc: 75.00%,  Train Avg Loss: 0.018246,  Time: 0:58:33
+Epoch id: 12, Training steps: 0600,  Train Loss: 0.011201,  Train Acc: 25.00%,  Train Avg Loss: 0.018614,  Time: 0:58:57
+Epoch id: 12, Training steps: 0700,  Train Loss: 0.012729,  Train Acc: 25.00%,  Train Avg Loss: 0.017388,  Time: 0:59:20
+Epoch id: 12, Training steps: 0800,  Train Loss: 0.027687,  Train Acc: 25.00%,  Train Avg Loss: 0.018482,  Time: 0:59:44
+Epoch id: 12, Training steps: 0900,  Train Loss: 0.006758,  Train Acc: 87.50%,  Train Avg Loss: 0.017200,  Time: 1:00:08
+Epoch id: 12, Training steps: 1000,  Train Loss: 0.018337,  Train Acc: 25.00%,  Train Avg Loss: 0.016715,  Time: 1:00:31
+Epoch id: 12, Training steps: 1100,  Train Loss: 0.024648,  Train Acc: 62.50%,  Train Avg Loss: 0.016973,  Time: 1:00:55
+Start evaluation on dev dataset.
+Acc. (Correct/Total): 29.99% micro-Prec: 0.4527 micro-Recall:0.3852 micro-F1: 0.4062 dev loss: 0.037368
+Epoch id: 13, Training steps: 0100,  Train Loss: 0.006236,  Train Acc: 50.00%,  Train Avg Loss: 0.024020,  Time: 1:01:52
+Epoch id: 13, Training steps: 0200,  Train Loss: 0.021067,  Train Acc: 37.50%,  Train Avg Loss: 0.015455,  Time: 1:02:15
+Epoch id: 13, Training steps: 0300,  Train Loss: 0.007060,  Train Acc: 50.00%,  Train Avg Loss: 0.015774,  Time: 1:02:39
+Epoch id: 13, Training steps: 0400,  Train Loss: 0.012929,  Train Acc: 62.50%,  Train Avg Loss: 0.014070,  Time: 1:03:03
+Epoch id: 13, Training steps: 0500,  Train Loss: 0.016928,  Train Acc: 37.50%,  Train Avg Loss: 0.015710,  Time: 1:03:27
+Epoch id: 13, Training steps: 0600,  Train Loss: 0.018419,  Train Acc: 25.00%,  Train Avg Loss: 0.016002,  Time: 1:03:51
+Epoch id: 13, Training steps: 0700,  Train Loss: 0.006443,  Train Acc: 75.00%,  Train Avg Loss: 0.017113,  Time: 1:04:15
+Epoch id: 13, Training steps: 0800,  Train Loss: 0.016151,  Train Acc: 50.00%,  Train Avg Loss: 0.016322,  Time: 1:04:38
+Epoch id: 13, Training steps: 0900,  Train Loss: 0.011263,  Train Acc: 37.50%,  Train Avg Loss: 0.015506,  Time: 1:05:02
+Epoch id: 13, Training steps: 1000,  Train Loss: 0.011825,  Train Acc: 37.50%,  Train Avg Loss: 0.014316,  Time: 1:05:26
+Epoch id: 13, Training steps: 1100,  Train Loss: 0.007329,  Train Acc: 37.50%,  Train Avg Loss: 0.015822,  Time: 1:05:50
+Start evaluation on dev dataset.
+Acc. (Correct/Total): 32.87% micro-Prec: 0.4904 micro-Recall:0.4159 micro-F1: 0.4395 dev loss: 0.035649
+Start evaluation on test dataset.
+Acc. (Correct/Total): 37.98% micro-Prec: 0.5331 micro-Recall:0.4604 micro-F1: 0.4844 dev loss: 0.031538
+Epoch id: 14, Training steps: 0100,  Train Loss: 0.006744,  Train Acc: 62.50%,  Train Avg Loss: 0.019412,  Time: 1:07:11
+Epoch id: 14, Training steps: 0200,  Train Loss: 0.009458,  Train Acc: 50.00%,  Train Avg Loss: 0.013653,  Time: 1:07:35
+Epoch id: 14, Training steps: 0300,  Train Loss: 0.024968,  Train Acc: 12.50%,  Train Avg Loss: 0.013673,  Time: 1:07:59
+Epoch id: 14, Training steps: 0400,  Train Loss: 0.011720,  Train Acc: 62.50%,  Train Avg Loss: 0.014301,  Time: 1:08:23
+Epoch id: 14, Training steps: 0500,  Train Loss: 0.012873,  Train Acc: 50.00%,  Train Avg Loss: 0.013311,  Time: 1:08:47
+Epoch id: 14, Training steps: 0600,  Train Loss: 0.020363,  Train Acc: 25.00%,  Train Avg Loss: 0.014715,  Time: 1:09:10
+Epoch id: 14, Training steps: 0700,  Train Loss: 0.009311,  Train Acc: 25.00%,  Train Avg Loss: 0.013911,  Time: 1:09:34
+Epoch id: 14, Training steps: 0800,  Train Loss: 0.011078,  Train Acc: 37.50%,  Train Avg Loss: 0.014933,  Time: 1:09:58
+Epoch id: 14, Training steps: 0900,  Train Loss: 0.015742,  Train Acc: 37.50%,  Train Avg Loss: 0.013827,  Time: 1:10:22
+Epoch id: 14, Training steps: 1000,  Train Loss: 0.012385,  Train Acc: 75.00%,  Train Avg Loss: 0.014415,  Time: 1:10:46
+Epoch id: 14, Training steps: 1100,  Train Loss: 0.017677,  Train Acc: 50.00%,  Train Avg Loss: 0.012695,  Time: 1:11:10
+Start evaluation on dev dataset.
+Acc. (Correct/Total): 36.90% micro-Prec: 0.5518 micro-Recall:0.4687 micro-F1: 0.4949 dev loss: 0.037662
+Start evaluation on test dataset.
+Acc. (Correct/Total): 41.07% micro-Prec: 0.5839 micro-Recall:0.5023 micro-F1: 0.5291 dev loss: 0.033377
+Epoch id: 15, Training steps: 0100,  Train Loss: 0.027267,  Train Acc: 12.50%,  Train Avg Loss: 0.018094,  Time: 1:12:31
+Epoch id: 15, Training steps: 0200,  Train Loss: 0.022752,  Train Acc: 25.00%,  Train Avg Loss: 0.012378,  Time: 1:12:54
+Epoch id: 15, Training steps: 0300,  Train Loss: 0.008126,  Train Acc: 62.50%,  Train Avg Loss: 0.012147,  Time: 1:13:18
+Epoch id: 15, Training steps: 0400,  Train Loss: 0.004969,  Train Acc: 62.50%,  Train Avg Loss: 0.013588,  Time: 1:13:42
+Epoch id: 15, Training steps: 0500,  Train Loss: 0.005815,  Train Acc: 50.00%,  Train Avg Loss: 0.012515,  Time: 1:14:05
+Epoch id: 15, Training steps: 0600,  Train Loss: 0.004662,  Train Acc: 62.50%,  Train Avg Loss: 0.012380,  Time: 1:14:29
+Epoch id: 15, Training steps: 0700,  Train Loss: 0.036020,  Train Acc: 62.50%,  Train Avg Loss: 0.013241,  Time: 1:14:52
+Epoch id: 15, Training steps: 0800,  Train Loss: 0.012131,  Train Acc: 50.00%,  Train Avg Loss: 0.012972,  Time: 1:15:16
+Epoch id: 15, Training steps: 0900,  Train Loss: 0.003963,  Train Acc: 75.00%,  Train Avg Loss: 0.011400,  Time: 1:15:40
+Epoch id: 15, Training steps: 1000,  Train Loss: 0.013059,  Train Acc: 25.00%,  Train Avg Loss: 0.010812,  Time: 1:16:03
+Epoch id: 15, Training steps: 1100,  Train Loss: 0.013621,  Train Acc: 25.00%,  Train Avg Loss: 0.014205,  Time: 1:16:27
+Start evaluation on dev dataset.
+Acc. (Correct/Total): 37.04% micro-Prec: 0.5417 micro-Recall:0.4634 micro-F1: 0.4882 dev loss: 0.036709
+Start evaluation on test dataset.
+Acc. (Correct/Total): 42.14% micro-Prec: 0.5806 micro-Recall:0.5070 micro-F1: 0.5310 dev loss: 0.033205
+Epoch id: 16, Training steps: 0100,  Train Loss: 0.004111,  Train Acc: 75.00%,  Train Avg Loss: 0.016828,  Time: 1:17:49
+Epoch id: 16, Training steps: 0200,  Train Loss: 0.012006,  Train Acc: 62.50%,  Train Avg Loss: 0.011583,  Time: 1:18:12
+Epoch id: 16, Training steps: 0300,  Train Loss: 0.005363,  Train Acc: 62.50%,  Train Avg Loss: 0.011199,  Time: 1:18:36
+Epoch id: 16, Training steps: 0400,  Train Loss: 0.006707,  Train Acc: 62.50%,  Train Avg Loss: 0.011178,  Time: 1:19:00
+Epoch id: 16, Training steps: 0500,  Train Loss: 0.022651,  Train Acc: 25.00%,  Train Avg Loss: 0.011293,  Time: 1:19:23
+Epoch id: 16, Training steps: 0600,  Train Loss: 0.006568,  Train Acc: 50.00%,  Train Avg Loss: 0.011221,  Time: 1:19:47
+Epoch id: 16, Training steps: 0700,  Train Loss: 0.015676,  Train Acc: 37.50%,  Train Avg Loss: 0.011586,  Time: 1:20:11
+Epoch id: 16, Training steps: 0800,  Train Loss: 0.026703,  Train Acc: 25.00%,  Train Avg Loss: 0.011022,  Time: 1:20:34
+Epoch id: 16, Training steps: 0900,  Train Loss: 0.002103,  Train Acc: 75.00%,  Train Avg Loss: 0.010202,  Time: 1:20:58
+Epoch id: 16, Training steps: 1000,  Train Loss: 0.013775,  Train Acc: 50.00%,  Train Avg Loss: 0.011329,  Time: 1:21:22
+Epoch id: 16, Training steps: 1100,  Train Loss: 0.002935,  Train Acc: 75.00%,  Train Avg Loss: 0.011794,  Time: 1:21:45
+Start evaluation on dev dataset.
+Acc. (Correct/Total): 37.28% micro-Prec: 0.5511 micro-Recall:0.4705 micro-F1: 0.4959 dev loss: 0.037287
+Start evaluation on test dataset.
+Acc. (Correct/Total): 43.20% micro-Prec: 0.5982 micro-Recall:0.5219 micro-F1: 0.5466 dev loss: 0.032070
+Epoch id: 17, Training steps: 0100,  Train Loss: 0.011807,  Train Acc: 62.50%,  Train Avg Loss: 0.014094,  Time: 1:23:06
+Epoch id: 17, Training steps: 0200,  Train Loss: 0.010429,  Train Acc: 75.00%,  Train Avg Loss: 0.009724,  Time: 1:23:30
+Epoch id: 17, Training steps: 0300,  Train Loss: 0.021187,  Train Acc: 50.00%,  Train Avg Loss: 0.010889,  Time: 1:23:53
+Epoch id: 17, Training steps: 0400,  Train Loss: 0.007664,  Train Acc: 75.00%,  Train Avg Loss: 0.009649,  Time: 1:24:17
+Epoch id: 17, Training steps: 0500,  Train Loss: 0.002067,  Train Acc: 87.50%,  Train Avg Loss: 0.009592,  Time: 1:24:41
+Epoch id: 17, Training steps: 0600,  Train Loss: 0.003747,  Train Acc: 75.00%,  Train Avg Loss: 0.010456,  Time: 1:25:04
+Epoch id: 17, Training steps: 0700,  Train Loss: 0.002997,  Train Acc: 87.50%,  Train Avg Loss: 0.009388,  Time: 1:25:28
+Epoch id: 17, Training steps: 0800,  Train Loss: 0.024261,  Train Acc: 50.00%,  Train Avg Loss: 0.011188,  Time: 1:25:52
+Epoch id: 17, Training steps: 0900,  Train Loss: 0.006512,  Train Acc: 62.50%,  Train Avg Loss: 0.010899,  Time: 1:26:15
+Epoch id: 17, Training steps: 1000,  Train Loss: 0.002978,  Train Acc: 87.50%,  Train Avg Loss: 0.009334,  Time: 1:26:39
+Epoch id: 17, Training steps: 1100,  Train Loss: 0.003148,  Train Acc: 87.50%,  Train Avg Loss: 0.008663,  Time: 1:27:03
+Start evaluation on dev dataset.
+Acc. (Correct/Total): 38.96% micro-Prec: 0.5713 micro-Recall:0.4914 micro-F1: 0.5164 dev loss: 0.037839
+Start evaluation on test dataset.
+Acc. (Correct/Total): 45.09% micro-Prec: 0.6246 micro-Recall:0.5455 micro-F1: 0.5712 dev loss: 0.032449
+Epoch id: 18, Training steps: 0100,  Train Loss: 0.004286,  Train Acc: 75.00%,  Train Avg Loss: 0.015667,  Time: 1:28:24
+Epoch id: 18, Training steps: 0200,  Train Loss: 0.005178,  Train Acc: 37.50%,  Train Avg Loss: 0.009293,  Time: 1:28:48
+Epoch id: 18, Training steps: 0300,  Train Loss: 0.007846,  Train Acc: 37.50%,  Train Avg Loss: 0.009802,  Time: 1:29:11
+Epoch id: 18, Training steps: 0400,  Train Loss: 0.021030,  Train Acc: 37.50%,  Train Avg Loss: 0.009118,  Time: 1:29:35
+Epoch id: 18, Training steps: 0500,  Train Loss: 0.008519,  Train Acc: 50.00%,  Train Avg Loss: 0.008688,  Time: 1:29:59
+Epoch id: 18, Training steps: 0600,  Train Loss: 0.005279,  Train Acc: 75.00%,  Train Avg Loss: 0.008334,  Time: 1:30:22
+Epoch id: 18, Training steps: 0700,  Train Loss: 0.007815,  Train Acc: 62.50%,  Train Avg Loss: 0.009539,  Time: 1:30:46
+Epoch id: 18, Training steps: 0800,  Train Loss: 0.014943,  Train Acc: 62.50%,  Train Avg Loss: 0.008809,  Time: 1:31:09
+Epoch id: 18, Training steps: 0900,  Train Loss: 0.013106,  Train Acc: 37.50%,  Train Avg Loss: 0.009587,  Time: 1:31:33
+Epoch id: 18, Training steps: 1000,  Train Loss: 0.003817,  Train Acc: 75.00%,  Train Avg Loss: 0.008859,  Time: 1:31:57
+Epoch id: 18, Training steps: 1100,  Train Loss: 0.017236,  Train Acc: 50.00%,  Train Avg Loss: 0.008610,  Time: 1:32:20
+Start evaluation on dev dataset.
+Acc. (Correct/Total): 41.94% micro-Prec: 0.6053 micro-Recall:0.5232 micro-F1: 0.5489 dev loss: 0.037101
+Start evaluation on test dataset.
+Acc. (Correct/Total): 46.40% micro-Prec: 0.6393 micro-Recall:0.5599 micro-F1: 0.5855 dev loss: 0.032534
+Epoch id: 19, Training steps: 0100,  Train Loss: 0.006660,  Train Acc: 50.00%,  Train Avg Loss: 0.012879,  Time: 1:33:41
+Epoch id: 19, Training steps: 0200,  Train Loss: 0.010588,  Train Acc: 62.50%,  Train Avg Loss: 0.007993,  Time: 1:34:05
+Epoch id: 19, Training steps: 0300,  Train Loss: 0.007823,  Train Acc: 62.50%,  Train Avg Loss: 0.007613,  Time: 1:34:29
+Epoch id: 19, Training steps: 0400,  Train Loss: 0.013928,  Train Acc: 62.50%,  Train Avg Loss: 0.008594,  Time: 1:34:52
+Epoch id: 19, Training steps: 0500,  Train Loss: 0.011992,  Train Acc: 37.50%,  Train Avg Loss: 0.008559,  Time: 1:35:16
+Epoch id: 19, Training steps: 0600,  Train Loss: 0.020980,  Train Acc: 50.00%,  Train Avg Loss: 0.008820,  Time: 1:35:39
+Epoch id: 19, Training steps: 0700,  Train Loss: 0.003510,  Train Acc: 50.00%,  Train Avg Loss: 0.008395,  Time: 1:36:03
+Epoch id: 19, Training steps: 0800,  Train Loss: 0.005253,  Train Acc: 62.50%,  Train Avg Loss: 0.007746,  Time: 1:36:27
+Epoch id: 19, Training steps: 0900,  Train Loss: 0.001982,  Train Acc: 75.00%,  Train Avg Loss: 0.007685,  Time: 1:36:50
+Epoch id: 19, Training steps: 1000,  Train Loss: 0.008859,  Train Acc: 62.50%,  Train Avg Loss: 0.008010,  Time: 1:37:14
+Epoch id: 19, Training steps: 1100,  Train Loss: 0.002855,  Train Acc: 100.00%,  Train Avg Loss: 0.007708,  Time: 1:37:38
+Start evaluation on dev dataset.
+Acc. (Correct/Total): 42.47% micro-Prec: 0.6087 micro-Recall:0.5289 micro-F1: 0.5539 dev loss: 0.037641
+Start evaluation on test dataset.
+Acc. (Correct/Total): 48.38% micro-Prec: 0.6645 micro-Recall:0.5828 micro-F1: 0.6093 dev loss: 0.032273
+Epoch id: 20, Training steps: 0100,  Train Loss: 0.003972,  Train Acc: 75.00%,  Train Avg Loss: 0.009352,  Time: 1:38:59
+Epoch id: 20, Training steps: 0200,  Train Loss: 0.008974,  Train Acc: 62.50%,  Train Avg Loss: 0.007011,  Time: 1:39:23
+Epoch id: 20, Training steps: 0300,  Train Loss: 0.004944,  Train Acc: 87.50%,  Train Avg Loss: 0.006596,  Time: 1:39:47
+Epoch id: 20, Training steps: 0400,  Train Loss: 0.015776,  Train Acc: 37.50%,  Train Avg Loss: 0.007667,  Time: 1:40:10
+Epoch id: 20, Training steps: 0500,  Train Loss: 0.003107,  Train Acc: 87.50%,  Train Avg Loss: 0.007672,  Time: 1:40:34
+Epoch id: 20, Training steps: 0600,  Train Loss: 0.007041,  Train Acc: 75.00%,  Train Avg Loss: 0.006833,  Time: 1:40:57
+Epoch id: 20, Training steps: 0700,  Train Loss: 0.003172,  Train Acc: 62.50%,  Train Avg Loss: 0.007323,  Time: 1:41:21
+Epoch id: 20, Training steps: 0800,  Train Loss: 0.009496,  Train Acc: 50.00%,  Train Avg Loss: 0.007320,  Time: 1:41:45
+Epoch id: 20, Training steps: 0900,  Train Loss: 0.003923,  Train Acc: 50.00%,  Train Avg Loss: 0.007948,  Time: 1:42:08
+Epoch id: 20, Training steps: 1000,  Train Loss: 0.005147,  Train Acc: 62.50%,  Train Avg Loss: 0.006587,  Time: 1:42:32
+Epoch id: 20, Training steps: 1100,  Train Loss: 0.001910,  Train Acc: 87.50%,  Train Avg Loss: 0.008322,  Time: 1:42:56
+Start evaluation on dev dataset.
+Acc. (Correct/Total): 41.94% micro-Prec: 0.6140 micro-Recall:0.5258 micro-F1: 0.5540 dev loss: 0.038115
+Epoch id: 21, Training steps: 0100,  Train Loss: 0.012498,  Train Acc: 75.00%,  Train Avg Loss: 0.010181,  Time: 1:43:52
+Epoch id: 21, Training steps: 0200,  Train Loss: 0.016685,  Train Acc: 62.50%,  Train Avg Loss: 0.007567,  Time: 1:44:16
+Epoch id: 21, Training steps: 0300,  Train Loss: 0.003415,  Train Acc: 62.50%,  Train Avg Loss: 0.005974,  Time: 1:44:39
+Epoch id: 21, Training steps: 0400,  Train Loss: 0.001889,  Train Acc: 100.00%,  Train Avg Loss: 0.006266,  Time: 1:45:03
+Epoch id: 21, Training steps: 0500,  Train Loss: 0.008491,  Train Acc: 50.00%,  Train Avg Loss: 0.006000,  Time: 1:45:27
+Epoch id: 21, Training steps: 0600,  Train Loss: 0.009026,  Train Acc: 37.50%,  Train Avg Loss: 0.007141,  Time: 1:45:50
+Epoch id: 21, Training steps: 0700,  Train Loss: 0.002063,  Train Acc: 75.00%,  Train Avg Loss: 0.007005,  Time: 1:46:14
+Epoch id: 21, Training steps: 0800,  Train Loss: 0.011722,  Train Acc: 75.00%,  Train Avg Loss: 0.007189,  Time: 1:46:38
+Epoch id: 21, Training steps: 0900,  Train Loss: 0.010700,  Train Acc: 62.50%,  Train Avg Loss: 0.006970,  Time: 1:47:01
+Epoch id: 21, Training steps: 1000,  Train Loss: 0.004585,  Train Acc: 87.50%,  Train Avg Loss: 0.007744,  Time: 1:47:25
+Epoch id: 21, Training steps: 1100,  Train Loss: 0.006909,  Train Acc: 62.50%,  Train Avg Loss: 0.006441,  Time: 1:47:48
+Start evaluation on dev dataset.
+Acc. (Correct/Total): 43.62% micro-Prec: 0.6275 micro-Recall:0.5465 micro-F1: 0.5714 dev loss: 0.038836
+Start evaluation on test dataset.
+Acc. (Correct/Total): 49.25% micro-Prec: 0.6734 micro-Recall:0.5944 micro-F1: 0.6196 dev loss: 0.033279
+Epoch id: 22, Training steps: 0100,  Train Loss: 0.003725,  Train Acc: 62.50%,  Train Avg Loss: 0.009841,  Time: 1:49:09
+Epoch id: 22, Training steps: 0200,  Train Loss: 0.006059,  Train Acc: 87.50%,  Train Avg Loss: 0.005617,  Time: 1:49:33
+Epoch id: 22, Training steps: 0300,  Train Loss: 0.003463,  Train Acc: 87.50%,  Train Avg Loss: 0.007099,  Time: 1:49:57
+Epoch id: 22, Training steps: 0400,  Train Loss: 0.006459,  Train Acc: 75.00%,  Train Avg Loss: 0.005780,  Time: 1:50:20
+Epoch id: 22, Training steps: 0500,  Train Loss: 0.008513,  Train Acc: 50.00%,  Train Avg Loss: 0.006228,  Time: 1:50:44
+Epoch id: 22, Training steps: 0600,  Train Loss: 0.001404,  Train Acc: 87.50%,  Train Avg Loss: 0.005376,  Time: 1:51:08
+Epoch id: 22, Training steps: 0700,  Train Loss: 0.020158,  Train Acc: 50.00%,  Train Avg Loss: 0.005708,  Time: 1:51:31
+Epoch id: 22, Training steps: 0800,  Train Loss: 0.008908,  Train Acc: 50.00%,  Train Avg Loss: 0.006528,  Time: 1:51:55
+Epoch id: 22, Training steps: 0900,  Train Loss: 0.011763,  Train Acc: 50.00%,  Train Avg Loss: 0.005910,  Time: 1:52:18
+Epoch id: 22, Training steps: 1000,  Train Loss: 0.002659,  Train Acc: 87.50%,  Train Avg Loss: 0.006411,  Time: 1:52:42
+Epoch id: 22, Training steps: 1100,  Train Loss: 0.010754,  Train Acc: 50.00%,  Train Avg Loss: 0.005697,  Time: 1:53:06
+Start evaluation on dev dataset.
+Acc. (Correct/Total): 44.63% micro-Prec: 0.6423 micro-Recall:0.5578 micro-F1: 0.5838 dev loss: 0.038491
+Start evaluation on test dataset.
+Acc. (Correct/Total): 50.99% micro-Prec: 0.6959 micro-Recall:0.6119 micro-F1: 0.6391 dev loss: 0.032905
+Epoch id: 23, Training steps: 0100,  Train Loss: 0.010037,  Train Acc: 62.50%,  Train Avg Loss: 0.007636,  Time: 1:54:28
+Epoch id: 23, Training steps: 0200,  Train Loss: 0.005396,  Train Acc: 75.00%,  Train Avg Loss: 0.005481,  Time: 1:54:51
+Epoch id: 23, Training steps: 0300,  Train Loss: 0.006031,  Train Acc: 37.50%,  Train Avg Loss: 0.004897,  Time: 1:55:15
+Epoch id: 23, Training steps: 0400,  Train Loss: 0.002673,  Train Acc: 87.50%,  Train Avg Loss: 0.005443,  Time: 1:55:39
+Epoch id: 23, Training steps: 0500,  Train Loss: 0.001672,  Train Acc: 87.50%,  Train Avg Loss: 0.005844,  Time: 1:56:02
+Epoch id: 23, Training steps: 0600,  Train Loss: 0.036508,  Train Acc: 50.00%,  Train Avg Loss: 0.006172,  Time: 1:56:26
+Epoch id: 23, Training steps: 0700,  Train Loss: 0.006827,  Train Acc: 62.50%,  Train Avg Loss: 0.004644,  Time: 1:56:50
+Epoch id: 23, Training steps: 0800,  Train Loss: 0.027427,  Train Acc: 75.00%,  Train Avg Loss: 0.005332,  Time: 1:57:14
+Epoch id: 23, Training steps: 0900,  Train Loss: 0.001078,  Train Acc: 87.50%,  Train Avg Loss: 0.004909,  Time: 1:57:37
+Epoch id: 23, Training steps: 1000,  Train Loss: 0.000734,  Train Acc: 100.00%,  Train Avg Loss: 0.005672,  Time: 1:58:01
+Epoch id: 23, Training steps: 1100,  Train Loss: 0.008768,  Train Acc: 50.00%,  Train Avg Loss: 0.005604,  Time: 1:58:24
+Start evaluation on dev dataset.
+Acc. (Correct/Total): 44.29% micro-Prec: 0.6419 micro-Recall:0.5569 micro-F1: 0.5829 dev loss: 0.038587
+Epoch id: 24, Training steps: 0100,  Train Loss: 0.004185,  Train Acc: 75.00%,  Train Avg Loss: 0.006848,  Time: 1:59:21
+Epoch id: 24, Training steps: 0200,  Train Loss: 0.002947,  Train Acc: 62.50%,  Train Avg Loss: 0.005575,  Time: 1:59:45
+Epoch id: 24, Training steps: 0300,  Train Loss: 0.002585,  Train Acc: 87.50%,  Train Avg Loss: 0.004605,  Time: 2:00:08
+Epoch id: 24, Training steps: 0400,  Train Loss: 0.003099,  Train Acc: 87.50%,  Train Avg Loss: 0.005229,  Time: 2:00:32
+Epoch id: 24, Training steps: 0500,  Train Loss: 0.001310,  Train Acc: 100.00%,  Train Avg Loss: 0.005841,  Time: 2:00:56
+Epoch id: 24, Training steps: 0600,  Train Loss: 0.001160,  Train Acc: 100.00%,  Train Avg Loss: 0.005490,  Time: 2:01:19
+Epoch id: 24, Training steps: 0700,  Train Loss: 0.001777,  Train Acc: 87.50%,  Train Avg Loss: 0.004850,  Time: 2:01:43
+Epoch id: 24, Training steps: 0800,  Train Loss: 0.002709,  Train Acc: 87.50%,  Train Avg Loss: 0.004757,  Time: 2:02:06
+Epoch id: 24, Training steps: 0900,  Train Loss: 0.007555,  Train Acc: 50.00%,  Train Avg Loss: 0.004263,  Time: 2:02:30
+Epoch id: 24, Training steps: 1000,  Train Loss: 0.009504,  Train Acc: 62.50%,  Train Avg Loss: 0.005336,  Time: 2:02:54
+Epoch id: 24, Training steps: 1100,  Train Loss: 0.001829,  Train Acc: 87.50%,  Train Avg Loss: 0.004737,  Time: 2:03:17
+Start evaluation on dev dataset.
+Acc. (Correct/Total): 45.49% micro-Prec: 0.6476 micro-Recall:0.5677 micro-F1: 0.5919 dev loss: 0.039533
+Start evaluation on test dataset.
+Acc. (Correct/Total): 52.20% micro-Prec: 0.7046 micro-Recall:0.6240 micro-F1: 0.6499 dev loss: 0.033128
+Epoch id: 25, Training steps: 0100,  Train Loss: 0.002051,  Train Acc: 87.50%,  Train Avg Loss: 0.006530,  Time: 2:04:39
+Epoch id: 25, Training steps: 0200,  Train Loss: 0.007306,  Train Acc: 62.50%,  Train Avg Loss: 0.005084,  Time: 2:05:03
+Epoch id: 25, Training steps: 0300,  Train Loss: 0.002695,  Train Acc: 75.00%,  Train Avg Loss: 0.004546,  Time: 2:05:26
+Epoch id: 25, Training steps: 0400,  Train Loss: 0.000909,  Train Acc: 100.00%,  Train Avg Loss: 0.004819,  Time: 2:05:50
+Epoch id: 25, Training steps: 0500,  Train Loss: 0.003839,  Train Acc: 75.00%,  Train Avg Loss: 0.004328,  Time: 2:06:14
+Epoch id: 25, Training steps: 0600,  Train Loss: 0.000780,  Train Acc: 100.00%,  Train Avg Loss: 0.003862,  Time: 2:06:37
+Epoch id: 25, Training steps: 0700,  Train Loss: 0.000860,  Train Acc: 100.00%,  Train Avg Loss: 0.004050,  Time: 2:07:01
+Epoch id: 25, Training steps: 0800,  Train Loss: 0.002581,  Train Acc: 62.50%,  Train Avg Loss: 0.004448,  Time: 2:07:25
+Epoch id: 25, Training steps: 0900,  Train Loss: 0.004697,  Train Acc: 75.00%,  Train Avg Loss: 0.005302,  Time: 2:07:48
+Epoch id: 25, Training steps: 1000,  Train Loss: 0.001445,  Train Acc: 75.00%,  Train Avg Loss: 0.004698,  Time: 2:08:12
+Epoch id: 25, Training steps: 1100,  Train Loss: 0.003966,  Train Acc: 62.50%,  Train Avg Loss: 0.003852,  Time: 2:08:35
+Start evaluation on dev dataset.
+Acc. (Correct/Total): 46.35% micro-Prec: 0.6532 micro-Recall:0.5744 micro-F1: 0.5981 dev loss: 0.040399
+Start evaluation on test dataset.
+Acc. (Correct/Total): 52.01% micro-Prec: 0.7063 micro-Recall:0.6247 micro-F1: 0.6506 dev loss: 0.033855
+Epoch id: 26, Training steps: 0100,  Train Loss: 0.001156,  Train Acc: 87.50%,  Train Avg Loss: 0.005367,  Time: 2:09:56
+Epoch id: 26, Training steps: 0200,  Train Loss: 0.002367,  Train Acc: 75.00%,  Train Avg Loss: 0.004524,  Time: 2:10:20
+Epoch id: 26, Training steps: 0300,  Train Loss: 0.005493,  Train Acc: 62.50%,  Train Avg Loss: 0.004262,  Time: 2:10:44
+Epoch id: 26, Training steps: 0400,  Train Loss: 0.000821,  Train Acc: 100.00%,  Train Avg Loss: 0.003862,  Time: 2:11:07
+Epoch id: 26, Training steps: 0500,  Train Loss: 0.005025,  Train Acc: 50.00%,  Train Avg Loss: 0.003849,  Time: 2:11:31
+Epoch id: 26, Training steps: 0600,  Train Loss: 0.001118,  Train Acc: 100.00%,  Train Avg Loss: 0.003862,  Time: 2:11:54
+Epoch id: 26, Training steps: 0700,  Train Loss: 0.002234,  Train Acc: 87.50%,  Train Avg Loss: 0.004098,  Time: 2:12:18
+Epoch id: 26, Training steps: 0800,  Train Loss: 0.004223,  Train Acc: 75.00%,  Train Avg Loss: 0.004041,  Time: 2:12:42
+Epoch id: 26, Training steps: 0900,  Train Loss: 0.003492,  Train Acc: 87.50%,  Train Avg Loss: 0.005078,  Time: 2:13:05
+Epoch id: 26, Training steps: 1000,  Train Loss: 0.004776,  Train Acc: 62.50%,  Train Avg Loss: 0.003919,  Time: 2:13:29
+Epoch id: 26, Training steps: 1100,  Train Loss: 0.004239,  Train Acc: 75.00%,  Train Avg Loss: 0.003756,  Time: 2:13:53
+Start evaluation on dev dataset.
+Acc. (Correct/Total): 46.64% micro-Prec: 0.6644 micro-Recall:0.5834 micro-F1: 0.6075 dev loss: 0.040180
+Start evaluation on test dataset.
+Acc. (Correct/Total): 52.01% micro-Prec: 0.7093 micro-Recall:0.6270 micro-F1: 0.6530 dev loss: 0.034057
+Epoch id: 27, Training steps: 0100,  Train Loss: 0.006252,  Train Acc: 62.50%,  Train Avg Loss: 0.004932,  Time: 2:15:14
+Epoch id: 27, Training steps: 0200,  Train Loss: 0.002607,  Train Acc: 87.50%,  Train Avg Loss: 0.003959,  Time: 2:15:38
+Epoch id: 27, Training steps: 0300,  Train Loss: 0.001796,  Train Acc: 75.00%,  Train Avg Loss: 0.004006,  Time: 2:16:02
+Epoch id: 27, Training steps: 0400,  Train Loss: 0.000682,  Train Acc: 100.00%,  Train Avg Loss: 0.004021,  Time: 2:16:25
+Epoch id: 27, Training steps: 0500,  Train Loss: 0.002217,  Train Acc: 87.50%,  Train Avg Loss: 0.003580,  Time: 2:16:49
+Epoch id: 27, Training steps: 0600,  Train Loss: 0.002129,  Train Acc: 100.00%,  Train Avg Loss: 0.003466,  Time: 2:17:13
+Epoch id: 27, Training steps: 0700,  Train Loss: 0.004823,  Train Acc: 75.00%,  Train Avg Loss: 0.003676,  Time: 2:17:36
+Epoch id: 27, Training steps: 0800,  Train Loss: 0.003956,  Train Acc: 75.00%,  Train Avg Loss: 0.003496,  Time: 2:18:00
+Epoch id: 27, Training steps: 0900,  Train Loss: 0.001952,  Train Acc: 87.50%,  Train Avg Loss: 0.004253,  Time: 2:18:23
+Epoch id: 27, Training steps: 1000,  Train Loss: 0.005690,  Train Acc: 87.50%,  Train Avg Loss: 0.003477,  Time: 2:18:47
+Epoch id: 27, Training steps: 1100,  Train Loss: 0.000947,  Train Acc: 100.00%,  Train Avg Loss: 0.003292,  Time: 2:19:11
+Start evaluation on dev dataset.
+Acc. (Correct/Total): 47.98% micro-Prec: 0.6727 micro-Recall:0.5960 micro-F1: 0.6188 dev loss: 0.040689
+Start evaluation on test dataset.
+Acc. (Correct/Total): 54.38% micro-Prec: 0.7254 micro-Recall:0.6493 micro-F1: 0.6731 dev loss: 0.034402
+Epoch id: 28, Training steps: 0100,  Train Loss: 0.001288,  Train Acc: 100.00%,  Train Avg Loss: 0.004954,  Time: 2:20:32
+Epoch id: 28, Training steps: 0200,  Train Loss: 0.001960,  Train Acc: 87.50%,  Train Avg Loss: 0.003075,  Time: 2:20:55
+Epoch id: 28, Training steps: 0300,  Train Loss: 0.002626,  Train Acc: 75.00%,  Train Avg Loss: 0.003724,  Time: 2:21:19
+Epoch id: 28, Training steps: 0400,  Train Loss: 0.002836,  Train Acc: 87.50%,  Train Avg Loss: 0.003360,  Time: 2:21:43
+Epoch id: 28, Training steps: 0500,  Train Loss: 0.003296,  Train Acc: 75.00%,  Train Avg Loss: 0.003236,  Time: 2:22:06
+Epoch id: 28, Training steps: 0600,  Train Loss: 0.004682,  Train Acc: 75.00%,  Train Avg Loss: 0.003494,  Time: 2:22:30
+Epoch id: 28, Training steps: 0700,  Train Loss: 0.006217,  Train Acc: 50.00%,  Train Avg Loss: 0.003313,  Time: 2:22:54
+Epoch id: 28, Training steps: 0800,  Train Loss: 0.002555,  Train Acc: 87.50%,  Train Avg Loss: 0.002757,  Time: 2:23:17
+Epoch id: 28, Training steps: 0900,  Train Loss: 0.003628,  Train Acc: 75.00%,  Train Avg Loss: 0.003399,  Time: 2:23:41
+Epoch id: 28, Training steps: 1000,  Train Loss: 0.006218,  Train Acc: 75.00%,  Train Avg Loss: 0.004091,  Time: 2:24:04
+Epoch id: 28, Training steps: 1100,  Train Loss: 0.006078,  Train Acc: 62.50%,  Train Avg Loss: 0.003980,  Time: 2:24:28
+Start evaluation on dev dataset.
+Acc. (Correct/Total): 48.13% micro-Prec: 0.6831 micro-Recall:0.6008 micro-F1: 0.6256 dev loss: 0.040373
+Start evaluation on test dataset.
+Acc. (Correct/Total): 53.89% micro-Prec: 0.7338 micro-Recall:0.6508 micro-F1: 0.6767 dev loss: 0.034916
+Epoch id: 29, Training steps: 0100,  Train Loss: 0.001376,  Train Acc: 100.00%,  Train Avg Loss: 0.004441,  Time: 2:25:49
+Epoch id: 29, Training steps: 0200,  Train Loss: 0.005203,  Train Acc: 50.00%,  Train Avg Loss: 0.003079,  Time: 2:26:13
+Epoch id: 29, Training steps: 0300,  Train Loss: 0.000793,  Train Acc: 100.00%,  Train Avg Loss: 0.003453,  Time: 2:26:36
+Epoch id: 29, Training steps: 0400,  Train Loss: 0.002450,  Train Acc: 87.50%,  Train Avg Loss: 0.002956,  Time: 2:27:00
+Epoch id: 29, Training steps: 0500,  Train Loss: 0.004959,  Train Acc: 75.00%,  Train Avg Loss: 0.003154,  Time: 2:27:24
+Epoch id: 29, Training steps: 0600,  Train Loss: 0.002182,  Train Acc: 87.50%,  Train Avg Loss: 0.003408,  Time: 2:27:47
+Epoch id: 29, Training steps: 0700,  Train Loss: 0.005589,  Train Acc: 87.50%,  Train Avg Loss: 0.003329,  Time: 2:28:11
+Epoch id: 29, Training steps: 0800,  Train Loss: 0.002500,  Train Acc: 75.00%,  Train Avg Loss: 0.003280,  Time: 2:28:34
+Epoch id: 29, Training steps: 0900,  Train Loss: 0.000851,  Train Acc: 100.00%,  Train Avg Loss: 0.003244,  Time: 2:28:58
+Epoch id: 29, Training steps: 1000,  Train Loss: 0.014290,  Train Acc: 62.50%,  Train Avg Loss: 0.003167,  Time: 2:29:22
+Epoch id: 29, Training steps: 1100,  Train Loss: 0.004490,  Train Acc: 62.50%,  Train Avg Loss: 0.002944,  Time: 2:29:45
+Start evaluation on dev dataset.
+Acc. (Correct/Total): 48.42% micro-Prec: 0.6735 micro-Recall:0.5988 micro-F1: 0.6209 dev loss: 0.041202
+Start evaluation on test dataset.
+Acc. (Correct/Total): 54.23% micro-Prec: 0.7297 micro-Recall:0.6503 micro-F1: 0.6751 dev loss: 0.034925
+Epoch id: 30, Training steps: 0100,  Train Loss: 0.000819,  Train Acc: 87.50%,  Train Avg Loss: 0.004153,  Time: 2:31:07
+Epoch id: 30, Training steps: 0200,  Train Loss: 0.000606,  Train Acc: 100.00%,  Train Avg Loss: 0.002942,  Time: 2:31:30
+Epoch id: 30, Training steps: 0300,  Train Loss: 0.001968,  Train Acc: 87.50%,  Train Avg Loss: 0.002877,  Time: 2:31:54
+Epoch id: 30, Training steps: 0400,  Train Loss: 0.004109,  Train Acc: 75.00%,  Train Avg Loss: 0.002810,  Time: 2:32:17
+Epoch id: 30, Training steps: 0500,  Train Loss: 0.004816,  Train Acc: 75.00%,  Train Avg Loss: 0.003670,  Time: 2:32:41
+Epoch id: 30, Training steps: 0600,  Train Loss: 0.003169,  Train Acc: 75.00%,  Train Avg Loss: 0.003157,  Time: 2:33:05
+Epoch id: 30, Training steps: 0700,  Train Loss: 0.000471,  Train Acc: 100.00%,  Train Avg Loss: 0.002388,  Time: 2:33:28
+Epoch id: 30, Training steps: 0800,  Train Loss: 0.001531,  Train Acc: 100.00%,  Train Avg Loss: 0.003164,  Time: 2:33:52
+Epoch id: 30, Training steps: 0900,  Train Loss: 0.002058,  Train Acc: 75.00%,  Train Avg Loss: 0.002762,  Time: 2:34:16
+Epoch id: 30, Training steps: 1000,  Train Loss: 0.001032,  Train Acc: 100.00%,  Train Avg Loss: 0.002878,  Time: 2:34:39
+Epoch id: 30, Training steps: 1100,  Train Loss: 0.003500,  Train Acc: 75.00%,  Train Avg Loss: 0.002867,  Time: 2:35:03
+Start evaluation on dev dataset.
+Acc. (Correct/Total): 48.08% micro-Prec: 0.6785 micro-Recall:0.6014 micro-F1: 0.6239 dev loss: 0.041304
+Epoch id: 31, Training steps: 0100,  Train Loss: 0.012594,  Train Acc: 37.50%,  Train Avg Loss: 0.003934,  Time: 2:35:59
+Epoch id: 31, Training steps: 0200,  Train Loss: 0.002973,  Train Acc: 75.00%,  Train Avg Loss: 0.003067,  Time: 2:36:23
+Epoch id: 31, Training steps: 0300,  Train Loss: 0.001986,  Train Acc: 75.00%,  Train Avg Loss: 0.002590,  Time: 2:36:47
+Epoch id: 31, Training steps: 0400,  Train Loss: 0.001422,  Train Acc: 100.00%,  Train Avg Loss: 0.002706,  Time: 2:37:10
+Epoch id: 31, Training steps: 0500,  Train Loss: 0.002084,  Train Acc: 75.00%,  Train Avg Loss: 0.002820,  Time: 2:37:34
+Epoch id: 31, Training steps: 0600,  Train Loss: 0.001254,  Train Acc: 87.50%,  Train Avg Loss: 0.002709,  Time: 2:37:57
+Epoch id: 31, Training steps: 0700,  Train Loss: 0.001174,  Train Acc: 100.00%,  Train Avg Loss: 0.002907,  Time: 2:38:21
+Epoch id: 31, Training steps: 0800,  Train Loss: 0.002324,  Train Acc: 75.00%,  Train Avg Loss: 0.002758,  Time: 2:38:45
+Epoch id: 31, Training steps: 0900,  Train Loss: 0.000914,  Train Acc: 87.50%,  Train Avg Loss: 0.003152,  Time: 2:39:08
+Epoch id: 31, Training steps: 1000,  Train Loss: 0.002180,  Train Acc: 87.50%,  Train Avg Loss: 0.002569,  Time: 2:39:32
+Epoch id: 31, Training steps: 1100,  Train Loss: 0.005364,  Train Acc: 75.00%,  Train Avg Loss: 0.002492,  Time: 2:39:55
+Start evaluation on dev dataset.
+Acc. (Correct/Total): 48.27% micro-Prec: 0.6751 micro-Recall:0.5984 micro-F1: 0.6212 dev loss: 0.041631
+Epoch id: 32, Training steps: 0100,  Train Loss: 0.001937,  Train Acc: 75.00%,  Train Avg Loss: 0.003997,  Time: 2:40:52
+Epoch id: 32, Training steps: 0200,  Train Loss: 0.000943,  Train Acc: 100.00%,  Train Avg Loss: 0.002620,  Time: 2:41:16
+Epoch id: 32, Training steps: 0300,  Train Loss: 0.002806,  Train Acc: 75.00%,  Train Avg Loss: 0.002846,  Time: 2:41:39
+Epoch id: 32, Training steps: 0400,  Train Loss: 0.000625,  Train Acc: 100.00%,  Train Avg Loss: 0.002596,  Time: 2:42:03
+Epoch id: 32, Training steps: 0500,  Train Loss: 0.000699,  Train Acc: 100.00%,  Train Avg Loss: 0.002466,  Time: 2:42:27
+Epoch id: 32, Training steps: 0600,  Train Loss: 0.002380,  Train Acc: 75.00%,  Train Avg Loss: 0.002693,  Time: 2:42:50
+Epoch id: 32, Training steps: 0700,  Train Loss: 0.005530,  Train Acc: 75.00%,  Train Avg Loss: 0.002902,  Time: 2:43:14
+Epoch id: 32, Training steps: 0800,  Train Loss: 0.006309,  Train Acc: 75.00%,  Train Avg Loss: 0.002794,  Time: 2:43:37
+Epoch id: 32, Training steps: 0900,  Train Loss: 0.002064,  Train Acc: 75.00%,  Train Avg Loss: 0.003016,  Time: 2:44:01
+Epoch id: 32, Training steps: 1000,  Train Loss: 0.002935,  Train Acc: 37.50%,  Train Avg Loss: 0.002357,  Time: 2:44:25
+Epoch id: 32, Training steps: 1100,  Train Loss: 0.000463,  Train Acc: 100.00%,  Train Avg Loss: 0.002428,  Time: 2:44:48
+Start evaluation on dev dataset.
+Acc. (Correct/Total): 48.18% micro-Prec: 0.6749 micro-Recall:0.5991 micro-F1: 0.6214 dev loss: 0.041684
+Final evaluation on the test dataset.
+The number of evaluation instances:  2067
+Acc. (Correct/Total): 53.89% micro-Prec: 0.7338 micro-Recall:0.6508 micro-F1: 0.6767 dev loss: 0.034916
+              precision    recall  f1-score   support
+
+         教育学     0.8629    0.8880    0.8753       241
+          法学     0.8370    0.8482    0.8426       224
+      中国语言文学     0.8642    0.7568    0.8069       185
+         政治学     0.7597    0.6012    0.6712       163
+         社会学     0.8696    0.7643    0.8136       157
+         心理学     0.8169    0.4715    0.5979       123
+       应用经济学     0.7838    0.4957    0.6073       117
+         历史学     0.9143    0.5872    0.7151       109
+     环境科学与工程     0.9222    0.7685    0.8384       108
+          哲学     0.8167    0.5052    0.6242        97
+      外国语言文学     0.8194    0.6941    0.7516        85
+         生物学     0.8871    0.6962    0.7801        79
+      交通运输工程     0.9103    0.9103    0.9103        78
+        临床医学     0.8276    0.6316    0.7164        76
+    计算机科学与技术     0.7500    0.6761    0.7111        71
+        土木工程     0.9538    0.9394    0.9466        66
+   航空宇航科学与技术     0.9649    0.9016    0.9322        61
+         民族学     0.6129    0.3455    0.4419        55
+   公共卫生与预防医学     0.7200    0.3529    0.4737        51
+         美术学     0.8214    0.9200    0.8679        50
+         艺术学     0.8421    0.7442    0.7901        43
+         地理学     0.8889    0.5714    0.6957        42
+         体育学     0.9500    0.4750    0.6333        40
+       理论经济学     0.8500    0.4474    0.5862        38
+         中医学     0.8529    0.7838    0.8169        37
+         物理学     0.8125    0.7222    0.7647        36
+          林学     0.8421    0.4848    0.6154        33
+          数学     0.7368    0.4375    0.5490        32
+     电子科学与技术     0.7273    0.2581    0.3810        31
+        基础医学     0.6471    0.3793    0.4783        29
+        工商管理     0.7222    0.4815    0.5778        27
+       新闻传播学     0.8462    0.5000    0.6286        22
+         天文学     0.8571    0.8182    0.8372        22
+         地质学     1.0000    0.3333    0.5000        21
+         畜牧学     0.8636    0.9048    0.8837        21
+   军事思想及军事历史     0.8462    0.5500    0.6667        20
+     管理科学与工程     0.6316    0.6667    0.6486        18
+     测绘科学与技术     0.5556    0.2941    0.3846        17
+        水利工程     1.0000    0.3750    0.5455        16
+        大气科学     0.8333    0.6250    0.7143        16
+     兵器科学与技术     0.7692    0.6667    0.7143        15
+       地球物理学     1.0000    0.0714    0.1333        14
+        电气工程     1.0000    0.2308    0.3750        13
+         作物学     0.6000    0.2308    0.3333        13
+     控制科学与工程     0.3333    0.0769    0.1250        13
+     信息与通信工程     0.6923    0.6923    0.6923        13
+        公共管理     1.0000    0.0769    0.1429        13
+         建筑学     1.0000    0.2308    0.3750        13
+     化学工程与技术     1.0000    0.4167    0.5882        12
+          力学     1.0000    0.2727    0.4286        11
+        海洋科学     1.0000    0.5455    0.7059        11
+     轻工技术与工程     0.0000    0.0000    0.0000        11
+        农业工程     0.0000    0.0000    0.0000        10
+         园艺学     0.8000    0.8000    0.8000        10
+       中西医结合     1.0000    0.2000    0.3333        10
+        机械工程     1.0000    0.3333    0.5000         9
+       科学技术史     1.0000    0.5000    0.6667         8
+     船舶与海洋工程     0.8000    0.5000    0.6154         8
+   图书情报与档案管理     0.6667    0.2500    0.3636         8
+        植物保护     1.0000    0.3750    0.5455         8
+     材料科学与工程     0.0000    0.0000    0.0000         8
+         统计学     0.5455    0.7500    0.6316         8
+          化学     1.0000    0.6250    0.7692         8
+     食品科学与工程     0.0000    0.0000    0.0000         8
+          水产     1.0000    0.5714    0.7273         7
+          药学     1.0000    0.1429    0.2500         7
+     农业资源与环境     0.0000    0.0000    0.0000         7
+         世界史     1.0000    0.8571    0.9231         7
+        系统科学     1.0000    0.1429    0.2500         7
+      农林经济管理     0.0000    0.0000    0.0000         5
+       军队指挥学     1.0000    0.2000    0.3333         5
+        矿业工程     0.0000    0.0000    0.0000         5
+     纺织科学与工程     0.6667    0.8000    0.7273         5
+  动力工程及工程热物理     0.0000    0.0000    0.0000         4
+        林业工程     0.0000    0.0000    0.0000         4
+     仪器科学与技术     0.0000    0.0000    0.0000         3
+         战略学     0.0000    0.0000    0.0000         3
+   地质资源与地质工程     0.0000    0.0000    0.0000         3
+        旅游管理     0.0000    0.0000    0.0000         3
+ 图书馆、情报与档案管理     0.0000    0.0000    0.0000         2
+        冶金工程     0.0000    0.0000    0.0000         2
+      核科学与技术     0.0000    0.0000    0.0000         2
+
+   micro avg     0.8403    0.6343    0.7229      3093
+   macro avg     0.6816    0.4288    0.4960      3093
+weighted avg     0.8180    0.6343    0.6973      3093
+ samples avg     0.7338    0.6508    0.6767      3093
+

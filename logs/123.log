@@ -1,0 +1,38 @@
+nohup: 忽略输入
+  0%|          | 0/82 [00:00<?, ?it/s]100%|██████████| 82/82 [00:00<00:00, 1202562.69it/s]
+Vocabulary Size:  39979
+[BertClassifier] use visible_matrix: False
+Some weights of ErnieRCNNForMultiLabelSequenceClassification were not initialized from the model checkpoint at ./models/ernie3 and are newly initialized: ['classifier.bias', 'lstm.weight_ih_l1_reverse', 'lstm.weight_hh_l0_reverse', 'lstm.bias_hh_l0_reverse', 'lstm.weight_ih_l0_reverse', 'lstm.weight_ih_l1', 'lstm.weight_hh_l1', 'classifier.weight', 'lstm.weight_hh_l0', 'lstm.bias_hh_l1_reverse', 'lstm.bias_ih_l0_reverse', 'lstm.bias_ih_l1', 'lstm.weight_ih_l0', 'lstm.bias_hh_l0', 'lstm.weight_hh_l1_reverse', 'lstm.bias_hh_l1', 'lstm.bias_ih_l0', 'lstm.bias_ih_l1_reverse']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+model:  ernie-rcnn
+pretrained:  ernie3
+dataset:  book_multilabels_task_slice
+task:  MLC
+seq_length:  256
+hidden_dropout_prob:  0.1
+attention_probs_dropout_prob:  0.1
+dropout_rnn:  0.2
+rnn_hidden:  768
+epochs_num:  32
+batch_size:  8
+learning_rate:  3e-05
+report_steps:  100
+acc_percent:  0.9
+kg_name:  CnDbpedia
+no_kg:  True
+no_vm:  True
+GPU:  NVIDIA GeForce RTX 2080 Ti
+1 GPUs are available. Let's use them.
+device:  cuda
+Start training.
+Loading sentences from ./datasets/book_multilabels_task_slice/train.tsv
+There are 9097 sentence in total. We use 1 processes to inject knowledge into sentences.
+Progress of process 0: 0/9097
+Loading sentences from ./datasets/book_multilabels_task_slice/dev.tsv
+There are 2084 sentence in total. We use 1 processes to inject knowledge into sentences.
+Progress of process 0: 0/2084
+Loading sentences from ./datasets/book_multilabels_task_slice/test.tsv
+There are 2067 sentence in total. We use 1 processes to inject knowledge into sentences.
+Progress of process 0: 0/2067
+Epoch id: 1, Training steps: 100,  Train Loss:  0.69,  Train Acc:  0.00%,  Train Avg Loss: 0.747,  Time: 0:00:50
+Epoch id: 1, Training steps: 200,  Train Loss:  0.44,  Train Acc:  0.00%,  Train Avg Loss: 0.559,  Time: 0:01:40

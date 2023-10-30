@@ -151,34 +151,59 @@
 # echo "94号执行完毕"
 
 
-echo "115号开始执行"
-CUDA_VISIBLE_DEVICES='1' nohup python3 -u run_kbert_transformers_cls.py --model bert  --pretrained bert --task MLC --dataset book_multilabels_task --No 115 --learning_rate 2e-5  --seq_length 256 --epochs_num 32 --batch_size 8 --kg_name CnDbpedia --no_kg --cuda  > ./outputs/115.log 2>&1  &
+# echo "115号开始执行"
+# CUDA_VISIBLE_DEVICES='1' nohup python3 -u run_kbert_transformers_cls.py --model bert  --pretrained bert --task MLC --dataset book_multilabels_task --No 115 --learning_rate 2e-5  --seq_length 256 --epochs_num 32 --batch_size 8 --kg_name CnDbpedia --no_kg --cuda  > ./outputs/115.log 2>&1  &
+# wait
+# echo "115号执行完毕"
+
+# echo "118号开始执行"
+# CUDA_VISIBLE_DEVICES='1' nohup python3 -u run_kbert_transformers_cls.py --model bert-rcnn  --pretrained bert --task MLC --dataset book_multilabels_task --No 118 --learning_rate 2e-5  --seq_length 256 --epochs_num 32 --batch_size 8 --kg_name CnDbpedia --no_kg --cuda  > ./outputs/118.log 2>&1  &
+# wait
+# echo "118号执行完毕"
+
+# echo "119号开始执行"
+# CUDA_VISIBLE_DEVICES='1' nohup python3 -u run_kbert_transformers_cls.py --model ernie  --pretrained ernie3 --task MLC --dataset book_multilabels_task --No 119 --learning_rate 2e-5  --seq_length 256 --epochs_num 32 --batch_size 8 --kg_name CnDbpedia --no_kg --cuda  > ./outputs/119.log 2>&1  &
+# wait
+# echo "119号执行完毕"
+
+# echo "122号开始执行"
+# CUDA_VISIBLE_DEVICES='1' nohup python3 -u run_kbert_transformers_cls.py --model ernie-rcnn  --pretrained ernie3 --task MLC --dataset book_multilabels_task --No 122 --learning_rate 2e-5  --seq_length 256 --epochs_num 32 --batch_size 8 --kg_name CnDbpedia --no_kg --cuda  > ./outputs/122.log 2>&1  &
+# wait
+# echo "122号执行完毕"
+
+# echo "116号开始执行"
+# CUDA_VISIBLE_DEVICES='1' nohup python3 -u run_kbert_transformers_cls.py --model bert-rnn  --pretrained bert --task MLC --dataset book_multilabels_task --No 116 --learning_rate 2e-5  --seq_length 256 --epochs_num 32 --batch_size 8 --kg_name CnDbpedia --no_kg --cuda  > ./outputs/116.log 2>&1  &
+# wait
+# echo "116号执行完毕"
+
+# echo "120号开始执行"
+# CUDA_VISIBLE_DEVICES='1' nohup python3 -u run_kbert_transformers_cls.py --model ernie-rnn  --pretrained ernie3 --task MLC --dataset book_multilabels_task --No 120 --learning_rate 2e-5  --seq_length 256 --epochs_num 32 --batch_size 8 --kg_name CnDbpedia --no_kg --cuda  > ./outputs/120.log 2>&1  &
+# wait
+# echo "120号执行完毕"
+
+
+
+echo "124号开始执行"
+CUDA_VISIBLE_DEVICES='1' nohup python3 -u run_kbert_transformers_cls.py --model ernie  --pretrained ernie1 --task MLC --dataset book_multilabels_task --No 124 --learning_rate 2e-5  --seq_length 256 --epochs_num 32 --batch_size 8 --kg_name CnDbpedia --no_kg --cuda  > ./outputs/124.log 2>&1  &
 wait
-echo "115号执行完毕"
+echo "124号执行完毕"
 
-echo "118号开始执行"
-CUDA_VISIBLE_DEVICES='1' nohup python3 -u run_kbert_transformers_cls.py --model bert-rcnn  --pretrained bert --task MLC --dataset book_multilabels_task --No 118 --learning_rate 2e-5  --seq_length 256 --epochs_num 32 --batch_size 8 --kg_name CnDbpedia --no_kg --cuda  > ./outputs/118.log 2>&1  &
+echo "125号开始执行"
+CUDA_VISIBLE_DEVICES='1' nohup python3 -u run_kbert_transformers_cls.py --model ernie-rnn  --pretrained ernie1 --task MLC --dataset book_multilabels_task --No 125 --learning_rate 2e-5  --seq_length 256 --epochs_num 32 --batch_size 8 --kg_name CnDbpedia --no_kg --cuda  > ./outputs/125.log 2>&1  &
 wait
-echo "118号执行完毕"
+echo "125号执行完毕"
 
-echo "119号开始执行"
-CUDA_VISIBLE_DEVICES='1' nohup python3 -u run_kbert_transformers_cls.py --model ernie  --pretrained ernie3--task MLC --dataset book_multilabels_task --No 119 --learning_rate 2e-5  --seq_length 256 --epochs_num 32 --batch_size 8 --kg_name CnDbpedia --no_kg --cuda  > ./outputs/119.log 2>&1  &
+echo "126号开始执行"
+CUDA_VISIBLE_DEVICES='1' nohup python3 -u run_kbert_transformers_cls.py --model ernie-cnn  --pretrained ernie1 --task MLC --dataset book_multilabels_task --No 126 --learning_rate 2e-5  --seq_length 256 --epochs_num 32 --batch_size 8 --kg_name CnDbpedia --no_kg --cuda  > ./outputs/126.log 2>&1  &
 wait
-echo "119号执行完毕"
+echo "126号执行完毕"
 
-echo "122号开始执行"
-CUDA_VISIBLE_DEVICES='1' nohup python3 -u run_kbert_transformers_cls.py --model ernie-rcnn  --pretrained ernie3--task MLC --dataset book_multilabels_task --No 122 --learning_rate 2e-5  --seq_length 256 --epochs_num 32 --batch_size 8 --kg_name CnDbpedia --no_kg --cuda  > ./outputs/122.log 2>&1  &
+echo "127号开始执行"
+CUDA_VISIBLE_DEVICES='1' nohup python3 -u run_kbert_transformers_cls.py --model ernie-rcnn  --pretrained ernie1 --task MLC --dataset book_multilabels_task --No 127 --learning_rate 2e-5  --seq_length 256 --epochs_num 32 --batch_size 8 --kg_name CnDbpedia --no_kg --cuda  > ./outputs/127.log 2>&1  &
 wait
-echo "122号执行完毕"
+echo "127号执行完毕"
 
-echo "116号开始执行"
-CUDA_VISIBLE_DEVICES='1' nohup python3 -u run_kbert_transformers_cls.py --model bert-rnn  --pretrained bert --task MLC --dataset book_multilabels_task --No 116 --learning_rate 2e-5  --seq_length 256 --epochs_num 32 --batch_size 8 --kg_name CnDbpedia --no_kg --cuda  > ./outputs/116.log 2>&1  &
+echo "128号开始执行"
+CUDA_VISIBLE_DEVICES='1' nohup python3 -u run_kbert_transformers_cls.py --model ernie-rcnn  --pretrained ernie1 --task MLC --dataset book_multilabels_task_slice  --No 128 --learning_rate 2e-5 --seq_length 128 --epochs_num 32 --batch_size 8 --kg_name CnDbpedia --no_kg --cuda  > ./outputs/128.log 2>&1  &
 wait
-echo "116号执行完毕"
-
-echo "120号开始执行"
-CUDA_VISIBLE_DEVICES='1' nohup python3 -u run_kbert_transformers_cls.py --model ernie-rnn  --pretrained ernie3--task MLC --dataset book_multilabels_task --No 120 --learning_rate 2e-5  --seq_length 256 --epochs_num 32 --batch_size 8 --kg_name CnDbpedia --no_kg --cuda  > ./outputs/120.log 2>&1  &
-wait
-echo "120号执行完毕"
-
-
+echo "128号执行完毕"
