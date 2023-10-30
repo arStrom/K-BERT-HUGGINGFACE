@@ -5,6 +5,7 @@ from transformers import BertPreTrainedModel, \
     ErnieModel
 from torch import nn
 import torch.nn.functional as F
+import math
 
 class RCNN(nn.Module):
     def __init__(self, input_size, rnn_hidden, num_layers, base_config):
@@ -30,6 +31,69 @@ class RCNN(nn.Module):
         out = self.maxpool(out).squeeze()
 
         return out
+    
+
+class MultiHeadedAttention(nn.Module):
+    """
+    Each head is a self-attention operation.
+    self-attention refers to https://arxiv.org/pdf/1706.03762.pdf
+    """
+    def __init__(self, hidden_size, heads_num, dropout):
+        super(MultiHeadedAttention, self).__init__()
+        self.hidden_size = hidden_size
+        self.heads_num = heads_num
+        self.per_head_size = hidden_size // heads_num
+
+        self.linear_layers = nn.ModuleList([
+                nn.Linear(hidden_size, hidden_size) for _ in range(3)
+            ])
+        self.dropout = nn.Dropout(dropout)
+        self.final_linear = nn.Linear(hidden_size, hidden_size)
+
+    def forward(self, key, value, query, mask):
+        """
+        Args:
+            key: [batch_size x seq_length x hidden_size]
+            value: [batch_size x seq_length x hidden_size]
+            query: [batch_size x seq_length x hidden_size]
+            mask: [batch_size x 1 x seq_length x seq_length]
+
+        Returns:
+            output: [batch_size x seq_length x hidden_size]
+        """
+        batch_size, seq_length, hidden_size = key.size()
+        heads_num = self.heads_num
+        per_head_size = self.per_head_size
+
+        def shape(x):
+            return x. \
+                   contiguous(). \
+                   view(batch_size, seq_length, heads_num, per_head_size). \
+                   transpose(1, 2)
+
+        def unshape(x):
+            return x. \
+                   transpose(1, 2). \
+                   contiguous(). \
+                   view(batch_size, seq_length, hidden_size)
+
+
+        query, key, value = [l(x). \
+                             view(batch_size, -1, heads_num, per_head_size). \
+                             transpose(1, 2) \
+                             for l, x in zip(self.linear_layers, (query, key, value))
+                            ]
+
+        scores = torch.matmul(query, key.transpose(-2, -1))
+        scores = scores / math.sqrt(float(per_head_size)) 
+        scores = scores + mask
+        probs = nn.Softmax(dim=-1)(scores)
+        probs = self.dropout(probs)
+        output = unshape(torch.matmul(probs, value))
+        output = self.final_linear(output)
+        
+        return output
+
 
 class BertForMultiLabelSequenceClassification(BertPreTrainedModel):
 
@@ -407,6 +471,8 @@ class ErnieRCNNForMultiLabelSequenceClassification(ErniePreTrainedModel):
         self.dropout_rnn = 0.2
         self.pad_size = base_config.max_seq_length  # 每句话处理成的长度(短填长切)
         self.pooling = base_config.pooling
+        self.SelfAttention = MultiHeadedAttention(config.hidden_size * self.sentence_num, self.sentence_num, 0.1)
+
         # 在rnn的维度拼接
         self.lstm = nn.LSTM(
             config.hidden_size * self.sentence_num, self.rnn_hidden, self.num_layers,
@@ -455,6 +521,7 @@ class ErnieRCNNForMultiLabelSequenceClassification(ErniePreTrainedModel):
             output_batch.append(outputs[0])
 
         output = torch.cat(output_batch, 2)
+        output = self.SelfAttention(output)
 
         out, _ = self.lstm(output)
         out = self.cat((output, out), 2)
