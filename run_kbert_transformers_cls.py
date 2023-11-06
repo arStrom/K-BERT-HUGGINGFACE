@@ -26,6 +26,7 @@ import MultiLabelSequenceClassificationSlice as MLCSliceModels
 
 
 MLCModel = {
+    'ernie-rcnn-new': MLCModels.ErnieRCNNForMultiLabelSequenceClassificationNew,
     'bert': MLCModels.BertForMultiLabelSequenceClassification,
     'bert-rcnn': MLCModels.BertRCNNForMultiLabelSequenceClassification,
     'bert-cnn': MLCModels.BertCNNForMultiLabelSequenceClassification,
@@ -94,8 +95,10 @@ def main():
                         help="Number of epochs.")
     parser.add_argument("--batch_size", type=int, default=32,
                         help="Batch size.")
+    parser.add_argument("--pretrained_learning_rate", type=float, default=2e-5,
+                        help="pretrained_learning_rate.")
     parser.add_argument("--learning_rate", type=float, default=2e-5,
-                        help="Sequence length.")
+                        help="learning_rate.")
     parser.add_argument("--report_steps", type=int, default=100,
                         help="Specific steps to print prompt.")
 
@@ -112,7 +115,7 @@ def main():
     args.no_vm = args.no_kg if args.no_kg else args.no_vm
     model_name = args.model
     base_config = BaseConfig(args.cuda, model_name, args.pretrained, args.dataset, sentence_num[args.dataset], args.No, args.seq_length, args.dropout, 
-                        args.epochs_num, args.batch_size, args.learning_rate, args.report_steps, args.pooling,
+                        args.epochs_num, args.batch_size, args.pretrained_learning_rate, args.learning_rate, args.report_steps, args.pooling,
                         args.no_kg, args.no_vm)
 
     model_type = model_name.split('-')
@@ -156,8 +159,10 @@ def main():
     print("attention_probs_dropout_prob: ",model_config.attention_probs_dropout_prob)
     print("dropout_rnn: ",model.dropout_rnn if hasattr(model, 'dropout_rnn') else 'None')
     print("rnn_hidden: ",model.rnn_hidden if hasattr(model, 'rnn_hidden') else 'None')
+    print("rnn_layers: ",model.num_layers if hasattr(model, 'num_layers') else 'None')
     print("epochs_num: ",args.epochs_num)
     print("batch_size: ",args.batch_size)
+    print("pretrained_learning_rate: ",args.pretrained_learning_rate)
     print("learning_rate: ",args.learning_rate)
     print("report_steps: ",args.report_steps)
     print("acc_percent: ",base_config.acc_percent)

@@ -58,7 +58,7 @@ class BaseConfig(object):
     """配置参数"""
 
     def __init__(self, cuda, model_name, pretrained, dataset, sentence_num, No, seq_length, dropout,
-                  epochs_num, batch_size, learning_rate, report_steps, pooling, no_kg, no_vm):
+                  epochs_num, batch_size, pretrained_learning_rate, learning_rate, report_steps, pooling, no_kg, no_vm):
 
         # train
         cuda_available = torch.cuda.is_available()
@@ -66,7 +66,8 @@ class BaseConfig(object):
         self.require_improvement = 2000                                           # 超过2000batch效果没提升，提前结束训练
         self.epochs_num = epochs_num                                              # epoch数
         self.batch_size = batch_size                                              # mini-batch大小
-        self.learning_rate = learning_rate                                        # 学习率
+        self.pretrained_learning_rate = pretrained_learning_rate                  # 预训练模型学习率
+        self.learning_rate = learning_rate                                        # 新加层学习率
         self.report_steps = report_steps
         self.warmup = 0.1
         self.sentence_num = sentence_num
