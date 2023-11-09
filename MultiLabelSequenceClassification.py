@@ -309,7 +309,7 @@ class ErnieRCNNForMultiLabelSequenceClassificationNew(ErniePreTrainedModel):
         # sequence_output = torch.cat(sequence_output_batch, 1)
         pooled_output = torch.cat(pool_output_batch, 1)
 
-        att_output = self.multi_text_attention(sequence_output_batch,sequence_output_batch,sequence_output_batch,
+        att_output = self.multi_text_attention(sequence_output_batch, sequence_output_batch, sequence_output_batch,
                                                encoder_attention_mask_batch)
 
         out, h_n = self.lstm(att_output)
@@ -327,6 +327,16 @@ class ErnieRCNNForMultiLabelSequenceClassificationNew(ErniePreTrainedModel):
 
         loss = self.criterion(logits.view(-1, self.num_labels), labels.view(-1, self.num_labels))
         return loss, logits
+
+
+
+
+
+
+
+
+
+
 
 
 
