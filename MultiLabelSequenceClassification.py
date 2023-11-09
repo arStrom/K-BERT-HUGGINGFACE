@@ -105,6 +105,8 @@ class LayerNorm(nn.Module):
         std = x.std(-1, keepdim=True)
         return self.gamma * (x-mean) / (std+self.eps) + self.beta
     
+def gelu(x):
+    return x * 0.5 * (1.0 + torch.erf(x / math.sqrt(2.0)))
 
 class PositionwiseFeedForward(nn.Module):
     """ Feed Forward Layer """
@@ -114,9 +116,6 @@ class PositionwiseFeedForward(nn.Module):
         self.linear_2 = nn.Linear(feedforward_size, hidden_size)
            
     def forward(self, x):
-        def gelu(x):
-            return x * 0.5 * (1.0 + torch.erf(x / math.sqrt(2.0)))
-        
         inter = gelu(self.linear_1(x))
         output = self.linear_2(inter)
         return output
@@ -135,15 +134,18 @@ class MultiTextAttention(nn.Module):
         self.linear_layers = nn.ModuleList([
                 nn.Linear(hidden_size, hidden_size) for _ in range(sentence_num)
             ])
-        self.attention = Attention(dropout)
-        # self.dropout_1 = nn.Dropout(dropout)
-        # self.layer_norm_1 = LayerNorm(hidden_size * sentence_num)
+        self.attention = Attention(hidden_size, dropout)
         self.final_linear = nn.Linear(hidden_size * sentence_num, hidden_size * sentence_num)
+
+        self.dropout = nn.Dropout(dropout)
+        self.layer_norm = LayerNorm(hidden_size * sentence_num)
+
         # self.feed_forward = PositionwiseFeedForward(
         #     hidden_size * sentence_num, self.feedforward_size
         # )
-        self.dropout = nn.Dropout(dropout)
-        self.layer_norm = LayerNorm(hidden_size * sentence_num)
+
+        # self.dropout_2 = nn.Dropout(dropout)
+        # self.layer_norm_2 = LayerNorm(hidden_size * sentence_num)
 
     def forward(self, querys, keys, values, masks):
         """
@@ -167,9 +169,10 @@ class MultiTextAttention(nn.Module):
             output_batch.append(att_output)
 
         output = torch.cat(output_batch,-1)
-        hidden = torch.cat(querys,-1)
+        # hidden = torch.cat(querys,-1)
 
-        mixoutput = self.dropout(self.final_linear(output))
+        output = self.final_linear(output)
+        mixoutput = gelu(self.dropout(output))
         mixoutput = self.layer_norm(mixoutput)
         
         # inter = self.dropout_1(output)
@@ -186,9 +189,10 @@ class Attention(nn.Module):
     Each head is a self-attention operation.
     self-attention refers to https://arxiv.org/pdf/1706.03762.pdf
     """
-    def __init__(self, dropout):
+    def __init__(self, hidden_size, dropout):
         super(Attention, self).__init__()
         self.dropout = nn.Dropout(dropout)
+        self.layer_norm = LayerNorm(hidden_size)
 
     def forward(self, query, key, value, mask):
         """
@@ -208,6 +212,7 @@ class Attention(nn.Module):
         probs = nn.Softmax(dim=-1)(scores)
         probs = self.dropout(probs)
         output = torch.matmul(probs, value)
+
         
         return output
     
