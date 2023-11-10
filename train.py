@@ -35,11 +35,12 @@ def train(model, train_batch, eval_batch, test_batch, config, task):
     train_steps = int(len(train_batch.dataset) * config.epochs_num / batch_size) + 1
     param_optimizer = list(model.named_parameters())
 
-    bert_params = list(model.ernie.named_parameters())
-    multi_text_attention_params = list(model.multi_text_attention.named_parameters())
-    lstm_params = list(model.lstm.named_parameters())
-    pooler_params = list(model.pooler.named_parameters())
-    classifier_params = list(model.classifier.named_parameters())
+    model_parameters = model.module if hasattr(model, 'module') else model
+    bert_params = list(model_parameters.ernie.named_parameters())
+    multi_text_attention_params = list(model_parameters.multi_text_attention.named_parameters())
+    lstm_params = list(model_parameters.lstm.named_parameters())
+    pooler_params = list(model_parameters.pooler.named_parameters())
+    classifier_params = list(model_parameters.classifier.named_parameters())
     no_decay = ['bias', 'LayerNorm.bias', 'LayerNorm.weight']
 
     # optimizer_grouped_parameters = [
