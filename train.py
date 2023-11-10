@@ -122,11 +122,17 @@ def train(model, train_batch, eval_batch, test_batch, config, task):
         for i, (input_ids_batch, mask_ids_batch, pos_ids_batch, vms_batch, label_ids_batch) in enumerate(train_batch):
 
             model.zero_grad()
-            
-            input_ids_batch = input_ids_batch.transpose(0,1).to(device)
-            mask_ids_batch = mask_ids_batch.transpose(0,1).to(device)
-            pos_ids_batch = pos_ids_batch.transpose(0,1).to(device)
-            vms_batch = vms_batch.transpose(0,1).to(device)
+            # 合并前两个维度 batch_size 和 sentences_num
+            input_ids_batch = input_ids_batch.flatten(0,1).to(device)
+            mask_ids_batch = mask_ids_batch.flatten(0,1).to(device)
+            pos_ids_batch = pos_ids_batch.flatten(0,1).to(device)
+            vms_batch = vms_batch.flatten(0,1).to(device)
+
+
+            # input_ids_batch = input_ids_batch.transpose(0,1).to(device)
+            # mask_ids_batch = mask_ids_batch.transpose(0,1).to(device)
+            # pos_ids_batch = pos_ids_batch.transpose(0,1).to(device)
+            # vms_batch = vms_batch.transpose(0,1).to(device)
             label_ids_batch = label_ids_batch.to(device)
 
             loss, logits = model(input_ids_batch, 

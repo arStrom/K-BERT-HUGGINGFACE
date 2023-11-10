@@ -147,36 +147,40 @@ class MultiTextAttention(nn.Module):
         # self.dropout_2 = nn.Dropout(dropout)
         # self.layer_norm_2 = LayerNorm(hidden_size * sentence_num)
 
-    def forward(self, querys, keys, values, masks, pooled_output):
+    def forward(self, query, key, value, mask, pool_output):
         """
         Args:
-            querys: [sentence_num x batch_size x seq_length x hidden_size]
-            keys: [sentence_num x batch_size x seq_length x hidden_size]
-            values: [sentence_num x batch_size x seq_length x hidden_size]
-            masks: [sentence_num x batch_size x 1 x seq_length x seq_length]
+            querys: [batch_size x sentence_num , seq_length , hidden_size]
+            keys: [batch_size x sentence_num , seq_length , hidden_size]
+            values: [batch_size x sentence_num , seq_length , hidden_size]
+            masks: [batch_size x sentence_num , seq_length , seq_length]
 
         Returns:
             output: [batch_size x seq_length x hidden_size]
         """
-        sentence_num = len(querys)
-        output_batch = []
-        for i in range(sentence_num):
-            query, key, value, mask = querys[i], keys[i], values[i], masks[i]
-            batch_size, seq_length, hidden_size = query.size()
-            query, key, value = [l(x) for l, x in zip(self.linear_layers, (query, key, value))]
-            mask = mask.squeeze(dim=1)
-            att_output = self.attention(query, key, value, mask)
-            output_batch.append(att_output)
+        # sentence_num = len(querys)
+        # output_batch = []
+        # for i in range(sentence_num):
+        #     query, key, value, mask = querys[i], keys[i], values[i], masks[i]
+        batch_sizeXsentence_num, seq_length, hidden_size = query.size()
+        batch_size = batch_sizeXsentence_num // self.sentence_num
+        query, key, value = [l(x) for l, x in zip(self.linear_layers, (query, key, value))]
+        mask = mask.squeeze(dim=1)
+        pool_output = pool_output.unsqueeze(1)
+        att_output = torch.cat([pool_output, self.attention(query, key, value, mask)], 1)
+        att_output = att_output.view(batch_size, self.sentence_num, seq_length + 1, hidden_size)
+        att_output = att_output.transpose(1, 2).contiguous().view(batch_size, seq_length + 1, -1)
+        # output_batch.append(att_output)
 
-        output = torch.cat(output_batch,-1)
+        # output = torch.cat(output_batch,-1)
 
-        pooled_output = pooled_output.unsqueeze(1)
-        output = torch.cat([pooled_output,output],1)
+        # pooled_output = pooled_output.unsqueeze(1)
+        # output = torch.cat([pooled_output,output],1)
 
         # hidden = torch.cat(querys,-1)
 
-        output = self.final_linear(output)
-        mixoutput = gelu(self.dropout(output))
+        att_output = self.final_linear(att_output)
+        mixoutput = gelu(self.dropout(att_output))
         mixoutput = self.layer_norm(mixoutput)
         
         # inter = self.dropout_1(output)
@@ -259,61 +263,63 @@ class ErnieRCNNForMultiLabelSequenceClassificationNew(ErniePreTrainedModel):
         print("[BertClassifier] use visible_matrix: {}".format(self.use_vm))
         self.init_weights()
 
-    def forward(self, input_ids_batch, mask_ids_batch, pos_ids_batch, vms_batch, labels):
+    def forward(self, input_ids, mask_ids, pos_ids, vms, labels):
         
-        sequence_output_batch = []
-        pool_output_batch = []
-        encoder_attention_mask_batch = []
-        for i in range(self.sentence_num):
-            input_ids = input_ids_batch[i]
-            attention_mask = mask_ids_batch[i]
-            position_ids = pos_ids_batch[i]
-            visible_matrix = vms_batch[i]
+        # sequence_output_batch = []
+        # pool_output_batch = []
+        # encoder_attention_mask_batch = []
+        # for i in range(self.sentence_num):
+        #     input_ids = input_ids_batch[i]
+        #     mask_ids = mask_ids_batch[i]
+        #     pos_ids = pos_ids_batch[i]
+        #     vms = vms_batch[i]
 
-            seq_length = input_ids.size(1)
-                
-            # Generate mask according to segment indicators.
-            # mask: [batch_size x 1 x seq_length x seq_length]
-            if visible_matrix is None or not self.use_vm:
-                encoder_attention_mask = (attention_mask > 0). \
-                        unsqueeze(1). \
-                        repeat(1, seq_length, 1). \
-                        unsqueeze(1)
-                encoder_attention_mask = encoder_attention_mask.float()
-                encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
-            else:
-                encoder_attention_mask = visible_matrix.unsqueeze(1)
-                encoder_attention_mask = encoder_attention_mask.float()
-                encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
+        seq_length = input_ids.size(1)
+            
+        # Generate mask according to segment indicators.
+        # mask: [batch_size x 1 x seq_length x seq_length]
+        if vms is None or not self.use_vm:
+            encoder_attention_mask = (mask_ids > 0). \
+                    unsqueeze(1). \
+                    repeat(1, seq_length, 1). \
+                    unsqueeze(1)
+            encoder_attention_mask = encoder_attention_mask.float()
+            encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
+        else:
+            encoder_attention_mask = vms.unsqueeze(1)
+            encoder_attention_mask = encoder_attention_mask.float()
+            encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
 
-            # token_type_ids实际上是attention_mask
-            outputs = self.ernie(input_ids,
-                                attention_mask=attention_mask,
-                                encoder_attention_mask=encoder_attention_mask,
-                                position_ids=position_ids)
-                                
-            sequence_output = outputs[0]
+        # token_type_ids实际上是attention_mask
+        outputs = self.ernie(input_ids,
+                            attention_mask=mask_ids,
+                            encoder_attention_mask=encoder_attention_mask,
+                            position_ids=pos_ids)
+                            
+        sequence_output = outputs[0]
 
-            # Target.
-            if self.pooling == "mean":
-                pool_output = torch.mean(sequence_output, dim=1)
-            elif self.pooling == "max":
-                pool_output = torch.max(sequence_output, dim=1)[0]
-            elif self.pooling == "last":
-                pool_output = sequence_output[:, -1, :]
-            else:
-                pool_output = sequence_output[:, 0, :]
-            pool_output = torch.tanh(self.pooler(pool_output))
+        # Target.
+        if self.pooling == "mean":
+            pool_output = torch.mean(sequence_output, dim=1)
+        elif self.pooling == "max":
+            pool_output = torch.max(sequence_output, dim=1)[0]
+        elif self.pooling == "last":
+            pool_output = sequence_output[:, -1, :]
+        else:
+            pool_output = sequence_output[:, 0, :]
+        pool_output = torch.tanh(self.pooler(pool_output))
 
-            pool_output_batch.append(pool_output)
-            sequence_output_batch.append(sequence_output)
-            encoder_attention_mask_batch.append(encoder_attention_mask)
+        # pool_output_batch.append(pool_output)
+        # sequence_output_batch.append(sequence_output)
+        # encoder_attention_mask_batch.append(encoder_attention_mask)
+        
+
         # 序列隐藏信息
         # sequence_output = torch.cat(sequence_output_batch, 1)
-        pooled_output = torch.cat(pool_output_batch, 1)
+        # pooled_output = torch.cat(pool_output_batch, 1)
 
-        att_output = self.multi_text_attention(sequence_output_batch, sequence_output_batch, sequence_output_batch,
-                                               encoder_attention_mask_batch, pooled_output)
+        att_output = self.multi_text_attention(sequence_output, sequence_output, sequence_output,
+                                               encoder_attention_mask, pool_output)
 
         lstm_out, h_n = self.lstm(att_output)
 
