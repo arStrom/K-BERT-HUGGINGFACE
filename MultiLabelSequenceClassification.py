@@ -147,7 +147,7 @@ class MultiTextAttention(nn.Module):
         # self.dropout_2 = nn.Dropout(dropout)
         # self.layer_norm_2 = LayerNorm(hidden_size * sentence_num)
 
-    def forward(self, querys, keys, values, masks):
+    def forward(self, querys, keys, values, masks, pooled_output):
         """
         Args:
             querys: [sentence_num x batch_size x seq_length x hidden_size]
@@ -169,6 +169,10 @@ class MultiTextAttention(nn.Module):
             output_batch.append(att_output)
 
         output = torch.cat(output_batch,-1)
+
+        pooled_output = pooled_output.unsqueeze(1)
+        output = torch.cat([pooled_output,output],1)
+
         # hidden = torch.cat(querys,-1)
 
         output = self.final_linear(output)
@@ -179,7 +183,6 @@ class MultiTextAttention(nn.Module):
         # inter = self.layer_norm_1(inter + hidden)
         # mixoutput = self.dropout_2(self.feed_forward(inter))
         # mixoutput = self.layer_norm_2(output + inter) 
-
 
         return mixoutput
 
@@ -249,7 +252,7 @@ class ErnieRCNNForMultiLabelSequenceClassificationNew(ErniePreTrainedModel):
         self.cat = torch.cat
         self.relu = F.relu
         # 在池化层拼接
-        self.maxpool = nn.MaxPool1d(self.pad_size)
+        self.maxpool = nn.MaxPool1d(self.pad_size + 1)
         self.sigmoid = nn.Sigmoid()
         self.criterion = nn.BCELoss()
         self.use_vm = False if base_config.no_vm or base_config.no_kg else True
@@ -310,20 +313,22 @@ class ErnieRCNNForMultiLabelSequenceClassificationNew(ErniePreTrainedModel):
         pooled_output = torch.cat(pool_output_batch, 1)
 
         att_output = self.multi_text_attention(sequence_output_batch, sequence_output_batch, sequence_output_batch,
-                                               encoder_attention_mask_batch)
+                                               encoder_attention_mask_batch, pooled_output)
 
-        out, h_n = self.lstm(att_output)
-        # out = self.cat((sequence_output, out), 2)
-        out = self.relu(out)
-        out = out.permute(0, 2, 1)
-        out = self.maxpool(out).squeeze()
+        lstm_out, h_n = self.lstm(att_output)
+
+        lstm_out = self.relu(lstm_out)
+
+        lstm_out = lstm_out.permute(0, 2, 1)
+        cnn_out = self.maxpool(lstm_out).squeeze()
         # out = out.permute(0, 2, 1)
         # out = self.dropouts(out)
 
-        # if len(out.shape) == 1:
-        #     out = out.unsqueeze(0)
-        # mixoutput = torch.cat([pool_output,out],-1)
-        logits = self.sigmoid(self.classifier(out))
+        # if len(lstm_out.shape) == 1:
+        #     lstm_out = lstm_out.unsqueeze(0)
+        # mixoutput = torch.tanh(self.pooler(mixoutput))
+
+        logits = self.sigmoid(self.classifier(cnn_out))
 
         loss = self.criterion(logits.view(-1, self.num_labels), labels.view(-1, self.num_labels))
         return loss, logits
