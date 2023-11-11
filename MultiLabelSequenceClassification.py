@@ -135,17 +135,19 @@ class MultiTextAttention(nn.Module):
                 nn.Linear(hidden_size, hidden_size) for _ in range(sentence_num)
             ])
         self.attention = Attention(hidden_size, dropout)
-        self.final_linear = nn.Linear(hidden_size * sentence_num, hidden_size * sentence_num)
+        self.mix_linear = nn.Linear(hidden_size * sentence_num, hidden_size * sentence_num)
 
         self.dropout = nn.Dropout(dropout)
         self.layer_norm = LayerNorm(hidden_size * sentence_num)
+
+        self.final_linear = nn.Linear(hidden_size * sentence_num, hidden_size * sentence_num)
 
         # self.feed_forward = PositionwiseFeedForward(
         #     hidden_size * sentence_num, self.feedforward_size
         # )
 
-        # self.dropout_2 = nn.Dropout(dropout)
-        # self.layer_norm_2 = LayerNorm(hidden_size * sentence_num)
+        self.dropout_2 = nn.Dropout(dropout)
+        self.layer_norm_2 = LayerNorm(hidden_size * sentence_num)
 
     def forward(self, query, key, value, mask, pool_output):
         """
@@ -166,29 +168,34 @@ class MultiTextAttention(nn.Module):
         batch_size = batch_sizeXsentence_num // self.sentence_num
         query, key, value = [l(x) for l, x in zip(self.linear_layers, (query, key, value))]
         mask = mask.squeeze(dim=1)
+        # pool_output = pool_output.unsqueeze(1)
+        # att_output = torch.cat([pool_output, self.attention(query, key, value, mask)], 1)
+        att_output = self.attention(query, key, value, mask)
+        att_output = att_output.view(batch_size, self.sentence_num, seq_length, hidden_size)
+        # att_output = att_output.view(batch_size, seq_length + 1, -1)
+        att_output = att_output.transpose(1,2).contiguous().view(batch_size, seq_length, -1)
+
         pool_output = pool_output.unsqueeze(1)
-        att_output = torch.cat([pool_output, self.attention(query, key, value, mask)], 1)
-        att_output = att_output.view(batch_size, self.sentence_num, seq_length + 1, hidden_size)
-        att_output = att_output.transpose(1, 2).contiguous().view(batch_size, seq_length + 1, -1)
-        # output_batch.append(att_output)
-
-        # output = torch.cat(output_batch,-1)
-
-        # pooled_output = pooled_output.unsqueeze(1)
-        # output = torch.cat([pooled_output,output],1)
+        pool_output = pool_output.view(batch_size, self.sentence_num, 1, hidden_size)
+        pool_output = pool_output.transpose(1,2).contiguous().view(batch_size, 1, -1)
 
         # hidden = torch.cat(querys,-1)
-
+        # hidden = query.view(batch_size, self.sentence_num, seq_length, hidden_size)
+        # hidden = hidden.transpose(1,2).contiguous().view(batch_size, seq_length, -1)
+        att_output = self.mix_linear(att_output)
+        att_output = gelu(self.dropout(att_output))
+        att_output = self.layer_norm(att_output)
+        att_output = torch.cat([pool_output,att_output],1)
         att_output = self.final_linear(att_output)
-        mixoutput = gelu(self.dropout(att_output))
-        mixoutput = self.layer_norm(mixoutput)
+        att_output = gelu(self.dropout_2(att_output))
+        att_output = self.layer_norm_2(att_output)
         
-        # inter = self.dropout_1(output)
-        # inter = self.layer_norm_1(inter + hidden)
+        # inter = self.dropout(att_output)
+        # inter = self.layer_norm(torch.cat([pool_output, inter + hidden], 1))
         # mixoutput = self.dropout_2(self.feed_forward(inter))
-        # mixoutput = self.layer_norm_2(output + inter) 
+        # mixoutput = self.layer_norm_2(mixoutput + inter) 
 
-        return mixoutput
+        return att_output
 
 
 class Attention(nn.Module):
@@ -229,6 +236,7 @@ class ErnieRCNNForMultiLabelSequenceClassificationNew(ErniePreTrainedModel):
         super(ErnieRCNNForMultiLabelSequenceClassificationNew, self).__init__(config)
         # 句子个数
         self.sentence_num = base_config.sentence_num
+        self.hidden_size = config.hidden_size
         self.num_labels = config.num_labels
         self.ernie = ErnieModel(config, add_pooling_layer=False)
         for param in self.ernie.parameters():
@@ -275,7 +283,6 @@ class ErnieRCNNForMultiLabelSequenceClassificationNew(ErniePreTrainedModel):
         #     vms = vms_batch[i]
 
         seq_length = input_ids.size(1)
-            
         # Generate mask according to segment indicators.
         # mask: [batch_size x 1 x seq_length x seq_length]
         if vms is None or not self.use_vm:
@@ -309,10 +316,11 @@ class ErnieRCNNForMultiLabelSequenceClassificationNew(ErniePreTrainedModel):
             pool_output = sequence_output[:, 0, :]
         pool_output = torch.tanh(self.pooler(pool_output))
 
+
         # pool_output_batch.append(pool_output)
         # sequence_output_batch.append(sequence_output)
         # encoder_attention_mask_batch.append(encoder_attention_mask)
-        
+
 
         # 序列隐藏信息
         # sequence_output = torch.cat(sequence_output_batch, 1)
