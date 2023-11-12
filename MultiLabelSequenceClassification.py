@@ -135,8 +135,11 @@ class MultiTextAttention(nn.Module):
                 nn.Linear(hidden_size, hidden_size) for _ in range(sentence_num)
             ])
         self.attention = Attention(hidden_size, dropout)
-        self.mix_linear = nn.Linear(hidden_size * sentence_num, hidden_size * sentence_num)
+        self.att_layer = nn.Linear(hidden_size, hidden_size)
+        self.att_dropout = nn.Dropout(dropout)
+        self.att_layer_norm = LayerNorm(hidden_size)
 
+        # self.mix_linear = nn.Linear(hidden_size * sentence_num, hidden_size * sentence_num)
         self.dropout = nn.Dropout(dropout)
         self.layer_norm = LayerNorm(hidden_size * sentence_num)
 
@@ -171,6 +174,11 @@ class MultiTextAttention(nn.Module):
         # pool_output = pool_output.unsqueeze(1)
         # att_output = torch.cat([pool_output, self.attention(query, key, value, mask)], 1)
         att_output = self.attention(query, key, value, mask)
+        att_output = self.att_layer(att_output)
+        att_output = self.att_dropout(att_output)
+        att_output = self.att_layer_norm(att_output)
+
+
         att_output = att_output.view(batch_size, self.sentence_num, seq_length, hidden_size)
         # att_output = att_output.view(batch_size, seq_length + 1, -1)
         att_output = att_output.transpose(1,2).contiguous().view(batch_size, seq_length, -1)
@@ -182,13 +190,14 @@ class MultiTextAttention(nn.Module):
         # hidden = torch.cat(querys,-1)
         # hidden = query.view(batch_size, self.sentence_num, seq_length, hidden_size)
         # hidden = hidden.transpose(1,2).contiguous().view(batch_size, seq_length, -1)
-        att_output = self.mix_linear(att_output)
-        att_output = gelu(self.dropout(att_output))
-        att_output = self.layer_norm(att_output)
+        # att_output = self.mix_linear(att_output)
+        # att_output = self.dropout(att_output)
+        # att_output = self.layer_norm(att_output)
         att_output = torch.cat([pool_output,att_output],1)
-        att_output = self.final_linear(att_output)
-        att_output = gelu(self.dropout_2(att_output))
-        att_output = self.layer_norm_2(att_output)
+        att_output = gelu(self.final_linear(att_output))
+
+        att_output = self.dropout(att_output)
+        att_output = self.layer_norm(att_output)
         
         # inter = self.dropout(att_output)
         # inter = self.layer_norm(torch.cat([pool_output, inter + hidden], 1))
