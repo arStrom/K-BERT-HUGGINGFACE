@@ -163,10 +163,7 @@ class MultiTextAttention(nn.Module):
         Returns:
             output: [batch_size x seq_length x hidden_size]
         """
-        # sentence_num = len(querys)
-        # output_batch = []
-        # for i in range(sentence_num):
-        #     query, key, value, mask = querys[i], keys[i], values[i], masks[i]
+
         batch_sizeXsentence_num, seq_length, hidden_size = query.size()
         batch_size = batch_sizeXsentence_num // self.sentence_num
         query, key, value = [l(x) for l, x in zip(self.linear_layers, (query, key, value))]
@@ -175,8 +172,6 @@ class MultiTextAttention(nn.Module):
         # att_output = torch.cat([pool_output, self.attention(query, key, value, mask)], 1)
         att_output = self.attention(query, key, value, mask)
         att_output = self.att_layer(att_output)
-        att_output = self.att_dropout(att_output)
-        att_output = self.att_layer_norm(att_output)
 
 
         att_output = att_output.view(batch_size, self.sentence_num, seq_length, hidden_size)
@@ -282,14 +277,10 @@ class ErnieRCNNForMultiLabelSequenceClassificationNew(ErniePreTrainedModel):
 
     def forward(self, input_ids, mask_ids, pos_ids, vms, labels):
         
-        # sequence_output_batch = []
-        # pool_output_batch = []
-        # encoder_attention_mask_batch = []
-        # for i in range(self.sentence_num):
-        #     input_ids = input_ids_batch[i]
-        #     mask_ids = mask_ids_batch[i]
-        #     pos_ids = pos_ids_batch[i]
-        #     vms = vms_batch[i]
+        input_ids = input_ids.flatten(0,1)
+        mask_ids = mask_ids.flatten(0,1)
+        pos_ids = pos_ids.flatten(0,1)
+        vms = vms.flatten(0,1)
 
         seq_length = input_ids.size(1)
         # Generate mask according to segment indicators.

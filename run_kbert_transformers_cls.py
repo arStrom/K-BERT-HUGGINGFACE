@@ -23,6 +23,8 @@ from test import test
 import MultiLabelSequenceClassification as MLCModels
 import SingleLabelSequenceClassification as SLCModels
 import MultiLabelSequenceClassificationSlice as MLCSliceModels
+from torch.utils.data.distributed import DistributedSampler
+
 
 
 MLCModel = {
@@ -171,6 +173,13 @@ def main():
     print("no_vm: ",args.no_vm)
     print("GPU: ",torch.cuda.get_device_name(0) if torch.cuda.is_available() else "CPU")
     
+    # 1) 初始化
+    # torch.distributed.init_process_group(backend="nccl")
+    # # 2） 配置每个进程的gpu
+    # local_rank = torch.distributed.get_rank()
+    # torch.cuda.set_device(local_rank)
+    # device = torch.device("cuda", local_rank)
+
     # 使用DataParallel包装器来使用多个GPU
     if torch.cuda.device_count() > 1:
         model = nn.DataParallel(model)
