@@ -9,7 +9,7 @@ KGS = {
     'Medical': os.path.join(FILE_DIR_PATH, 'kgs/Medical.spo'),
 }
 
-MAX_ENTITIES = 2
+MAX_ENTITIES = 1
 
 # Special token words.
 PAD_TOKEN = '[PAD]'

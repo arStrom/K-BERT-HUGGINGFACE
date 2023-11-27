@@ -28,7 +28,7 @@ class KnowledgeGraph(object):
             with open(spo_path, 'r', encoding='utf-8') as f:
                 for line in f:
                     try:
-                        subj, pred, obje = line.strip().split("\t")    
+                        subj, pred, obje = line.strip().split("\t")
                     except:
                         print("[KnowledgeGraph] Bad spo:", line)
                     if self.predicate:
@@ -54,8 +54,11 @@ class KnowledgeGraph(object):
         position_batch = []
         visible_matrix_batch = []
         seg_batch = []
-        for split_sent in split_sent_batch:
+        # for split_sent in split_sent_batch:
+        for sent in sent_batch:
 
+            split_sent = self.tokenizer.cut(sent)
+            sent_length = len(sent)
             # create tree
             sent_tree = []
             pos_idx_tree = []
@@ -66,7 +69,7 @@ class KnowledgeGraph(object):
             for token in split_sent:
 
                 entities = list(self.lookup_table.get(token, []))[:max_entities]
-                sent_tree.append((token, entities))
+                # sent_tree.append((token, entities))
 
                 if token in self.special_tags:
                     token_pos_idx = [pos_idx+1]
@@ -78,13 +81,19 @@ class KnowledgeGraph(object):
 
                 entities_pos_idx = []
                 entities_abs_idx = []
+                entities_added = []
                 for ent in entities:
+                    if len(ent) + sent_length > max_length:
+                        continue
+                    entities_added.append(ent)
+                    sent_length = sent_length + len(ent)
                     ent_pos_idx = [token_pos_idx[-1] + i for i in range(1, len(ent)+1)]
                     entities_pos_idx.append(ent_pos_idx)
                     ent_abs_idx = [abs_idx + i for i in range(1, len(ent)+1)]
                     abs_idx = ent_abs_idx[-1]
                     entities_abs_idx.append(ent_abs_idx)
 
+                sent_tree.append((token, entities_added))
                 pos_idx_tree.append((token_pos_idx, entities_pos_idx))
                 pos_idx = token_pos_idx[-1]
                 abs_idx_tree.append((token_abs_idx, entities_abs_idx))
@@ -117,6 +126,9 @@ class KnowledgeGraph(object):
             for item in abs_idx_tree:
                 src_ids = item[0]
                 for id in src_ids:
+                    # visible_matrix[id, abs_idx_src] = 1
+                    # ent_idx_src = [idx for ent in item[1] for idx in ent]
+                    # visible_matrix[id, ent_idx_src] = 0
                     visible_abs_idx = abs_idx_src + [idx for ent in item[1] for idx in ent]
                     visible_matrix[id, visible_abs_idx] = 1
                 for ent in item[1]:

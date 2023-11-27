@@ -185,7 +185,7 @@ def main():
         spo_files = [args.kg_name]
     
     if not args.no_kg:
-        kg = KnowledgeGraph(spo_files=spo_files, predicate=True)
+        kg = KnowledgeGraph(spo_files=spo_files, predicate=False)
     else:
         kg = None
     
@@ -215,7 +215,7 @@ def main():
     test_dataset = dataloader.myDataset(test_dataset)
     test_batch = DataLoader(test_dataset,batch_size=base_config.batch_size)
 
-    # evaluate(model, dev_batch, base_config, is_test = False)
+    # evaluate(model, test_batch, base_config, task=args.task, is_test = True)
 
     train(model, train_batch, dev_batch, test_batch, config=base_config, task=args.task)
 

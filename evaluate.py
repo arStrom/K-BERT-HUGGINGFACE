@@ -24,34 +24,31 @@ def evaluate(model, eval_batch, config, task, is_test):
     
     with torch.no_grad():
         for i, (input_ids_batch, mask_ids_batch, pos_ids_batch, vms_batch, label_ids_batch) in enumerate(eval_batch):
-
-            # input_ids_batch = input_ids_batch.transpose(0,1).to(device)
-            # mask_ids_batch = mask_ids_batch.transpose(0,1).to(device)
-            # pos_ids_batch = pos_ids_batch.transpose(0,1).to(device)
-            # vms_batch = vms_batch.transpose(0,1).to(device)
-
             
-            # 合并前两个维度 batch_size 和 sentences_num
-            input_ids_batch = input_ids_batch.flatten(0,1).to(device)
-            mask_ids_batch = mask_ids_batch.flatten(0,1).to(device)
-            pos_ids_batch = pos_ids_batch.flatten(0,1).to(device)
-            vms_batch = vms_batch.flatten(0,1).to(device)
+            input_ids_batch = input_ids_batch.to(device)
+            mask_ids_batch = mask_ids_batch.to(device)
+            pos_ids_batch = pos_ids_batch.to(device)
+            vms_batch = vms_batch.to(device)
             label_ids_batch = label_ids_batch.to(device)
 
-            try:
-                loss, logits = model(input_ids_batch, 
-                                    mask_ids_batch, 
-                                    pos_ids_batch, 
-                                    vms_batch,
-                                    label_ids_batch)
-            except Exception as ex:
-                print("出现如下异常%s"%ex)
-                print(input_ids_batch)
-                print(input_ids_batch.size())
-                print(vms_batch)
-                print(vms_batch.size())
-            
+            # try:
+            loss, logits = model(input_ids_batch, 
+                                mask_ids_batch, 
+                                pos_ids_batch, 
+                                vms_batch,
+                                label_ids_batch)
+                
+            # except Exception as ex:
+            #     print("出现如下异常%s"%ex)
+            #     print(input_ids_batch)
+            #     print(input_ids_batch.size())
+            #     print(vms_batch)
+            #     print(vms_batch.size())
+            if torch.cuda.device_count() > 1:
+                loss = torch.mean(loss)
+
             total_loss += loss.item()
+
             if task == 'SLC':
                 preds = (logits == logits.max(dim=1, keepdim=True)[0]).to(dtype=torch.int32)
                 preds = preds.cpu().numpy()
@@ -63,9 +60,10 @@ def evaluate(model, eval_batch, config, task, is_test):
                 raise NameError("任务名称错误")
 
             labels = label_ids_batch.cpu().numpy()
-            if len(preds.shape) == 1:
-                preds = np.expand_dims(preds,axis=0)
 
+            if len(preds.shape) == 1:
+                preds = preds.reshape(-1, config.label_number)
+                
             if predict_all is None:
                 predict_all = preds
                 labels_all = labels
