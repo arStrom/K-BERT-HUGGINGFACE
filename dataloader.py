@@ -195,7 +195,7 @@ class myDataset(Dataset): #继承Dataset
         input_ids = torch.LongTensor(self.dataset[index][0])
         mask_ids = torch.LongTensor(self.dataset[index][1])
         pos_ids = torch.LongTensor(self.dataset[index][2])
-        vms = torch.LongTensor(np.array(self.dataset[index][3]))
+        vms = torch.FloatTensor(np.array(self.dataset[index][3]))
 
         label_ids = torch.FloatTensor(self.dataset[index][4])
         return input_ids, mask_ids, pos_ids, vms, label_ids  #返回该样本

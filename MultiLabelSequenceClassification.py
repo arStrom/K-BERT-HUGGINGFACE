@@ -136,8 +136,6 @@ class MultiTextAttention(nn.Module):
             ])
         self.attention = Attention(hidden_size, dropout)
         self.att_layer = nn.Linear(hidden_size, hidden_size)
-        self.att_dropout = nn.Dropout(dropout)
-        self.att_layer_norm = LayerNorm(hidden_size)
 
         # self.mix_linear = nn.Linear(hidden_size * sentence_num, hidden_size * sentence_num)
         self.dropout = nn.Dropout(dropout)
@@ -163,41 +161,27 @@ class MultiTextAttention(nn.Module):
         Returns:
             output: [batch_size x seq_length x hidden_size]
         """
-
         batch_sizeXsentence_num, seq_length, hidden_size = query.size()
         batch_size = batch_sizeXsentence_num // self.sentence_num
         query, key, value = [l(x) for l, x in zip(self.linear_layers, (query, key, value))]
         mask = mask.squeeze(dim=1)
-        # pool_output = pool_output.unsqueeze(1)
-        # att_output = torch.cat([pool_output, self.attention(query, key, value, mask)], 1)
         att_output = self.attention(query, key, value, mask)
         att_output = self.att_layer(att_output)
 
 
+
         att_output = att_output.view(batch_size, self.sentence_num, seq_length, hidden_size)
-        # att_output = att_output.view(batch_size, seq_length + 1, -1)
         att_output = att_output.transpose(1,2).contiguous().view(batch_size, seq_length, -1)
 
         pool_output = pool_output.unsqueeze(1)
         pool_output = pool_output.view(batch_size, self.sentence_num, 1, hidden_size)
         pool_output = pool_output.transpose(1,2).contiguous().view(batch_size, 1, -1)
 
-        # hidden = torch.cat(querys,-1)
-        # hidden = query.view(batch_size, self.sentence_num, seq_length, hidden_size)
-        # hidden = hidden.transpose(1,2).contiguous().view(batch_size, seq_length, -1)
-        # att_output = self.mix_linear(att_output)
-        # att_output = self.dropout(att_output)
-        # att_output = self.layer_norm(att_output)
         att_output = torch.cat([pool_output,att_output],1)
         att_output = gelu(self.final_linear(att_output))
 
         att_output = self.dropout(att_output)
         att_output = self.layer_norm(att_output)
-        
-        # inter = self.dropout(att_output)
-        # inter = self.layer_norm(torch.cat([pool_output, inter + hidden], 1))
-        # mixoutput = self.dropout_2(self.feed_forward(inter))
-        # mixoutput = self.layer_norm_2(mixoutput + inter) 
 
         return att_output
 
@@ -277,6 +261,7 @@ class ErnieRCNNForMultiLabelSequenceClassificationNew(ErniePreTrainedModel):
 
     def forward(self, input_ids, mask_ids, pos_ids, vms, labels):
         
+        # 合并前两个维度 batch_size 和 sentences_num
         input_ids = input_ids.flatten(0,1)
         mask_ids = mask_ids.flatten(0,1)
         pos_ids = pos_ids.flatten(0,1)
@@ -330,7 +315,6 @@ class ErnieRCNNForMultiLabelSequenceClassificationNew(ErniePreTrainedModel):
                                                encoder_attention_mask, pool_output)
 
         lstm_out, h_n = self.lstm(att_output)
-
         lstm_out = self.relu(lstm_out)
 
         lstm_out = lstm_out.permute(0, 2, 1)
@@ -341,10 +325,13 @@ class ErnieRCNNForMultiLabelSequenceClassificationNew(ErniePreTrainedModel):
         # if len(lstm_out.shape) == 1:
         #     lstm_out = lstm_out.unsqueeze(0)
         # mixoutput = torch.tanh(self.pooler(mixoutput))
-
         logits = self.sigmoid(self.classifier(cnn_out))
+        if len(logits.shape) == 1:
+            logits = logits.unsqueeze(0)
 
         loss = self.criterion(logits.view(-1, self.num_labels), labels.view(-1, self.num_labels))
+        if len(loss.shape) == 1:
+            loss = loss.unsqueeze(0)
         return loss, logits
 
 
