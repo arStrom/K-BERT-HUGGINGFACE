@@ -130,25 +130,16 @@ class MultiTextAttention(nn.Module):
         super(MultiTextAttention, self).__init__()
         self.hidden_size = hidden_size
         self.sentence_num = sentence_num
-        self.feedforward_size = 3072
         self.linear_layers = nn.ModuleList([
                 nn.Linear(hidden_size, hidden_size) for _ in range(sentence_num)
             ])
         self.attention = Attention(hidden_size, dropout)
         self.att_layer = nn.Linear(hidden_size, hidden_size)
 
-        # self.mix_linear = nn.Linear(hidden_size * sentence_num, hidden_size * sentence_num)
         self.dropout = nn.Dropout(dropout)
         self.layer_norm = LayerNorm(hidden_size * sentence_num)
 
         self.final_linear = nn.Linear(hidden_size * sentence_num, hidden_size * sentence_num)
-
-        # self.feed_forward = PositionwiseFeedForward(
-        #     hidden_size * sentence_num, self.feedforward_size
-        # )
-
-        self.dropout_2 = nn.Dropout(dropout)
-        self.layer_norm_2 = LayerNorm(hidden_size * sentence_num)
 
     def forward(self, query, key, value, mask, pool_output):
         """
@@ -233,7 +224,7 @@ class ErnieRCNNForMultiLabelSequenceClassificationNew(ErniePreTrainedModel):
                                                        self.sentence_num,
                                                        0.5)
 
-        self.rnn_hidden = 768 * self.sentence_num
+        self.rnn_hidden = 768 * 3
         self.num_layers = 2
         self.dropout_rnn = 0.2
         self.pad_size = base_config.max_seq_length  # 每句话处理成的长度(短填长切)
