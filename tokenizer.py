@@ -96,13 +96,14 @@ class tokenizer:
             # line = line.strip().split('\t')
             example = [[],[],[],[]]
             # try:
-            sentences = [inputexample.text_a, inputexample.text_b, inputexample.text_c]
-            entities = []
-            for i,sentence in enumerate(sentences):
-                if sentence is None:
-                    sentence = ''
-                entities += self.kg.add_knowledge([sentence], add_pad=True, max_length=self.max_length)
-                tokens = [CLS_TOKEN] + list(sentence)
+            fields = [inputexample.text_a, inputexample.text_b, inputexample.text_c]
+            entities = sum([self.kg.add_knowledge([field], add_pad=True, max_length=self.max_length) for field in fields],[])
+            fields.append("-".join(entities))
+            for i,field in enumerate(fields):
+                if field is None:
+                    field = ''
+                # entities += self.kg.add_knowledge([field], add_pad=True, max_length=self.max_length)
+                tokens = [CLS_TOKEN] + list(field)
                 tokens_lenth = len(tokens)
                 token_ids = [self.vocab.get(t) for t in tokens]
                 mask = [1 for i in range(0, tokens_lenth)]
@@ -122,24 +123,24 @@ class tokenizer:
                 example[2].append(pos_ids)
                 example[3].append(np.ones(1))
 
-            entities_tokens = [CLS_TOKEN] + list("-".join(entities))
-            entities_lenth = len(entities_tokens)
-            entities_ids = [self.vocab.get(t) for t in entities_tokens]
-            entities_mask = [1 for i in range(0, entities_lenth)]
-            entities_pos_ids = [i for i in range(0, entities_lenth)]
-            if entities_lenth < self.max_length:
-                pad_num = self.max_length - entities_lenth
-                entities_ids += [self.vocab.get(PAD_TOKEN)] * pad_num
-                entities_mask += [0] * pad_num
-                entities_pos_ids += [self.max_length-1] * pad_num
-            else:
-                entities_ids = entities_ids[:self.max_length]
-                entities_mask = entities_mask[:self.max_length]
-                entities_pos_ids = entities_pos_ids[:self.max_length]
-            example[0].append(entities_ids)
-            example[1].append(entities_mask)
-            example[2].append(entities_pos_ids)
-            example[3].append(np.ones(1))
+            # entities_tokens = [CLS_TOKEN] + list("-".join(entities))
+            # entities_lenth = len(entities_tokens)
+            # entities_ids = [self.vocab.get(t) for t in entities_tokens]
+            # entities_mask = [1 for i in range(0, entities_lenth)]
+            # entities_pos_ids = [i for i in range(0, entities_lenth)]
+            # if entities_lenth < self.max_length:
+            #     pad_num = self.max_length - entities_lenth
+            #     entities_ids += [self.vocab.get(PAD_TOKEN)] * pad_num
+            #     entities_mask += [0] * pad_num
+            #     entities_pos_ids += [self.max_length-1] * pad_num
+            # else:
+            #     entities_ids = entities_ids[:self.max_length]
+            #     entities_mask = entities_mask[:self.max_length]
+            #     entities_pos_ids = entities_pos_ids[:self.max_length]
+            # example[0].append(entities_ids)
+            # example[1].append(entities_mask)
+            # example[2].append(entities_pos_ids)
+            # example[3].append(np.ones(1))
 
             example.append(inputexample.label)
             dataset.append(example)
