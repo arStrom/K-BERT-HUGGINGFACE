@@ -40,6 +40,20 @@ class KnowledgeGraph(object):
                     else:
                         lookup_table[subj] = set([value])
         return lookup_table
+    
+    def add_knowledge(self, sent_batch, max_entities=config.MAX_ENTITIES, add_pad=True, max_length=128):
+
+        # for split_sent in split_sent_batch:
+        for sent in sent_batch:
+
+            split_sent = self.tokenizer.cut(sent)
+            entitie_batch = []
+            for token in split_sent:
+
+                entities = list(self.lookup_table.get(token, []))[:max_entities]
+                entitie_batch += entities
+        return entitie_batch
+
 
     def add_knowledge_with_vm(self, sent_batch, max_entities=config.MAX_ENTITIES, add_pad=True, max_length=128):
         """

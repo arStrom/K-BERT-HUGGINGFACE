@@ -169,7 +169,6 @@ class MultiTextAttention(nn.Module):
         att_output = self.att_layer(att_output)
 
 
-
         att_output = att_output.view(batch_size, self.sentence_num, seq_length, hidden_size)
         att_output = att_output.transpose(1,2).contiguous().view(batch_size, seq_length, -1)
 

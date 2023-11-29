@@ -115,8 +115,9 @@ def main():
     # 如果不启用kg，那么vm也不启用
     # 如果启用kg，vm根据用户自定义
     args.no_vm = args.no_kg if args.no_kg else args.no_vm
+    args.sentence_num = sentence_num[args.dataset] + 1 if not args.no_kg and args.no_vm else sentence_num[args.dataset]
     model_name = args.model
-    base_config = BaseConfig(args.cuda, model_name, args.pretrained, args.dataset, sentence_num[args.dataset], args.No, args.seq_length, args.dropout, 
+    base_config = BaseConfig(args.cuda, model_name, args.pretrained, args.dataset, args.sentence_num, args.No, args.seq_length, args.dropout, 
                         args.epochs_num, args.batch_size, args.pretrained_learning_rate, args.learning_rate, args.report_steps, args.pooling,
                         args.no_kg, args.no_vm)
 
@@ -142,7 +143,6 @@ def main():
     vocab.load(base_config.pretrained_model_path + '/vocab.txt')
     args.vocab = vocab
 
-    args.sentence_num = sentence_num[args.dataset]
     # 加载分类模型
     if args.task == 'SLC':
         model = SLCModel[model_name].from_pretrained(base_config.pretrained_model_path, config=model_config, base_config = base_config)
@@ -201,26 +201,26 @@ def main():
     #训练.
     print("Start training.")
 
-    tokenizer = Tokenizer(vocab, base_config.max_seq_length, kg)
+    tokenizer = Tokenizer(args.vocab, base_config.max_seq_length, kg)
 
     # 训练数据
     train_dataset = dataloader.read_dataset(base_config.train_path, tokenizer, 
                                             workers_num=args.workers_num, dataset=args.dataset, 
-                                            class_list=base_config.class_list, with_kg=not args.no_kg)
+                                            class_list=base_config.class_list, with_kg=not args.no_kg, with_vm = not args.no_vm)
     train_dataset = dataloader.myDataset(train_dataset)
     train_batch = DataLoader(train_dataset,batch_size=base_config.batch_size, shuffle=True)
 
     # 验证数据
     dev_dataset = dataloader.read_dataset(base_config.dev_path, tokenizer, 
                                           workers_num=args.workers_num, dataset=args.dataset, 
-                                          class_list=base_config.class_list, with_kg=not args.no_kg)
+                                          class_list=base_config.class_list, with_kg=not args.no_kg, with_vm = not args.no_vm)
     dev_dataset = dataloader.myDataset(dev_dataset)
     dev_batch = DataLoader(dev_dataset,batch_size=base_config.batch_size)
 
     # 测试数据
     test_dataset = dataloader.read_dataset(base_config.test_path, tokenizer, 
                                            workers_num=args.workers_num, dataset=args.dataset, 
-                                           class_list=base_config.class_list, with_kg=not args.no_kg)
+                                           class_list=base_config.class_list, with_kg=not args.no_kg, with_vm = not args.no_vm)
     test_dataset = dataloader.myDataset(test_dataset)
     test_batch = DataLoader(test_dataset,batch_size=base_config.batch_size)
 

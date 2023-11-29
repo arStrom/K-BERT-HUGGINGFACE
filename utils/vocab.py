@@ -49,7 +49,7 @@ class Vocab(object):
         print("Vocabulary saving done.")
 
     def get(self, w):
-        return self.w2i.get(w, UNK_ID)
+        return self.w2i.get(w, self.w2i.get('[UNK]'))
         
     def __len__(self):
         return len(self.i2w)

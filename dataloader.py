@@ -137,7 +137,7 @@ def creat_multi_label_sentences_slice(path, class_list):
 
 
 # 读取数据集
-def read_dataset(path, tokenizer, workers_num=1, dataset=None, class_list=None, with_kg = True):
+def read_dataset(path, tokenizer, workers_num=1, dataset=None, class_list=None, with_kg = True, with_vm = True):
 
     read_dataset_process = {
         'tnews_public': creat_TNEWS,
@@ -148,7 +148,7 @@ def read_dataset(path, tokenizer, workers_num=1, dataset=None, class_list=None, 
 
     print("Loading sentences from {}".format(path))
     sentences = read_dataset_process[dataset](path, class_list)
-    encoder = tokenizer.encode_with_knowledge if with_kg else tokenizer.encode
+    encoder = (tokenizer.encode_with_knowledge if with_vm else tokenizer.encode_add_knowledge) if with_kg else tokenizer.encode
 
     sentence_num = len(sentences)
 
