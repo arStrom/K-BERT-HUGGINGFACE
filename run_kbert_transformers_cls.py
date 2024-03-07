@@ -28,6 +28,7 @@ from torch.utils.data.distributed import DistributedSampler
 
 
 MLCModel = {
+    'bert-rcnn-new': MLCModels.BertRCNNForMultiLabelSequenceClassificationNew,
     'ernie-rcnn-new': MLCModels.ErnieRCNNForMultiLabelSequenceClassificationNew,
     'bert': MLCModels.BertForMultiLabelSequenceClassification,
     'bert-rcnn': MLCModels.BertRCNNForMultiLabelSequenceClassification,
@@ -43,6 +44,8 @@ MLCModel = {
 }
 
 SLCModel = {
+    'bert-rcnn-new': SLCModels.BertRCNNForSequenceClassificationNew,
+    'ernie-rcnn-new': SLCModels.ErnieRCNNForSequenceClassificationNew,
     'bert': SLCModels.BertForSequenceClassification,
     'ernie-rcnn': SLCModels.ErnieRCNNForSequenceClassification,
 }

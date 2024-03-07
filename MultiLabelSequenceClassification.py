@@ -141,7 +141,7 @@ class MultiTextAttention(nn.Module):
 
         self.final_linear = nn.Linear(hidden_size * sentence_num, hidden_size * sentence_num)
 
-    def forward(self, query, key, value, mask, pool_output):
+    def forward(self, fields, mask, pool_output):
         """
         Args:
             querys: [batch_size x sentence_num , seq_length , hidden_size]
@@ -152,9 +152,16 @@ class MultiTextAttention(nn.Module):
         Returns:
             output: [batch_size x seq_length x hidden_size]
         """
-        batch_sizeXsentence_num, seq_length, hidden_size = query.size()
-        batch_size = batch_sizeXsentence_num // self.sentence_num
-        query, key, value = [l(x) for l, x in zip(self.linear_layers, (query, key, value))]
+        batch_size, seq_length, hidden_size = fields[0].size()
+
+        fields = [l(x) for l, x in zip(self.linear_layers, fields)]
+    
+        query = torch.stack(fields).transpose(0,1).flatten(0,1)
+        key = query
+        value = query
+
+        # query, key, value = [l(x) for l, x in zip(self.linear_layers, (query, key, value))]
+
         mask = mask.squeeze(dim=1)
         att_output = self.attention(query, key, value, mask)
         att_output = self.att_layer(att_output)
@@ -258,8 +265,6 @@ class ErnieRCNNForMultiLabelSequenceClassificationNew(ErniePreTrainedModel):
         vms = vms.flatten(0,1)
 
         seq_length = input_ids.size(1)
-        # Generate mask according to segment indicators.
-        # mask: [batch_size x 1 x seq_length x seq_length]
         if vms is None or not self.use_vm:
             encoder_attention_mask = (mask_ids > 0). \
                     unsqueeze(1). \
@@ -272,7 +277,6 @@ class ErnieRCNNForMultiLabelSequenceClassificationNew(ErniePreTrainedModel):
             encoder_attention_mask = encoder_attention_mask.float()
             encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
 
-        # token_type_ids实际上是attention_mask
         outputs = self.ernie(input_ids,
                             attention_mask=mask_ids,
                             encoder_attention_mask=encoder_attention_mask,
@@ -291,17 +295,9 @@ class ErnieRCNNForMultiLabelSequenceClassificationNew(ErniePreTrainedModel):
             pool_output = sequence_output[:, 0, :]
         pool_output = torch.tanh(self.pooler(pool_output))
 
+        sequence_output = sequence_output.view(-1, self.sentence_num, seq_length, self.hidden_size).transpose(0,1)
 
-        # pool_output_batch.append(pool_output)
-        # sequence_output_batch.append(sequence_output)
-        # encoder_attention_mask_batch.append(encoder_attention_mask)
-
-
-        # 序列隐藏信息
-        # sequence_output = torch.cat(sequence_output_batch, 1)
-        # pooled_output = torch.cat(pool_output_batch, 1)
-
-        att_output = self.multi_text_attention(sequence_output, sequence_output, sequence_output,
+        att_output = self.multi_text_attention([x for x in sequence_output],
                                                encoder_attention_mask, pool_output)
 
         lstm_out, h_n = self.lstm(att_output)
@@ -309,12 +305,103 @@ class ErnieRCNNForMultiLabelSequenceClassificationNew(ErniePreTrainedModel):
 
         lstm_out = lstm_out.permute(0, 2, 1)
         cnn_out = self.maxpool(lstm_out).squeeze()
-        # out = out.permute(0, 2, 1)
-        # out = self.dropouts(out)
+        logits = self.sigmoid(self.classifier(cnn_out))
+        if len(logits.shape) == 1:
+            logits = logits.unsqueeze(0)
 
-        # if len(lstm_out.shape) == 1:
-        #     lstm_out = lstm_out.unsqueeze(0)
-        # mixoutput = torch.tanh(self.pooler(mixoutput))
+        loss = self.criterion(logits.view(-1, self.num_labels), labels.view(-1, self.num_labels))
+        if len(loss.shape) == 1:
+            loss = loss.unsqueeze(0)
+        return loss, logits
+    
+class BertRCNNForMultiLabelSequenceClassificationNew(BertPreTrainedModel):
+
+    def __init__(self, config, base_config):
+        super(BertRCNNForMultiLabelSequenceClassificationNew, self).__init__(config)
+        # 句子个数
+        self.sentence_num = base_config.sentence_num
+        self.hidden_size = config.hidden_size
+        self.num_labels = config.num_labels
+        self.bert = BertModel(config, add_pooling_layer=False)
+
+        self.multi_text_attention = MultiTextAttention(config.hidden_size, 
+                                                       self.sentence_num,
+                                                       0.5)
+
+        self.rnn_hidden = 768 * 3
+        self.num_layers = 2
+        self.dropout_rnn = 0.2
+        self.pad_size = base_config.max_seq_length  # 每句话处理成的长度(短填长切)
+        self.pooling = base_config.pooling
+
+        self.lstm = nn.LSTM(
+            config.hidden_size * self.sentence_num, self.rnn_hidden, self.num_layers,
+            bidirectional=True, batch_first=True, dropout=self.dropout_rnn
+        )
+
+        self.pooler = nn.Linear(config.hidden_size, config.hidden_size)
+
+        self.classifier = nn.Linear(self.rnn_hidden * 2, self.num_labels)
+
+        self.cat = torch.cat
+        self.relu = F.relu
+        # 在池化层拼接
+        self.maxpool = nn.MaxPool1d(self.pad_size + 1)
+        self.sigmoid = nn.Sigmoid()
+        self.criterion = nn.BCELoss()
+        self.use_vm = False if base_config.no_vm or base_config.no_kg else True
+        print("[BertClassifier] use visible_matrix: {}".format(self.use_vm))
+        self.init_weights()
+
+    def forward(self, input_ids, mask_ids, pos_ids, vms, labels):
+        
+        # 合并前两个维度 batch_size 和 sentences_num
+        input_ids = input_ids.flatten(0,1)
+        mask_ids = mask_ids.flatten(0,1)
+        pos_ids = pos_ids.flatten(0,1)
+        vms = vms.flatten(0,1)
+
+        seq_length = input_ids.size(1)
+        if vms is None or not self.use_vm:
+            encoder_attention_mask = (mask_ids > 0). \
+                    unsqueeze(1). \
+                    repeat(1, seq_length, 1). \
+                    unsqueeze(1)
+            encoder_attention_mask = encoder_attention_mask.float()
+            encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
+        else:
+            encoder_attention_mask = vms.unsqueeze(1)
+            encoder_attention_mask = encoder_attention_mask.float()
+            encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
+
+        outputs = self.bert(input_ids,
+                            attention_mask=mask_ids,
+                            encoder_attention_mask=encoder_attention_mask,
+                            position_ids=pos_ids)
+                            
+        sequence_output = outputs[0]
+
+        # Target.
+        if self.pooling == "mean":
+            pool_output = torch.mean(sequence_output, dim=1)
+        elif self.pooling == "max":
+            pool_output = torch.max(sequence_output, dim=1)[0]
+        elif self.pooling == "last":
+            pool_output = sequence_output[:, -1, :]
+        else:
+            pool_output = sequence_output[:, 0, :]
+        pool_output = torch.tanh(self.pooler(pool_output))
+
+        sequence_output = sequence_output.view(-1, self.sentence_num, seq_length, self.hidden_size).transpose(0,1)
+
+        att_output = self.multi_text_attention([x for x in sequence_output],
+                                               encoder_attention_mask, pool_output)
+
+        lstm_out, h_n = self.lstm(att_output)
+        lstm_out = self.relu(lstm_out)
+
+        lstm_out = lstm_out.permute(0, 2, 1)
+        cnn_out = self.maxpool(lstm_out).squeeze()
         logits = self.sigmoid(self.classifier(cnn_out))
         if len(logits.shape) == 1:
             logits = logits.unsqueeze(0)

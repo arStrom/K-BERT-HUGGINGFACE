@@ -50,6 +50,7 @@ class Vocab(object):
 
     def get(self, w):
         return self.w2i.get(w, self.w2i.get('[UNK]'))
+        # return self.w2i.get(w, UNK_ID)
         
     def __len__(self):
         return len(self.i2w)

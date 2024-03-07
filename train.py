@@ -34,71 +34,73 @@ def train(model, train_batch, eval_batch, test_batch, config, task):
     num_train_optimization_steps = len(train_batch) * config.epochs_num
     train_steps = int(len(train_batch.dataset) * config.epochs_num / batch_size) + 1
     param_optimizer = list(model.named_parameters())
-
-    model_parameters = model.module if hasattr(model, 'module') else model
-    bert_params = list(model_parameters.ernie.named_parameters())
-    multi_text_attention_params = list(model_parameters.multi_text_attention.named_parameters())
-    lstm_params = list(model_parameters.lstm.named_parameters())
-    pooler_params = list(model_parameters.pooler.named_parameters())
-    classifier_params = list(model_parameters.classifier.named_parameters())
     no_decay = ['bias', 'LayerNorm.bias', 'LayerNorm.weight']
 
-    # optimizer_grouped_parameters = [
-    #     {'params': [p for n, p in param_optimizer if not any(nd in n for nd in no_decay)], 'weight_decay': 0.01},
-    #     {'params': [p for n, p in param_optimizer if any(nd in n for nd in no_decay)], 'weight_decay': 0.0}
-    # ]
+    # model_parameters = model.module if hasattr(model, 'module') else model
+    # pretrained_model_params = list(model_parameters.bert.named_parameters())
+    # multi_text_attention_params = list(model_parameters.multi_text_attention.named_parameters())
+    # lstm_params = list(model_parameters.lstm.named_parameters())
+    # pooler_params = list(model_parameters.pooler.named_parameters())
+    # classifier_params = list(model_parameters.classifier.named_parameters())
+
     optimizer_grouped_parameters = [
-        {
-            "params": [p for n, p in bert_params if not any(nd in n for nd in no_decay)],
-            "weight_decay": 0.0,
-            "lr": config.pretrained_learning_rate  # RoBERTa层的学习率
-        },
-        {
-            "params": [p for n, p in bert_params if any(nd in n for nd in no_decay)],
-            "weight_decay": 0.0,
-            "lr": config.pretrained_learning_rate  # RoBERTa层的学习率
-        },
-        {
-            "params": [p for n, p in multi_text_attention_params if not any(nd in n for nd in no_decay)],
-            "weight_decay": 0.01,
-            "lr": config.learning_rate  # multi_text_attention层的学习率
-        },
-        {
-            "params": [p for n, p in multi_text_attention_params if any(nd in n for nd in no_decay)],
-            "weight_decay": 0.0,
-            "lr": config.learning_rate  # multi_text_attention层的学习率
-        },
-        {
-            "params": [p for n, p in lstm_params if not any(nd in n for nd in no_decay)],
-            "weight_decay": 0.01,
-            "lr": config.learning_rate  # LSTM层的学习率
-        },
-        {
-            "params": [p for n, p in lstm_params if any(nd in n for nd in no_decay)],
-            "weight_decay": 0.0,
-            "lr": config.learning_rate  # LSTM层的学习率
-        },
-        {
-            "params": [p for n, p in pooler_params if not any(nd in n for nd in no_decay)],
-            "weight_decay": 0.01,
-            "lr": config.learning_rate  # pooler的学习率
-        },
-        {
-            "params": [p for n, p in pooler_params if any(nd in n for nd in no_decay)],
-            "weight_decay": 0.0,
-            "lr": config.learning_rate  # pooler的学习率
-        },
-        {
-            "params": [p for n, p in classifier_params if not any(nd in n for nd in no_decay)],
-            "weight_decay": 0.01,
-            "lr": config.learning_rate  # 全连接层的学习率
-        },
-        {
-            "params": [p for n, p in classifier_params if any(nd in n for nd in no_decay)],
-            "weight_decay": 0.0,
-            "lr": config.learning_rate
-        },
+        {'params': [p for n, p in param_optimizer if not any(nd in n for nd in no_decay)], 'weight_decay': 0.01},
+        {'params': [p for n, p in param_optimizer if any(nd in n for nd in no_decay)], 'weight_decay': 0.0}
     ]
+    # optimizer_grouped_parameters = [
+    #     {
+    #         "params": [p for n, p in pretrained_model_params if not any(nd in n for nd in no_decay)],
+    #         "weight_decay": 0.0,
+    #         "lr": config.pretrained_learning_rate  # pretrained_model_params层的学习率
+    #     },
+    #     {
+    #         "params": [p for n, p in pretrained_model_params if any(nd in n for nd in no_decay)],
+    #         "weight_decay": 0.0,
+    #         "lr": config.pretrained_learning_rate  # pretrained_model_params层的学习率
+    #     },
+    #     {
+    #         "params": [p for n, p in multi_text_attention_params if not any(nd in n for nd in no_decay)],
+    #         "weight_decay": 0.01,
+    #         "lr": config.learning_rate  # multi_text_attention层的学习率
+    #     },
+    #     {
+    #         "params": [p for n, p in multi_text_attention_params if any(nd in n for nd in no_decay)],
+    #         "weight_decay": 0.0,
+    #         "lr": config.learning_rate  # multi_text_attention层的学习率
+    #     },
+    #     {
+    #         "params": [p for n, p in lstm_params if not any(nd in n for nd in no_decay)],
+    #         "weight_decay": 0.01,
+    #         "lr": config.learning_rate  # LSTM层的学习率
+    #     },
+    #     {
+    #         "params": [p for n, p in lstm_params if any(nd in n for nd in no_decay)],
+    #         "weight_decay": 0.0,
+    #         "lr": config.learning_rate  # LSTM层的学习率
+    #     },
+    #     {
+    #         "params": [p for n, p in pooler_params if not any(nd in n for nd in no_decay)],
+    #         "weight_decay": 0.01,
+    #         "lr": config.learning_rate  # pooler的学习率
+    #     },
+    #     {
+    #         "params": [p for n, p in pooler_params if any(nd in n for nd in no_decay)],
+    #         "weight_decay": 0.0,
+    #         "lr": config.learning_rate  # pooler的学习率
+    #     },
+    #     {
+    #         "params": [p for n, p in classifier_params if not any(nd in n for nd in no_decay)],
+    #         "weight_decay": 0.01,
+    #         "lr": config.learning_rate  # 全连接层的学习率
+    #     },
+    #     {
+    #         "params": [p for n, p in classifier_params if any(nd in n for nd in no_decay)],
+    #         "weight_decay": 0.0,
+    #         "lr": config.learning_rate
+    #     },
+    # ]
+
+
     # optimizer = BertAdam(optimizer_grouped_parameters, lr=config.learning_rate, warmup=config.warmup, t_total=train_steps)
     # optimizer = AdamW(model.parameters(), lr=config.learning_rate)
     optimizer = AdamW(optimizer_grouped_parameters, lr=config.learning_rate) 
@@ -163,8 +165,8 @@ def train(model, train_batch, eval_batch, test_batch, config, task):
 
         print("Start evaluation on dev dataset.")
         acc, prec, recall, f1, dev_loss = evaluate(model, eval_batch, config, task, is_test = False)
-        if acc > best_result:
-            best_result = acc
+        if f1 > best_result:
+            best_result = f1
             print("Start evaluation on test dataset.")
             _, _, _, test_f1, _ = evaluate(model, test_batch, config, task, is_test = False)
             if(test_f1 > best_test_result):
