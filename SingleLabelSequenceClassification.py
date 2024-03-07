@@ -121,6 +121,7 @@ class PositionwiseFeedForward(nn.Module):
         output = self.linear_2(inter)
         return output
 
+
 class MultiTextAttention(nn.Module):
     """
     Each head is a self-attention operation.
@@ -212,8 +213,8 @@ class Attention(nn.Module):
         probs = self.dropout(probs)
         output = torch.matmul(probs, value)
 
+        
         return output
-    
 
 class ErnieRCNNForSequenceClassificationNew(ErniePreTrainedModel):
 
@@ -304,7 +305,7 @@ class ErnieRCNNForSequenceClassificationNew(ErniePreTrainedModel):
         lstm_out = lstm_out.permute(0, 2, 1)
         cnn_out = self.maxpool(lstm_out).squeeze()
 
-        logits = self.classifier(cnn_out)
+        logits = self.softmax(self.classifier(cnn_out))
         loss = self.criterion(logits.view(-1, self.num_labels), labels.view(-1, self.num_labels))
         logits = self.softmax(logits)
         return loss, logits

@@ -54,6 +54,7 @@ SLCModel = {
 sentence_num = {
     'tnews_public': 1,
     'tnews_public_slice': 2,
+    'tnews_10w': 2,
     'book_multilabels_task': 1,
     'book_multilabels_task_slice': 3,
 }

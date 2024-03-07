@@ -40,6 +40,11 @@ dataset_files = {
     'tnews_public_slice_dev': './datasets/tnews_public_slice/dev.json',
     'tnews_public_slice_test': './datasets/tnews_public_slice/test.json',
     'tnews_public_slice_labels': './datasets/tnews_public_slice/labels.json',
+    # tnews_10w
+    'tnews_10w_train': './datasets/tnews_10w/train.txt',
+    'tnews_10w_dev': './datasets/tnews_10w/dev.txt',
+    'tnews_10w_test': './datasets/tnews_10w/test.txt',
+    'tnews_10w_labels': './datasets/tnews_10w/labels.txt',
     # book_multilabels_task
     'book_multilabels_task_train': './datasets/book_multilabels_task/train.tsv',
     'book_multilabels_task_dev': './datasets/book_multilabels_task/dev.tsv',

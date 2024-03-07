@@ -115,6 +115,20 @@ def creat_TNEWS_slice(path, class_list):
         sentences.append(InputExample(text_a=sentence, text_b=keywords, label=label))
     return sentences
 
+def creat_TNEWS_10w(path, class_list):
+    """Creates examples for the training and dev sets."""
+    label_number = len(class_list)
+    sentences = []
+    with open(path, mode='r', encoding="utf-8") as f:
+        for (i, line) in enumerate(f):
+            line = line.strip().split('\t')
+            sentence = line[3]
+            keyword = line[4]
+            label = np.zeros((label_number,), dtype=int)
+            label[int(line[1])] = 1
+            sentences.append(InputExample(text_a=sentence, text_b=keyword, label=label))
+    return sentences
+
 def creat_multi_label_sentences_slice(path, class_list):
     """Creates examples for the training and dev sets."""
     label_number = len(class_list)
@@ -142,6 +156,7 @@ def read_dataset(path, tokenizer, workers_num=1, dataset=None, class_list=None, 
     read_dataset_process = {
         'tnews_public': creat_TNEWS,
         'tnews_public_slice': creat_TNEWS_slice,
+        'tnews_10w': creat_TNEWS_10w,
         'book_multilabels_task': creat_multi_label_sentences,
         'book_multilabels_task_slice': creat_multi_label_sentences_slice,
     }
