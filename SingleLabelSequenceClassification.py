@@ -452,8 +452,8 @@ class BertForSequenceClassification(BertPreTrainedModel):
         self.output_layer_1 = nn.Linear(config.hidden_size, config.hidden_size)
         self.output_layer_2 = nn.Linear(config.hidden_size, config.num_labels)
         self.pooling = base_config.pooling
-        self.softmax = nn.LogSoftmax(dim=-1)
-        self.criterion = nn.NLLLoss()
+        self.softmax = nn.Softmax(dim=-1)
+        self.criterion = nn.CrossEntropyLoss()
         self.use_vm = False if base_config.no_vm or base_config.no_kg else True
         print("[BertClassifier] use visible_matrix: {}".format(self.use_vm))
         self.init_weights()
