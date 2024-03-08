@@ -443,7 +443,7 @@ class BertRCNNForSequenceClassificationNew(BertPreTrainedModel):
 
 
 class BertForSequenceClassification(BertPreTrainedModel):
-    def __init__(self, config, args):
+    def __init__(self, config, base_config):
         super(BertForSequenceClassification, self).__init__(config)
         self.num_labels = config.num_labels
         self.bert = BertModel(config, add_pooling_layer=False)
@@ -452,37 +452,37 @@ class BertForSequenceClassification(BertPreTrainedModel):
         self.dropout = nn.Dropout(config.hidden_dropout_prob)
         self.output_layer_1 = nn.Linear(config.hidden_size, config.hidden_size)
         self.output_layer_2 = nn.Linear(config.hidden_size, config.num_labels)
-        self.pooling = args.pooling
+        self.pooling = base_config.pooling
         self.softmax = nn.LogSoftmax(dim=-1)
         self.criterion = nn.NLLLoss()
-        self.use_vm = False if args.no_vm or args.no_kg else True
+        self.use_vm = False if base_config.no_vm or base_config.no_kg else True
         print("[BertClassifier] use visible_matrix: {}".format(self.use_vm))
         self.init_weights()
 
-    def forward(self, input_ids, token_type_ids=None,
-                position_ids=None, head_mask=None, labels=None, visible_matrix=None):
+    def forward(self, input_ids, mask_ids, pos_ids, vms, labels):
         
         seq_length = input_ids.size(1)
         
         # Generate mask according to segment indicators.
         # mask: [batch_size x 1 x seq_length x seq_length]
-        if visible_matrix is None or not self.use_vm:
-            encoder_attention_mask = (token_type_ids > 0). \
+        if vms is None or not self.use_vm:
+            encoder_attention_mask = (mask_ids > 0). \
                     unsqueeze(1). \
                     repeat(1, seq_length, 1). \
                     unsqueeze(1)
             encoder_attention_mask = encoder_attention_mask.float()
             encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
         else:
-            encoder_attention_mask = visible_matrix.unsqueeze(1)
+            encoder_attention_mask = vms.unsqueeze(1)
             encoder_attention_mask = encoder_attention_mask.float()
             encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
 
         # token_type_ids实际上是attention_mask
         outputs = self.bert(input_ids,
-                            attention_mask=token_type_ids,
+                            attention_mask=mask_ids,
                             encoder_attention_mask=encoder_attention_mask,
-                            head_mask=head_mask)
+                            position_ids=pos_ids)
+        
         
         output = outputs[0]
         # Target.
