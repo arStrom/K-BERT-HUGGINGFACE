@@ -63,7 +63,7 @@ class BaseConfig(object):
     """配置参数"""
 
     def __init__(self, cuda, model_name, pretrained, dataset, sentence_num, No, seq_length, dropout,
-                  epochs_num, batch_size, pretrained_learning_rate, learning_rate, report_steps, pooling, no_kg, no_vm):
+                  epochs_num, batch_size, pretrained_learning_rate, learning_rate, report_steps, pooling, no_kg, no_vm, slice):
 
         # train
         cuda_available = torch.cuda.is_available()
@@ -83,6 +83,7 @@ class BaseConfig(object):
         self.pooling = pooling
         self.no_kg = no_kg
         self.no_vm = no_vm
+        self.slice = slice
         self.output_dir = create_dir('./outputs/' + str(No))                     # 结果保存路径
 
         self.seed = 7

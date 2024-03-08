@@ -67,6 +67,7 @@ def main():
     parser.add_argument('--cuda', action='store_true', help='True use GPU, False use CPU')
     parser.add_argument('--task', default='SLC', help='task type')
     parser.add_argument('--dataset', default='book_review', help='dataset name')
+    parser.add_argument("--slice", action="store_true", help="filed slice")
 
     # Model options.
     parser.add_argument("--No", type=int, required=True, help="Experiment number.")
@@ -123,7 +124,7 @@ def main():
     model_name = args.model
     base_config = BaseConfig(args.cuda, model_name, args.pretrained, args.dataset, args.sentence_num, args.No, args.seq_length, args.dropout, 
                         args.epochs_num, args.batch_size, args.pretrained_learning_rate, args.learning_rate, args.report_steps, args.pooling,
-                        args.no_kg, args.no_vm)
+                        args.no_kg, args.no_vm, args.slice)
 
     model_type = model_name.split('-')
     if model_type[0] == 'bert':
@@ -210,21 +211,21 @@ def main():
     # 训练数据
     train_dataset = dataloader.read_dataset(base_config.train_path, tokenizer, 
                                             workers_num=args.workers_num, dataset=args.dataset, 
-                                            class_list=base_config.class_list, with_kg=not args.no_kg, with_vm = not args.no_vm)
+                                            class_list=base_config.class_list, with_kg=not args.no_kg, with_vm = not args.no_vm, slice = args.slice)
     train_dataset = dataloader.myDataset(train_dataset)
     train_batch = DataLoader(train_dataset,batch_size=base_config.batch_size, shuffle=True)
 
     # 验证数据
     dev_dataset = dataloader.read_dataset(base_config.dev_path, tokenizer, 
                                           workers_num=args.workers_num, dataset=args.dataset, 
-                                          class_list=base_config.class_list, with_kg=not args.no_kg, with_vm = not args.no_vm)
+                                          class_list=base_config.class_list, with_kg=not args.no_kg, with_vm = not args.no_vm, slice = args.slice)
     dev_dataset = dataloader.myDataset(dev_dataset)
     dev_batch = DataLoader(dev_dataset,batch_size=base_config.batch_size)
 
     # 测试数据
     test_dataset = dataloader.read_dataset(base_config.test_path, tokenizer, 
                                            workers_num=args.workers_num, dataset=args.dataset, 
-                                           class_list=base_config.class_list, with_kg=not args.no_kg, with_vm = not args.no_vm)
+                                           class_list=base_config.class_list, with_kg=not args.no_kg, with_vm = not args.no_vm, slice = args.slice)
     test_dataset = dataloader.myDataset(test_dataset)
     test_batch = DataLoader(test_dataset,batch_size=base_config.batch_size)
 

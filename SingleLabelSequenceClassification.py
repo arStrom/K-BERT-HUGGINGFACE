@@ -225,6 +225,8 @@ class ErnieRCNNForSequenceClassificationNew(ErniePreTrainedModel):
         self.hidden_size = config.hidden_size
         self.num_labels = config.num_labels
         self.ernie = ErnieModel(config, add_pooling_layer=False)
+        for param in self.ernie.parameters():
+            param.requires_grad = True
 
         self.multi_text_attention = MultiTextAttention(config.hidden_size, 
                                                        self.sentence_num,
@@ -410,7 +412,7 @@ class BertRCNNForSequenceClassificationNew(BertPreTrainedModel):
         lstm_out = lstm_out.permute(0, 2, 1)
         cnn_out = self.maxpool(lstm_out).squeeze()
 
-        logits = self.classifier(cnn_out)
+        logits = self.softmax(self.classifier(cnn_out))
         loss = self.criterion(logits.view(-1, self.num_labels), labels.view(-1, self.num_labels))
         logits = self.softmax(logits)
         return loss, logits
@@ -497,6 +499,7 @@ class BertForSequenceClassification(BertPreTrainedModel):
         logits = self.output_layer_2(output)
         loss = self.criterion(self.softmax(logits.view(-1, self.num_labels)), labels.view(-1))
         return loss, logits
+    
 
 class ErnieRCNNForSequenceClassification(ErniePreTrainedModel):
 
