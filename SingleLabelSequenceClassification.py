@@ -220,8 +220,7 @@ class ErnieRCNNForSequenceClassificationNew(ErniePreTrainedModel):
 
     def __init__(self, config, base_config):
         super(ErnieRCNNForSequenceClassificationNew, self).__init__(config)
-        # 句子个数
-        self.sentence_num = base_config.sentence_num
+        self.sentence_num = base_config.sentence_num if base_config.slice else 1 # 句子个数
         self.hidden_size = config.hidden_size
         self.num_labels = config.num_labels
         self.ernie = ErnieModel(config, add_pooling_layer=False)
@@ -327,8 +326,7 @@ class BertRCNNForSequenceClassificationNew(BertPreTrainedModel):
 
     def __init__(self, config, base_config):
         super(BertRCNNForSequenceClassificationNew, self).__init__(config)
-        # 句子个数
-        self.sentence_num = base_config.sentence_num
+        self.sentence_num = base_config.sentence_num if base_config.slice else 1 # 句子个数
         self.hidden_size = config.hidden_size
         self.num_labels = config.num_labels
         self.bert = BertModel(config, add_pooling_layer=False)
@@ -445,6 +443,7 @@ class BertRCNNForSequenceClassificationNew(BertPreTrainedModel):
 class BertForSequenceClassification(BertPreTrainedModel):
     def __init__(self, config, base_config):
         super(BertForSequenceClassification, self).__init__(config)
+        self.sentence_num = base_config.sentence_num if base_config.slice else 1 # 句子个数
         self.num_labels = config.num_labels
         self.bert = BertModel(config, add_pooling_layer=False)
         for param in self.bert.parameters():
@@ -461,6 +460,12 @@ class BertForSequenceClassification(BertPreTrainedModel):
 
     def forward(self, input_ids, mask_ids, pos_ids, vms, labels):
         
+        # 合并前两个维度 batch_size 和 sentences_num
+        input_ids = input_ids.flatten(0,1)
+        mask_ids = mask_ids.flatten(0,1)
+        pos_ids = pos_ids.flatten(0,1)
+        vms = vms.flatten(0,1)
+
         seq_length = input_ids.size(1)
         
         # Generate mask according to segment indicators.
@@ -482,7 +487,7 @@ class BertForSequenceClassification(BertPreTrainedModel):
                             attention_mask=mask_ids,
                             encoder_attention_mask=encoder_attention_mask,
                             position_ids=pos_ids)
-        
+                            
         
         output = outputs[0]
         # Target.
@@ -496,8 +501,8 @@ class BertForSequenceClassification(BertPreTrainedModel):
             output = output[:, 0, :]
         output = torch.tanh(self.output_layer_1(output))
 
-        logits = self.output_layer_2(output)
-        loss = self.criterion(self.softmax(logits.view(-1, self.num_labels)), labels.view(-1))
+        logits = self.softmax(self.output_layer_2(output))
+        loss = self.criterion(logits.view(-1, self.num_labels), labels.view(-1, self.num_labels))
         return loss, logits
     
 
