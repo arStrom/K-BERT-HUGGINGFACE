@@ -58,6 +58,7 @@ sentence_num = {
     'book_multilabels_task': 1,
     'book_multilabels_task_slice': 3,
     'AAPD': 1,
+    'DuEE':1,
 }
 
 def main():

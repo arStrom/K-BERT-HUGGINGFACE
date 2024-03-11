@@ -60,6 +60,11 @@ dataset_files = {
     'AAPD_dev': './datasets/AAPD/dev.txt',
     'AAPD_test': './datasets/AAPD/test.txt',
     'AAPD_labels': './datasets/AAPD/labels.txt',
+    # DuEE
+    'DuEE_train': './datasets/DuEE/train.json',
+    'DuEE_dev': './datasets/DuEE/dev.json',
+    'DuEE_test': './datasets/DuEE/test.json',
+    'DuEE_labels': './datasets/DuEE/labels.txt',
     
 }
 

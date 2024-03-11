@@ -179,6 +179,22 @@ def creat_AAPD(path, class_list):
                 label[i] = int(line[i+1])
             sentences.append(InputExample(text_a=abstract, label=label))
     return sentences
+
+def creat_DuEE(path, class_list):
+    """Creates examples for the training and dev sets."""
+    label_number = len(class_list)
+    sentences = []
+    lines = read_json(path)
+    for line in lines:
+        text = line['text']
+        label = np.zeros((label_number,), dtype=int)
+        for event in line['event_list']:
+            for (x,class_name) in enumerate(class_list):
+                if class_name == event['event_type']:
+                    label[x] = 1
+                    break
+        sentences.append(InputExample(text_a=text, label=label))
+    return sentences
     
 
 
@@ -191,6 +207,7 @@ def read_dataset(path, tokenizer, workers_num=1, dataset=None, class_list=None, 
         'tnews_10w': creat_TNEWS_10w,
         'book_multilabels_task': creat_multi_label_sentences,
         'AAPD': creat_AAPD,
+        'DuEE': creat_DuEE,
     }
 
     read_dataset_process_slice = {
