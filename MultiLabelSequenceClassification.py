@@ -219,8 +219,7 @@ class ErnieRCNNForMultiLabelSequenceClassificationNew(ErniePreTrainedModel):
 
     def __init__(self, config, base_config):
         super(ErnieRCNNForMultiLabelSequenceClassificationNew, self).__init__(config)
-        # 句子个数
-        self.sentence_num = base_config.sentence_num
+        self.sentence_num = base_config.sentence_num if base_config.slice else 1 # 句子个数
         self.hidden_size = config.hidden_size
         self.num_labels = config.num_labels
         self.ernie = ErnieModel(config, add_pooling_layer=False)
@@ -318,8 +317,7 @@ class BertRCNNForMultiLabelSequenceClassificationNew(BertPreTrainedModel):
 
     def __init__(self, config, base_config):
         super(BertRCNNForMultiLabelSequenceClassificationNew, self).__init__(config)
-        # 句子个数
-        self.sentence_num = base_config.sentence_num
+        self.sentence_num = base_config.sentence_num if base_config.slice else 1 # 句子个数
         self.hidden_size = config.hidden_size
         self.num_labels = config.num_labels
         self.bert = BertModel(config, add_pooling_layer=False)
