@@ -57,6 +57,7 @@ sentence_num = {
     'tnews_10w': 2,
     'book_multilabels_task': 1,
     'book_multilabels_task_slice': 3,
+    'AAPD': 1,
 }
 
 def main():

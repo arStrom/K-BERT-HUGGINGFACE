@@ -55,6 +55,11 @@ dataset_files = {
     'book_multilabels_task_slice_dev': './datasets/book_multilabels_task_slice/dev.tsv',
     'book_multilabels_task_slice_test': './datasets/book_multilabels_task_slice/test.tsv',
     'book_multilabels_task_slice_labels': './datasets/book_multilabels_task_slice/labels.txt',
+    # AAPD
+    'AAPD_train': './datasets/AAPD/train.txt',
+    'AAPD_dev': './datasets/AAPD/dev.txt',
+    'AAPD_test': './datasets/AAPD/test.txt',
+    'AAPD_labels': './datasets/AAPD/labels.txt',
     
 }
 

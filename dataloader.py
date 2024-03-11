@@ -164,6 +164,23 @@ def creat_multi_label_sentences_slice(path, class_list):
             sentences.append(InputExample(text_a=title, text_b=keyword, text_c=summary, label=label))
     return sentences
 
+def creat_AAPD(path, class_list):
+    """Creates examples for the training and dev sets."""
+    label_number = len(class_list)
+    sentences = []
+    with open(path, mode='r', encoding="utf-8") as f:
+        for (i, line) in enumerate(f):
+            if i == 0 :
+                continue
+            line = line.strip().split('\t')
+            abstract = line[0]
+            label = np.zeros((label_number,), dtype=int)
+            for i in range(label_number):
+                label[i] = int(line[i+1])
+            sentences.append(InputExample(text_a=abstract, label=label))
+    return sentences
+    
+
 
 
 # 读取数据集
@@ -173,6 +190,7 @@ def read_dataset(path, tokenizer, workers_num=1, dataset=None, class_list=None, 
         'tnews_public': creat_TNEWS,
         'tnews_10w': creat_TNEWS_10w,
         'book_multilabels_task': creat_multi_label_sentences,
+        'AAPD': creat_AAPD,
     }
 
     read_dataset_process_slice = {
