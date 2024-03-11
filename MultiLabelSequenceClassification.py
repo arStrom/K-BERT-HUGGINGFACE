@@ -455,36 +455,37 @@ class BertForMultiLabelSequenceClassification(BertPreTrainedModel):
         print("[BertClassifier] use visible_matrix: {}".format(self.use_vm))
         self.init_weights()
 
-    def forward(self, input_ids_batch, mask_ids_batch, pos_ids_batch, vms_batch, labels):
+    def forward(self, input_ids, mask_ids, pos_ids, vms, labels):
         output_batch = []
-        for i in range(self.sentence_num):
-            input_ids = input_ids_batch[i]
-            attention_mask = mask_ids_batch[i]
-            position_ids = pos_ids_batch[i]
-            visible_matrix = vms_batch[i]
+        
+        # 合并前两个维度 batch_size 和 sentences_num
+        input_ids = input_ids.flatten(0,1)
+        mask_ids = mask_ids.flatten(0,1)
+        pos_ids = pos_ids.flatten(0,1)
+        vms = vms.flatten(0,1)
 
-            seq_length = input_ids.size(1)
-            
-            # Generate mask according to segment indicators.
-            # mask: [batch_size x 1 x seq_length x seq_length]
-            if visible_matrix is None or not self.use_vm:
-                encoder_attention_mask = (attention_mask > 0). \
-                        unsqueeze(1). \
-                        repeat(1, seq_length, 1). \
-                        unsqueeze(1)
-                encoder_attention_mask = encoder_attention_mask.float()
-                encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
-            else:
-                encoder_attention_mask = visible_matrix.unsqueeze(1)
-                encoder_attention_mask = encoder_attention_mask.float()
-                encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
+        seq_length = input_ids.size(1)
+        
+        # Generate mask according to segment indicators.
+        # mask: [batch_size x 1 x seq_length x seq_length]
+        if vms is None or not self.use_vm:
+            encoder_attention_mask = (mask_ids > 0). \
+                    unsqueeze(1). \
+                    repeat(1, seq_length, 1). \
+                    unsqueeze(1)
+            encoder_attention_mask = encoder_attention_mask.float()
+            encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
+        else:
+            encoder_attention_mask = vms.unsqueeze(1)
+            encoder_attention_mask = encoder_attention_mask.float()
+            encoder_attention_mask = (1.0 - encoder_attention_mask) * -10000.0
 
-            # token_type_ids实际上是attention_mask
-            outputs = self.bert(input_ids,
-                                attention_mask=attention_mask,
-                                encoder_attention_mask=encoder_attention_mask,
-                                position_ids=position_ids)
-            output_batch.append(outputs[0])
+        # token_type_ids实际上是attention_mask
+        outputs = self.bert(input_ids,
+                            attention_mask=mask_ids,
+                            encoder_attention_mask=encoder_attention_mask,
+                            position_ids=pos_ids)
+        output_batch.append(outputs[0])
 
         output = torch.cat(output_batch, 2)
 
